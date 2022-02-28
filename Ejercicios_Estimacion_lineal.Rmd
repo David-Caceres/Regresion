@@ -12,7 +12,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```{r}
 require(faraway)
-data("teengamb")
+
 ```
 
 ## Ejercicios del libro de Faraway
@@ -24,6 +24,8 @@ with the expenditure on gambling as the response and the sex, status, income and
 predictors. Present the output.
 
 ```{r}
+data("teengamb")
+head(teengamb)
 # Convertimos los datos de la columna "sex" en cualitativos como un factor y hacemos un resumen de los datos
 
 teengamb$sex<-factor(teengamb$sex)
@@ -38,3 +40,110 @@ lmod<-lm(gamble ~ sex + status + income + verbal, data=teengamb)
 summary(lmod)
 ```
 
+(a) What percentage of variation in the response is explained by these predictors?
+
+```{r}
+# El porcentaje de variación de la respuesta es R²
+
+lmodsum<-summary(lmod)
+lmodsum
+
+#R² puede extraerse del resumen de lmod
+names(lmodsum)
+
+# Lo piden en porcentaje
+lmodsum$r.squared*100
+```
+
+(b) Which observation has the largest (positive) residual? Give the case number.
+
+```{r}
+e<-lmodsum$residuals
+max(e)
+
+# Posición
+which.max(e)
+```
+
+(c) Compute the mean and median of the residuals.
+
+```{r}
+mean(e)
+median(e)
+```
+
+(d) Compute the correlation of the residuals with the fitted values.
+
+```{r}
+cor(lmod$residuals,lmod$fitted.values)
+```
+
+(e) Compute the correlation of the residuals with the income.
+
+```{r}
+cor(lmod$residuals, teengamb$income)
+```
+
+
+(f) For all other predictors held constant, what would be the difference in predicted expenditure
+on gambling for a male compared to a female?
+
+```{r}
+# Nos piden el coeficiente de regresión para la varaible sex
+lmod$coefficients["sexfemale"]
+```
+
+
+### Ejercicio 2
+The dataset uswages is drawn as a sample from the Current Population Survey in 1988. Fit a model with weekly wages as the response and years of education and experience as predictors. Report and give a simple interpretation to the regression coefﬁcient for years of education. Now ﬁt the same model but with logged weekly wages. Give an interpretation to the regression coefﬁcient for years of education. Which interpretation is more natural?
+
+```{r}
+data(uswages, package = "faraway")
+head(uswages)
+```
+
+
+```{r}
+# Creamos el modelo lineal
+lmod2<-lm(wage ~ educ + exper, data = uswages)
+summary(lmod2)
+lmod2$coefficients
+
+```
+
+El modelo obtenido se podría expresar de la siguiente forma:
+
+wague = -242.799412 + 51.175268 * educ + 9.774767 * exper
+
+El salario se expresa por semanas, pero la educación y la experiencia se expresan por años.
+Este modelo nos muestra que el salario se incrementará en 51,17 dólares por año de educación y en 9.77 dólares por año de experiencia.
+
+```{r}
+# Construimos el mismo modelo con los ingresos en forma logaritmoca
+
+waguelog<-lm(log2(wage) ~ educ + exper, data=uswages)
+summary(waguelog)
+waguelog$coefficients
+```
+
+Obtenemos un segundo modelo que respondería a la siguiente expresión:
+
+log2wague = 6.70899224 + 0.13057296 * educ + 0.02608184 * exper
+
+En este caso, los coeficientes expresan la relación entre el aumento de una unidad en la variable respuesta y el aumento de las explicativas. Por ejemplo:
+
+```{r}
+1/0.13057
+```
+
+Se necesitarían 7,6 años de educación para doblar el salario (log de base 2).
+
+- La primera expresión parace algo más sencilla de entender y da una referencia algo más clara, aunque los dos modelos son válidos.
+
+
+### 4. (Ejercicio 4 cap. 2 pág. 30)
+The dataset prostate comes from a study on 97 men with prostate cancer who were due to receive a
+radical prostatectomy. Fit a model with lpsa as the response and lcavol as the predictor. Record
+the residual standard error and the R 2 . Now add lweight, svi, lbph, age, lcp, pgg45 and gleason
+to the model one at a time. For each model record the residual standard error and the R 2 . Plot
+the trends in these two statistics.
