@@ -147,3 +147,31 @@ radical prostatectomy. Fit a model with lpsa as the response and lcavol as the p
 the residual standard error and the R 2 . Now add lweight, svi, lbph, age, lcp, pgg45 and gleason
 to the model one at a time. For each model record the residual standard error and the R 2 . Plot
 the trends in these two statistics.
+
+```{r}
+data(prostate, package="faraway")
+head(prostate)
+
+lmod_p<-lm(lpsa ~ lcavol, data = prostate)
+summary(lmod_p)
+
+```
+
+```{r}
+# El error residual estandar y R²
+lmod_psum<-summary(lmod_p)
+names(lmod_psum)
+
+lmod_psum$sigma
+lmod_psum$r.squared
+
+```
+
+```{r}
+# Añadimos weight
+lmod_p2<-lm(lpsa ~ lcavol + lweight, data = prostate)
+lmod_psum2<-summary(lmod_p2)
+lmod_psum2$sigma
+lmod_psum2$r.squared
+```
+
