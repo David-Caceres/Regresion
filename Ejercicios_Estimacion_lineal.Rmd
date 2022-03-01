@@ -175,3 +175,74 @@ lmod_psum2$sigma
 lmod_psum2$r.squared
 ```
 
+
+```{r}
+# Añadimos svi
+lmod_p3<-lm(lpsa ~ lcavol + lweight + svi, data = prostate)
+lmod_psum3<-summary(lmod_p3)
+lmod_psum3$sigma
+lmod_psum3$r.squared
+
+```
+
+```{r}
+# Añadimos lbph
+lmod_p4<-lm(lpsa ~ lcavol + lweight + svi + lbph, data = prostate)
+lmod_psum4<-summary(lmod_p4)
+lmod_psum4$sigma
+lmod_psum4$r.squared
+```
+
+```{r}
+# Añadimos age
+
+lmod_p5<-lm(lpsa ~ lcavol + lweight + svi + lbph + age, data = prostate)
+lmod_psum5<-summary(lmod_p5)
+lmod_psum5$sigma
+lmod_psum5$r.squared
+```
+
+```{r}
+# Añadimos lcp
+
+lmod_p6<-lm(lpsa ~ lcavol + lweight + svi + lbph + age + lcp, data = prostate)
+lmod_psum6<-summary(lmod_p6)
+lmod_psum6$sigma
+lmod_psum6$r.squared
+```
+
+```{r}
+# Añadimos pgg45
+lmod_p7<-lm(lpsa ~ lcavol + lweight + svi + lbph + age + lcp + 
+              pgg45, data = prostate)
+lmod_psum7<-summary(lmod_p7)
+lmod_psum7$sigma
+lmod_psum7$r.squared
+```
+
+```{r}
+# Añadimos gleason
+lmod_p8<-lm(lpsa ~ lcavol + lweight + svi + lbph + age + lcp + 
+              pgg45 + gleason, data = prostate)
+lmod_psum8<-summary(lmod_p8)
+lmod_psum8$sigma
+lmod_psum8$r.squared
+```
+
+```{r}
+# Creamos un data frame con cada añadido
+datos<-data.frame(
+"Variables"=c(1,2,3,4,5,6,7,8),
+"Error residual"=c(lmod_psum$sigma, lmod_psum2$sigma, lmod_psum3$sigma, lmod_psum4$sigma
+,lmod_psum5$sigma, lmod_psum6$sigma, lmod_psum7$sigma, lmod_psum8$sigma),
+"R²"=c(lmod_psum$r.squared, lmod_psum2$r.squared, lmod_psum3$r.squared, lmod_psum4$r.squared,
+lmod_psum5$r.squared, lmod_psum6$r.squared, lmod_psum7$r.squared, lmod_psum8$r.squared))
+datos
+```
+
+
+```{r}
+matplot(datos[2:3],type ="b", xlab="Variables", ylab = "Valores", col=c("blue","red")) 
+legend("topright", legend=c("Error Residual", "R²"), fill =c("blue","red"))
+```
+
