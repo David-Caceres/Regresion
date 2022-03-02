@@ -242,7 +242,15 @@ datos
 
 
 ```{r}
-matplot(datos[2:3],type ="b", xlab="Variables", ylab = "Valores", col=c("blue","red")) 
+matplot(datos[2:3],type ="b", xlab="Variables", ylab = "Valores", 
+        col=c("blue","red")) 
 legend("topright", legend=c("Error Residual", "R²"), fill =c("blue","red"))
+
+# Vemos que conforme vamos añadiendo varaibles a la regresión, el error standar 
+# y r² tienden a confluir poco a poco, es decir el error residual disminuye 
+# mientras el ajuste es cada vez mejor. 
+# Esto se debe a que conforme añadimos variables, y estando estas variables
+# correlacionadas con la variable respuesta, a mayor número de datos, menor 
+# varibilidad en los errores y mejor es el ajuste a la recta.
 ```
 
