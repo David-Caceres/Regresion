@@ -254,3 +254,9 @@ legend("topright", legend=c("Error Residual", "R²"), fill =c("blue","red"))
 # varibilidad en los errores y mejor es el ajuste a la recta.
 ```
 
+
+### 5. (Ejercicio 5 cap. 2 pág. 30)
+Using the prostate data, plot lpsa against lcavol. Fit the regressions of lpsa on lcavol and
+lcavol on lpsa. Display both regression lines on the plot. At what point do the two lines intersect?
+
+
