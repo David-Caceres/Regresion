@@ -258,5 +258,29 @@ legend("topright", legend=c("Error Residual", "R²"), fill =c("blue","red"))
 ### 5. (Ejercicio 5 cap. 2 pág. 30)
 Using the prostate data, plot lpsa against lcavol. Fit the regressions of lpsa on lcavol and
 lcavol on lpsa. Display both regression lines on the plot. At what point do the two lines intersect?
+```{r}
+
+recta1<-lm(lpsa ~ lcavol, data=prostate)
+recta2<-lm(lcavol ~ lpsa, data=prostate)
+recta1
+recta2
+
+```
 
 
+Para comparar ambas rectas tenemos que invertir una de ellas, ya que si tomamos la ecuación de la recta, y= a + b * x para la recta1, para la recta2 la x y la y deben intercambiarse, de ese modo:
+
+ x = a' + b' * y
+ y = (x - a'/b)
+ y = -a'/b' + 1/b' * x
+ 
+```{r}
+plot(lpsa ~ lcavol, data =prostate)
+abline(recta1, col="red")
+a_2<-recta2$coefficients[1]
+b_2<-recta2$coefficients[2]
+a2<- -a_2/b_2
+b2<- 1/b_2
+abline(a2,b2, col="blue")
+```
+ 
