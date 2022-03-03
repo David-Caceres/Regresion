@@ -318,3 +318,15 @@ summary(cheddarlm)
 (c) Fit the same regression model but without an intercept term. What is the value of R 2 reported
 in the output? Compute a more reasonable measure of the good- ness of fit for this example.
 
+```{r}
+cheddarlm2<-lm(taste ~ 0 + Acetic + H2S + Lactic, data = cheddar)
+summary(cheddarlm2)
+```
+
+```{r}
+# Sacamos el R²
+cheddarlm2sum<-summary(cheddarlm2)
+names(cheddarlm2sum)
+cheddarlm2sum$r.squared
+```
+

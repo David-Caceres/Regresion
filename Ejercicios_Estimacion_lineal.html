@@ -576,6 +576,35 @@ correlacion^2</code></pre>
 <ol start="3" style="list-style-type: lower-alpha">
 <li>Fit the same regression model but without an intercept term. What is the value of R 2 reported in the output? Compute a more reasonable measure of the good- ness of fit for this example.</li>
 </ol>
+<pre class="r"><code>cheddarlm2&lt;-lm(taste ~ 0 + Acetic + H2S + Lactic, data = cheddar)
+summary(cheddarlm2)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = taste ~ 0 + Acetic + H2S + Lactic, data = cheddar)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -15.4521  -6.5262  -0.6388   4.6811  28.4744 
+## 
+## Coefficients:
+##        Estimate Std. Error t value Pr(&gt;|t|)    
+## Acetic   -5.454      2.111  -2.583  0.01553 *  
+## H2S       4.576      1.187   3.854  0.00065 ***
+## Lactic   19.127      8.801   2.173  0.03871 *  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 10.34 on 27 degrees of freedom
+## Multiple R-squared:  0.8877, Adjusted R-squared:  0.8752 
+## F-statistic: 71.15 on 3 and 27 DF,  p-value: 6.099e-13</code></pre>
+<pre class="r"><code># Sacamos el R²
+cheddarlm2sum&lt;-summary(cheddarlm2)
+names(cheddarlm2sum)</code></pre>
+<pre><code>##  [1] &quot;call&quot;          &quot;terms&quot;         &quot;residuals&quot;     &quot;coefficients&quot; 
+##  [5] &quot;aliased&quot;       &quot;sigma&quot;         &quot;df&quot;            &quot;r.squared&quot;    
+##  [9] &quot;adj.r.squared&quot; &quot;fstatistic&quot;    &quot;cov.unscaled&quot;</code></pre>
+<pre class="r"><code>cheddarlm2sum$r.squared</code></pre>
+<pre><code>## [1] 0.8877059</code></pre>
 </div>
 </div>
 
