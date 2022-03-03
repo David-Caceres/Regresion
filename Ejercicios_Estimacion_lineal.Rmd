@@ -284,3 +284,29 @@ b2<- 1/b_2
 abline(a2,b2, col="blue")
 ```
  
+### 6. (Ejercicio 6 cap. 2 pág. 30)
+Thirty samples of cheddar cheese were analyzed for their content of acetic acid, hydrogen sulfide
+and lactic acid. Each sample was tasted and scored by a panel of judges and the average taste score
+produced. Use the cheddar data to answer the following:
+
+```{r}
+data(cheddar)
+head(cheddar)
+```
+
+(a) Fit a regression model with taste as the response and the three chemical contents as predictors.
+Report the values of the regression coefficients.
+
+```{r}
+cheddarlm<-lm(taste ~ Acetic + H2S + Lactic, data=cheddar)
+cheddarlm$coefficients
+```
+
+
+(b) Compute the correlation between the fitted values and the response. Square it. Identify where
+this value appears in the regression output.
+```{r}
+attach(cheddar)
+correlacion<-cor(fitted.values(cheddarlm),taste)
+```
+
