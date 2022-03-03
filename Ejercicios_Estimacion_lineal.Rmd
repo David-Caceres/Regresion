@@ -308,5 +308,13 @@ this value appears in the regression output.
 ```{r}
 attach(cheddar)
 correlacion<-cor(fitted.values(cheddarlm),taste)
+correlacion^2
+summary(cheddarlm)
+
+# El cuadrado de la correlación coincide con el coeficiente de determinación o R² 
 ```
+
+
+(c) Fit the same regression model but without an intercept term. What is the value of R 2 reported
+in the output? Compute a more reasonable measure of the good- ness of fit for this example.
 
