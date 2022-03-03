@@ -605,6 +605,51 @@ names(cheddarlm2sum)</code></pre>
 ##  [9] &quot;adj.r.squared&quot; &quot;fstatistic&quot;    &quot;cov.unscaled&quot;</code></pre>
 <pre class="r"><code>cheddarlm2sum$r.squared</code></pre>
 <pre><code>## [1] 0.8877059</code></pre>
+<pre class="r"><code># El ajuste en este segundo modelo es mejor que en el primero a priori, pero 
+# tenemos que tener en cuenta que cuando no se usa el intecepto, las fórmulas 
+# para clacular R² varían y no son comparables.</code></pre>
+<ol start="4" style="list-style-type: lower-alpha">
+<li>Compute the regression coefficients from the original fit using the QR decomposition showing your R code.</li>
+</ol>
+<pre class="r"><code>x&lt;-model.matrix(~ Acetic + H2S + Lactic, data = cheddar)
+y&lt;- cheddar$taste
+qrx&lt;-qr(x)
+dim(qr.Q(qrx))</code></pre>
+<pre><code>## [1] 30  4</code></pre>
+<pre class="r"><code>(f&lt;-t(qr.Q(qrx))%*%y)</code></pre>
+<pre><code>##            [,1]
+## [1,] -134.37460
+## [2,]   48.10552
+## [3,]   46.33591
+## [4,]  -23.09366</code></pre>
+<pre class="r"><code>backsolve(qr.R(qrx),f)</code></pre>
+<pre><code>##             [,1]
+## [1,] -28.8767696
+## [2,]   0.3277413
+## [3,]   3.9118411
+## [4,]  19.6705434</code></pre>
+<pre class="r"><code># Los resultados coinciden con el modelo ajustado por mínimos cuadrados
+summary(cheddarlm)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = taste ~ Acetic + H2S + Lactic, data = cheddar)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -17.390  -6.612  -1.009   4.908  25.449 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)   
+## (Intercept) -28.8768    19.7354  -1.463  0.15540   
+## Acetic        0.3277     4.4598   0.073  0.94198   
+## H2S           3.9118     1.2484   3.133  0.00425 **
+## Lactic       19.6705     8.6291   2.280  0.03108 * 
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 10.13 on 26 degrees of freedom
+## Multiple R-squared:  0.6518, Adjusted R-squared:  0.6116 
+## F-statistic: 16.22 on 3 and 26 DF,  p-value: 3.81e-06</code></pre>
 </div>
 </div>
 

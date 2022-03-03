@@ -328,5 +328,76 @@ summary(cheddarlm2)
 cheddarlm2sum<-summary(cheddarlm2)
 names(cheddarlm2sum)
 cheddarlm2sum$r.squared
+
+# El ajuste en este segundo modelo es mejor que en el primero a priori, pero 
+# tenemos que tener en cuenta que cuando no se usa el intecepto, las fórmulas 
+# para clacular R² varían y no son comparables.
+```
+
+
+(d) Compute the regression coefficients from the original fit using the QR decomposition showing
+your R code.
+
+```{r}
+x<-model.matrix(~ Acetic + H2S + Lactic, data = cheddar)
+y<- cheddar$taste
+qrx<-qr(x)
+dim(qr.Q(qrx))
+
+(f<-t(qr.Q(qrx))%*%y)
+
+backsolve(qr.R(qrx),f)
+```
+
+
+```{r}
+# Los resultados coinciden con el modelo ajustado por mínimos cuadrados
+summary(cheddarlm)
+```
+
+### 7. (Ejercicio 7 cap. 2 pág. 31)
+An experiment was conducted to determine the effect of four factors on the resistivity of a semi-
+conductor wafer. The data is found in wafer where each of the four factors is coded as − or +
+depending on whether the low or the high setting for that factor was used. Fit the linear model
+resist ~ x1 + x2 + x3 + x4.
+
+```{r}
+data(wafer, package = "faraway")
+head(wafer)
+waferlm<-lm(resist ~ x1 + x2 + x3 + x4, data = wafer)
+summary(waferlm)
+```
+
+(a) Extract the X matrix using the model.matrix function. Examine this to determine how the
+low and high levels have been coded in the model.
+
+```{r}
+mx<-model.matrix(waferlm)
+mx
+
+# Parece que los valores altos corresponden a los 1 o + en el dataset, y 
+# los más bajos a los 0 o -.
+```
+
+(b) Compute the correlation in the X matrix. Why are there some missing values in the matrix?
+```{r}
+cor(mx)
+# Hay valores perdidos porque corresponden a la intersección con el intercepto que tiene 1 como valor
+```
+
+
+(c) What difference in resistance is expected when moving from the low to the high level of x1?
+
+```{r}
+# Nos piden el coeficiente de regresión de x1
+waferlm$coefficients
+# Vemos que la resistencia es 25.76 veces mayor cuando los valores son altos
+```
+
+(d) Refit the model without x4 and examine the regression coefficients and standard errors? What
+stayed the the same as the original fit and what changed?
+
+```{r}
+
 ```
 
