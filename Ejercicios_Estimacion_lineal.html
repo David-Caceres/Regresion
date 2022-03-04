@@ -651,6 +651,193 @@ summary(cheddarlm)</code></pre>
 ## Multiple R-squared:  0.6518, Adjusted R-squared:  0.6116 
 ## F-statistic: 16.22 on 3 and 26 DF,  p-value: 3.81e-06</code></pre>
 </div>
+<div id="ejercicio-7-cap.-2-pág.-31" class="section level3">
+<h3>7. (Ejercicio 7 cap. 2 pág. 31)</h3>
+<p>An experiment was conducted to determine the effect of four factors on the resistivity of a semi- conductor wafer. The data is found in wafer where each of the four factors is coded as − or + depending on whether the low or the high setting for that factor was used. Fit the linear model resist ~ x1 + x2 + x3 + x4.</p>
+<pre class="r"><code>data(wafer, package = &quot;faraway&quot;)
+head(wafer)</code></pre>
+<pre><code>##   x1 x2 x3 x4 resist
+## 1  -  -  -  -  193.4
+## 2  +  -  -  -  247.6
+## 3  -  +  -  -  168.2
+## 4  +  +  -  -  205.0
+## 5  -  -  +  -  303.4
+## 6  +  -  +  -  339.9</code></pre>
+<pre class="r"><code>waferlm&lt;-lm(resist ~ x1 + x2 + x3 + x4, data = wafer)
+summary(waferlm)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = resist ~ x1 + x2 + x3 + x4, data = wafer)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -43.381 -17.119   4.825  16.644  33.769 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)   236.78      14.77  16.032 5.65e-09 ***
+## x1+            25.76      13.21   1.950 0.077085 .  
+## x2+           -69.89      13.21  -5.291 0.000256 ***
+## x3+            43.59      13.21   3.300 0.007083 ** 
+## x4+           -14.49      13.21  -1.097 0.296193    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 26.42 on 11 degrees of freedom
+## Multiple R-squared:  0.7996, Adjusted R-squared:  0.7267 
+## F-statistic: 10.97 on 4 and 11 DF,  p-value: 0.0007815</code></pre>
+<ol style="list-style-type: lower-alpha">
+<li>Extract the X matrix using the model.matrix function. Examine this to determine how the low and high levels have been coded in the model.</li>
+</ol>
+<pre class="r"><code>mx&lt;-model.matrix(waferlm)
+mx</code></pre>
+<pre><code>##    (Intercept) x1+ x2+ x3+ x4+
+## 1            1   0   0   0   0
+## 2            1   1   0   0   0
+## 3            1   0   1   0   0
+## 4            1   1   1   0   0
+## 5            1   0   0   1   0
+## 6            1   1   0   1   0
+## 7            1   0   1   1   0
+## 8            1   1   1   1   0
+## 9            1   0   0   0   1
+## 10           1   1   0   0   1
+## 11           1   0   1   0   1
+## 12           1   1   1   0   1
+## 13           1   0   0   1   1
+## 14           1   1   0   1   1
+## 15           1   0   1   1   1
+## 16           1   1   1   1   1
+## attr(,&quot;assign&quot;)
+## [1] 0 1 2 3 4
+## attr(,&quot;contrasts&quot;)
+## attr(,&quot;contrasts&quot;)$x1
+## [1] &quot;contr.treatment&quot;
+## 
+## attr(,&quot;contrasts&quot;)$x2
+## [1] &quot;contr.treatment&quot;
+## 
+## attr(,&quot;contrasts&quot;)$x3
+## [1] &quot;contr.treatment&quot;
+## 
+## attr(,&quot;contrasts&quot;)$x4
+## [1] &quot;contr.treatment&quot;</code></pre>
+<pre class="r"><code># Parece que los valores altos corresponden a los 1 o + en el dataset, y 
+# los más bajos a los 0 o -.</code></pre>
+<ol start="2" style="list-style-type: lower-alpha">
+<li>Compute the correlation in the X matrix. Why are there some missing values in the matrix?</li>
+</ol>
+<pre class="r"><code>cor(mx)</code></pre>
+<pre><code>## Warning in cor(mx): the standard deviation is zero</code></pre>
+<pre><code>##             (Intercept) x1+ x2+ x3+ x4+
+## (Intercept)           1  NA  NA  NA  NA
+## x1+                  NA   1   0   0   0
+## x2+                  NA   0   1   0   0
+## x3+                  NA   0   0   1   0
+## x4+                  NA   0   0   0   1</code></pre>
+<pre class="r"><code># Hay valores perdidos porque corresponden a la intersección con el intercepto que tiene 1 como valor</code></pre>
+<ol start="3" style="list-style-type: lower-alpha">
+<li>What difference in resistance is expected when moving from the low to the high level of x1?</li>
+</ol>
+<pre class="r"><code># Nos piden el coeficiente de regresión de x1
+waferlm$coefficients</code></pre>
+<pre><code>## (Intercept)         x1+         x2+         x3+         x4+ 
+##    236.7813     25.7625    -69.8875     43.5875    -14.4875</code></pre>
+<pre class="r"><code># Vemos que la resistencia es 25.76 veces mayor cuando los valores son altos</code></pre>
+<ol start="4" style="list-style-type: lower-alpha">
+<li>Refit the model without x4 and examine the regression coefficients and standard errors? What stayed the the same as the original fit and what changed?</li>
+</ol>
+<pre class="r"><code>waferlm4&lt;-lm(resist ~ x1 + x2 + x3, data = wafer)
+summary(waferlm4)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = resist ~ x1 + x2 + x3, data = wafer)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -36.137 -20.550   3.575  18.463  41.012 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)   229.54      13.32  17.231 7.88e-10 ***
+## x1+            25.76      13.32   1.934 0.077047 .  
+## x2+           -69.89      13.32  -5.246 0.000206 ***
+## x3+            43.59      13.32   3.272 0.006677 ** 
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 26.64 on 12 degrees of freedom
+## Multiple R-squared:  0.7777, Adjusted R-squared:  0.7221 
+## F-statistic: 13.99 on 3 and 12 DF,  p-value: 0.0003187</code></pre>
+<pre class="r"><code># Comparamos
+summary(waferlm4)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = resist ~ x1 + x2 + x3, data = wafer)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -36.137 -20.550   3.575  18.463  41.012 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)   229.54      13.32  17.231 7.88e-10 ***
+## x1+            25.76      13.32   1.934 0.077047 .  
+## x2+           -69.89      13.32  -5.246 0.000206 ***
+## x3+            43.59      13.32   3.272 0.006677 ** 
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 26.64 on 12 degrees of freedom
+## Multiple R-squared:  0.7777, Adjusted R-squared:  0.7221 
+## F-statistic: 13.99 on 3 and 12 DF,  p-value: 0.0003187</code></pre>
+<pre class="r"><code>summary(waferlm)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = resist ~ x1 + x2 + x3 + x4, data = wafer)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -43.381 -17.119   4.825  16.644  33.769 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)   236.78      14.77  16.032 5.65e-09 ***
+## x1+            25.76      13.21   1.950 0.077085 .  
+## x2+           -69.89      13.21  -5.291 0.000256 ***
+## x3+            43.59      13.21   3.300 0.007083 ** 
+## x4+           -14.49      13.21  -1.097 0.296193    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 26.42 on 11 degrees of freedom
+## Multiple R-squared:  0.7996, Adjusted R-squared:  0.7267 
+## F-statistic: 10.97 on 4 and 11 DF,  p-value: 0.0007815</code></pre>
+<p>Vemos que los coeficientes no varían al eliminar x4 del modelo, probablemente debido a que son variables o experiencias independientes. Además x4 tiene un valor negativo, con lo cual afecta negativamente a la resistencia total, verificamos esto ya que al eliminar esta variable, la resistencia aumenta.</p>
+<ol start="5" style="list-style-type: lower-alpha">
+<li>Explain how the change in the regression coefficients is related to the correlation matrix of X.</li>
+</ol>
+<p>La matriz contiene muchos ceros, por lo tanto, la covarianza entre x4 y los valores de x1, x2, x3, es cero. Por eso al quitar x4 del modelo, los demás coeficientes no varían.</p>
+</div>
+</div>
+<div id="ejercicios-de-libro-de-carmona" class="section level2">
+<h2>Ejercicios de libro de Carmona</h2>
+<div id="ejercicio-2.1" class="section level3">
+<h3>Ejercicio 2.1</h3>
+<p>Una variable Y toma los valores y1, y2 y y3 en función de otra variable X con los valores x1, x2 y x3. Determinar cuales de los siguientes modelos son lineales y encontrar, en su caso, la matriz de diseño para x1=1, x2=2 y x3=3.</p>
+<ol style="list-style-type: lower-alpha">
+<li>y i = β 0 + β 1 x i + β 2 (x 2 i − 1) +  i</li>
+</ol>
+<pre class="r"><code># Es un modelo lineal
+
+matriz_a&lt;-matrix(c(1,1,(1^2-1),1,2,(2^2-1),1,3,(3^2-1)), nrow = 3, 
+                 byrow = T)
+matriz_a</code></pre>
+<pre><code>##      [,1] [,2] [,3]
+## [1,]    1    1    0
+## [2,]    1    2    3
+## [3,]    1    3    8</code></pre>
+</div>
 </div>
 
 
