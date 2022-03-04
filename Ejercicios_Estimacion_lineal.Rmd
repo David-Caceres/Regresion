@@ -433,3 +433,28 @@ matriz_a<-matrix(c(1,1,(1^2-1),1,2,(2^2-1),1,3,(3^2-1)), nrow = 3,
 matriz_a
 ```
 
+```{r}
+# Es un modelo lineal
+matriz_b<-matrix(c(1,1,exp(1),1,2,exp(2),1,3,exp(3)), nrow = 3, byrow = T)
+matriz_b
+```
+
+```{r}
+# No es lineal
+```
+
+### 2. (Ejercicio 2.4 del Capítulo 2 página 42)
+Cuatro objetos cuyos pesos exactos son β 1 , β 2 , β 3 y β 4 han sido pesados en una balanza de platillos
+de acuerdo con el siguiente esquema:
+
+```{r}
+# Nos están dando la matriz de diseño y los valores de la variable respuesta.
+# Construimos la matriz y sus respuestas
+
+x<-matrix(c(1,1,1,1,1,-1,1,1,1,0,0,1,1,0,0,-1,1,0,1,1,1,1,-1,1), nrow=6, byrow=T)
+x
+
+y<-c(9.2,8.3,5.4,-1.6,8.7,3.)
+    
+```
+

@@ -837,6 +837,31 @@ matriz_a</code></pre>
 ## [1,]    1    1    0
 ## [2,]    1    2    3
 ## [3,]    1    3    8</code></pre>
+<pre class="r"><code># Es un modelo lineal
+matriz_b&lt;-matrix(c(1,1,exp(1),1,2,exp(2),1,3,exp(3)), nrow = 3, byrow = T)
+matriz_b</code></pre>
+<pre><code>##      [,1] [,2]      [,3]
+## [1,]    1    1  2.718282
+## [2,]    1    2  7.389056
+## [3,]    1    3 20.085537</code></pre>
+<pre class="r"><code># No es lineal</code></pre>
+</div>
+<div id="ejercicio-2.4-del-capítulo-2-página-42" class="section level3">
+<h3>2. (Ejercicio 2.4 del Capítulo 2 página 42)</h3>
+<p>Cuatro objetos cuyos pesos exactos son β 1 , β 2 , β 3 y β 4 han sido pesados en una balanza de platillos de acuerdo con el siguiente esquema:</p>
+<pre class="r"><code># Nos están dando la matriz de diseño y los valores de la variable respuesta.
+# Construimos la matriz y sus respuestas
+
+x&lt;-matrix(c(1,1,1,1,1,-1,1,1,1,0,0,1,1,0,0,-1,1,0,1,1,1,1,-1,1), nrow=6, byrow=T)
+x</code></pre>
+<pre><code>##      [,1] [,2] [,3] [,4]
+## [1,]    1    1    1    1
+## [2,]    1   -1    1    1
+## [3,]    1    0    0    1
+## [4,]    1    0    0   -1
+## [5,]    1    0    1    1
+## [6,]    1    1   -1    1</code></pre>
+<pre class="r"><code>y&lt;-c(9.2,8.3,5.4,-1.6,8.7,3.)</code></pre>
 </div>
 </div>
 
