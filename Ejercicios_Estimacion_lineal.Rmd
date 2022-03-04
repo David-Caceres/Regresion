@@ -398,6 +398,20 @@ waferlm$coefficients
 stayed the the same as the original fit and what changed?
 
 ```{r}
+waferlm4<-lm(resist ~ x1 + x2 + x3, data = wafer)
+summary(waferlm4)
+```
+
+
+```{r}
+# Comparamos
+summary(waferlm4)
+summary(waferlm)
 
 ```
 
+Vemos que los coeficientes no varían al eliminar x4 del modelo, probablemente debido a que son variables o experiencias independientes. Además x4 tiene un valor negativo, con lo cual afecta negativamente a la resistencia total, verificamos esto ya que al eliminar esta variable, la resistencia aumenta.
+
+(e) Explain how the change in the regression coefficients is related to the correlation matrix of X.
+
+La matriz contiene muchos ceros, por lo tanto, la covarianza entre x4 y los valores de x1, x2, x3, es cero. Por eso al quitar x4 del modelo, los demás coeficientes no varían.
