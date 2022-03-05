@@ -882,6 +882,105 @@ names(lmodsumpesos2)</code></pre>
 <pre><code>## [1] 0.08371429</code></pre>
 </div>
 </div>
+<div id="ejercicios-opcionales" class="section level1">
+<h1>Ejercicios opcionales</h1>
+<div id="ejercicio-3-cap.-2-pág.-30" class="section level3">
+<h3>3. (∗) (Ejercicio 3 cap. 2 pág. 30)</h3>
+<p>In this question, we investigate the relative merits of methods for computing the coefficients. Generate some artificial data by:</p>
+<pre class="r"><code>x &lt;- 1:20
+y &lt;- x+rnorm(20)</code></pre>
+<p>Fit a polynomial in x for predicting y. Compute β̂ in two ways — by lm() and by using the direct cal- culation described in the chapter. At what degree of polynomial does the direct calculation method fail? (Note the need for the I() function in fitting the polynomial, that is, lm(y ~ x + I(x^2)).</p>
+<pre class="r"><code># Construimos la recta con el polinomiony hayamos los coeficientes
+recta2&lt;-lm(y ~ x + I(x^2))
+coef(recta2)</code></pre>
+<pre><code>## (Intercept)           x      I(x^2) 
+## -0.04810379  1.03367947 -0.00168555</code></pre>
+<pre class="r"><code># Pide también el método directo
+matriz&lt;-model.matrix(recta2)
+solve(t(matriz) %*% matriz) %*% t(matriz) %*% y</code></pre>
+<pre><code>##                    [,1]
+## (Intercept) -0.04810379
+## x            1.03367947
+## I(x^2)      -0.00168555</code></pre>
+<p>Para 3</p>
+<pre class="r"><code>recta3&lt;-lm(y ~ x + I(x^2) + I(x^3))
+coef(recta3)</code></pre>
+<pre><code>##   (Intercept)             x        I(x^2)        I(x^3) 
+## -2.666741e-02  1.022741e+00 -4.146179e-04 -4.034704e-05</code></pre>
+<pre class="r"><code>matriz&lt;-model.matrix(recta3)
+cbind(coef(recta3),solve(t(matriz) %*% matriz) %*% t(matriz) %*% y)</code></pre>
+<pre><code>##                      [,1]          [,2]
+## (Intercept) -2.666741e-02 -2.666741e-02
+## x            1.022741e+00  1.022741e+00
+## I(x^2)      -4.146179e-04 -4.146179e-04
+## I(x^3)      -4.034704e-05 -4.034704e-05</code></pre>
+<p>Para 4</p>
+<pre class="r"><code>recta4&lt;-lm(y ~ x + I(x^2) + I(x^3) + I(x^4))
+coef(recta4)</code></pre>
+<pre><code>##   (Intercept)             x        I(x^2)        I(x^3)        I(x^4) 
+## -1.461174e-02  1.013310e+00  1.493780e-03 -1.793287e-04  3.309088e-06</code></pre>
+<pre class="r"><code>matriz&lt;-model.matrix(recta4)
+cbind(coef(recta4),solve(t(matriz) %*% matriz) %*% t(matriz) %*% y)</code></pre>
+<pre><code>##                      [,1]          [,2]
+## (Intercept) -1.461174e-02 -1.461174e-02
+## x            1.013310e+00  1.013310e+00
+## I(x^2)       1.493780e-03  1.493780e-03
+## I(x^3)      -1.793287e-04 -1.793287e-04
+## I(x^4)       3.309088e-06  3.309088e-06</code></pre>
+<p>Para 5</p>
+<pre class="r"><code>recta5&lt;-lm(y ~ x + I(x^2) + I(x^3) + I(x^4) + I(x^5))
+coef(recta5)</code></pre>
+<pre><code>##   (Intercept)             x        I(x^2)        I(x^3)        I(x^4) 
+##  2.844486e-01  6.946455e-01  9.768363e-02 -1.192109e-02  6.238888e-04 
+##        I(x^5) 
+## -1.182057e-05</code></pre>
+<pre class="r"><code>matriz&lt;-model.matrix(recta5)
+cbind(coef(recta5),solve(t(matriz) %*% matriz) %*% t(matriz) %*% y)</code></pre>
+<pre><code>##                      [,1]          [,2]
+## (Intercept)  2.844486e-01  2.844486e-01
+## x            6.946455e-01  6.946455e-01
+## I(x^2)       9.768363e-02  9.768363e-02
+## I(x^3)      -1.192109e-02 -1.192109e-02
+## I(x^4)       6.238888e-04  6.238888e-04
+## I(x^5)      -1.182057e-05 -1.182057e-05</code></pre>
+<p>Para 6</p>
+<pre class="r"><code>recta6&lt;-lm(y ~ x + I(x^2) + I(x^3) + I(x^4) + I(x^5) + I(x^6))
+coef(recta6)</code></pre>
+<pre><code>##   (Intercept)             x        I(x^2)        I(x^3)        I(x^4) 
+## -1.478721e-03  1.078580e+00 -5.970229e-02  1.608700e-02 -1.800132e-03 
+##        I(x^5)        I(x^6) 
+##  8.858868e-05 -1.593798e-06</code></pre>
+<pre class="r"><code>matriz&lt;-model.matrix(recta6)</code></pre>
+</div>
+<div id="ejercicio-8-cap.-2-pág.-31" class="section level3">
+<h3>8. (∗) (Ejercicio 8 cap. 2 pág. 31)</h3>
+<p>An experiment was conducted to examine factors that might affect the height of leaf springs in the suspension of trucks. The data may be found in truck. The five factors in the experiment are set to − and + but it will be more convenient for us to use −1 and +1. This can be achieved for the first factor by:</p>
+<pre class="r"><code>truck$B &lt;- sapply(truck$B, function(x) ifelse(x == &quot;-&quot;,-1,1))
+truck$C &lt;- sapply(truck$C, function(x) ifelse(x == &quot;-&quot;,-1,1))
+truck$D &lt;- sapply(truck$D, function(x) ifelse(x == &quot;-&quot;,-1,1))
+truck$E &lt;- sapply(truck$E, function(x) ifelse(x == &quot;-&quot;,-1,1))
+truck$O &lt;- sapply(truck$O, function(x) ifelse(x == &quot;-&quot;,-1,1))</code></pre>
+<ol style="list-style-type: lower-alpha">
+<li>Fit a linear model for the height in terms of the five factors. Report on the value of the regression coefficients.</li>
+</ol>
+<pre class="r"><code>lmodt&lt;-lm(height ~ B + C + D + E + O, data = truck)
+lmodt$coefficients</code></pre>
+<pre><code>## (Intercept)           B           C           D           E           O 
+##   7.6360417   0.1106250  -0.0881250  -0.0143750   0.0518750  -0.1297917</code></pre>
+<ol start="2" style="list-style-type: lower-alpha">
+<li>Fit a linear model using just factors B, C, D and E and report the coefficients. How do these com- pare to the previous question? Show how we could have anticipated this result by examining the X matrix.</li>
+</ol>
+<pre class="r"><code>lmodt2&lt;- lm(height ~ B + C + D + E, data = truck)
+lmodt2$coefficients</code></pre>
+<pre><code>## (Intercept)           B           C           D           E 
+##    7.636042    0.110625   -0.088125   -0.014375    0.051875</code></pre>
+<pre class="r"><code># Los coeficientes son idénticos al modelo anterior, lo cual es lógico teniendo
+# en cuenta que &quot;O&quot; tiene todos los valores negativos y no influye sobre el peso</code></pre>
+<ol start="3" style="list-style-type: lower-alpha">
+<li>Construct a new predictor called A which is set to B+C+D+E. Fit a linear model with the predictors A, B, C, D, E and O. Do coefficients for all six predictors appear in the regression summary? Explain.</li>
+</ol>
+</div>
+</div>
 
 
 

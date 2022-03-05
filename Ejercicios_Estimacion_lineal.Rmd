@@ -475,3 +475,122 @@ lmodsumpesos2$sigma^2
 ```
 
 
+# Ejercicios opcionales
+
+### 3. (∗) (Ejercicio 3 cap. 2 pág. 30)
+In this question, we investigate the relative merits of methods for computing the coefficients. Generate some artificial data by:
+
+```{r}
+x <- 1:20
+y <- x+rnorm(20)
+```
+
+Fit a polynomial in x for predicting y. Compute β̂ in two ways — by lm() and by using the direct cal-
+culation described in the chapter. At what degree of polynomial does the direct calculation method
+fail? (Note the need for the I() function in fitting the polynomial, that is, lm(y ~ x + I(x^2)).
+
+```{r}
+# Construimos la recta con el polinomiony hayamos los coeficientes
+recta2<-lm(y ~ x + I(x^2))
+coef(recta2)
+```
+
+
+```{r}
+# Pide también el método directo
+matriz<-model.matrix(recta2)
+solve(t(matriz) %*% matriz) %*% t(matriz) %*% y
+```
+
+Para 3
+
+```{r}
+recta3<-lm(y ~ x + I(x^2) + I(x^3))
+coef(recta3)
+```
+
+
+```{r}
+matriz<-model.matrix(recta3)
+cbind(coef(recta3),solve(t(matriz) %*% matriz) %*% t(matriz) %*% y)
+```
+
+Para 4
+
+```{r}
+recta4<-lm(y ~ x + I(x^2) + I(x^3) + I(x^4))
+coef(recta4)
+```
+
+
+```{r}
+matriz<-model.matrix(recta4)
+cbind(coef(recta4),solve(t(matriz) %*% matriz) %*% t(matriz) %*% y)
+```
+
+Para 5
+
+```{r}
+recta5<-lm(y ~ x + I(x^2) + I(x^3) + I(x^4) + I(x^5))
+coef(recta5)
+```
+
+
+```{r}
+matriz<-model.matrix(recta5)
+cbind(coef(recta5),solve(t(matriz) %*% matriz) %*% t(matriz) %*% y)
+```
+
+Para 6
+
+```{r}
+recta6<-lm(y ~ x + I(x^2) + I(x^3) + I(x^4) + I(x^5) + I(x^6))
+coef(recta6)
+```
+
+
+```{r}
+matriz<-model.matrix(recta6)
+
+```
+
+
+
+### 8. (∗) (Ejercicio 8 cap. 2 pág. 31)
+An experiment was conducted to examine factors that might affect the height of leaf springs in the
+suspension of trucks. The data may be found in truck. The five factors in the experiment are set
+to − and + but it will be more convenient for us to use −1 and +1. This can be achieved for the
+first factor by:
+
+```{r}
+truck$B <- sapply(truck$B, function(x) ifelse(x == "-",-1,1))
+truck$C <- sapply(truck$C, function(x) ifelse(x == "-",-1,1))
+truck$D <- sapply(truck$D, function(x) ifelse(x == "-",-1,1))
+truck$E <- sapply(truck$E, function(x) ifelse(x == "-",-1,1))
+truck$O <- sapply(truck$O, function(x) ifelse(x == "-",-1,1))
+```
+(a) Fit a linear model for the height in terms of the five factors. Report on the value of the
+regression coefficients.
+
+```{r}
+lmodt<-lm(height ~ B + C + D + E + O, data = truck)
+lmodt$coefficients
+```
+
+(b) Fit a linear model using just factors B, C, D and E and report the coefficients. How do these com-
+pare to the previous question? Show how we could have anticipated this result by examining
+the X matrix.
+
+```{r}
+lmodt2<- lm(height ~ B + C + D + E, data = truck)
+lmodt2$coefficients
+
+
+# Los coeficientes son idénticos al modelo anterior, lo cual es lógico teniendo
+# en cuenta que "O" tiene todos los valores negativos y no influye sobre el peso
+```
+
+(c) Construct a new predictor called A which is set to B+C+D+E. Fit a linear model with the
+predictors A, B, C, D, E and O. Do coefficients for all six predictors appear in the regression
+summary? Explain.
+
