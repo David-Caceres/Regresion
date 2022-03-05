@@ -631,3 +631,24 @@ backsolve(qr.R(qrx),f)
 # QR no va bien aquí
 ```
 
+(f) Use the function qr.coef to correctly compute β̂.
+
+```{r}
+qr.coef(qrx, height)
+```
+
+
+## Ejercicios del libro de Carmona
+
+### 3. (∗) (Ejercicio 3.2 del Capítulo 3 página 54)
+En un modelo lineal, la matriz de diseño es
+
+
+1 1 1 1 1
+1 0 1 0 0
+1 1 1 0 0
+1 0 1 1 1
+
+
+Hallar la expresión general de las funciones paramétricas estimables
+
