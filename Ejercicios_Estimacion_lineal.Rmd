@@ -551,7 +551,7 @@ coef(recta6)
 
 ```{r}
 matriz<-model.matrix(recta6)
-
+cbind(coef(recta6),solve(t(matriz) %*% matriz) %*% t(matriz) %*% y)
 ```
 
 
@@ -584,13 +584,50 @@ the X matrix.
 ```{r}
 lmodt2<- lm(height ~ B + C + D + E, data = truck)
 lmodt2$coefficients
-
-
 # Los coeficientes son idénticos al modelo anterior, lo cual es lógico teniendo
 # en cuenta que "O" tiene todos los valores negativos y no influye sobre el peso
+
+# Comprobamos la matriz x
+x<-model.matrix(lmodt)
+t(x) %*% x
+
+# Vemos que hay ortogonalidad, y que los coeficientes son independientes.
 ```
 
 (c) Construct a new predictor called A which is set to B+C+D+E. Fit a linear model with the
 predictors A, B, C, D, E and O. Do coefficients for all six predictors appear in the regression
 summary? Explain.
+
+```{r}
+attach(truck)
+A<-B+C+D+E
+lmodt3<-lm(height ~ A + B + C + D + E + O, data = truck)
+lmodt3$coefficients
+
+# En este modelo, una de las variables es combinación de otras, así que el
+# rango de la matriz de diseño no es máximo y no podemos calcular todas las betas
+```
+
+
+(d) Extract the model matrix X from the previous model. Attempt to compute β̂ from (X 0 X) −1 X 0 y.
+What went wrong and why?
+
+```{r}
+x<-model.matrix(lmodt3)
+solve(t(x) %*% x)
+
+# La matriz no es de rango máximo y no tiene inversa
+```
+
+
+(e) Use the QR decomposition method as seen in Section 2.7 to compute β̂. Are the results satisfactory?
+
+```{r}
+qrx<-qr(x)
+(f <- t(qr.Q(qrx)) %*% height)
+backsolve(qr.R(qrx),f)
+
+# Los coeficientes no son iguales y tienen valores muy altos, la descomposición
+# QR no va bien aquí
+```
 
