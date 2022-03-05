@@ -454,7 +454,24 @@ de acuerdo con el siguiente esquema:
 x<-matrix(c(1,1,1,1,1,-1,1,1,1,0,0,1,1,0,0,-1,1,0,1,1,1,1,-1,1), nrow=6, byrow=T)
 x
 
-y<-c(9.2,8.3,5.4,-1.6,8.7,3.)
+y<-c(9.2,8.3,5.4,-1.6,8.7,3.5)
     
 ```
+
+Hallar las estimaciones de cada β i y de la varianza del error.
+
+```{r}
+# Primero calculamos las betas
+solve(crossprod(x,x),crossprod(x,y))
+```
+
+```{r}
+# La varianza del error a partir del modelo lineal sin intercept
+x1 <- x[,1]; x2 <- x[,2]; x3 <- x[,3]; x4 <- x[,4]
+lmodpesos2<-lm(y ~ 0 + x1 + x2 + x3 + x4)
+lmodsumpesos2<-summary(lmodpesos2)
+names(lmodsumpesos2)
+lmodsumpesos2$sigma^2
+```
+
 
