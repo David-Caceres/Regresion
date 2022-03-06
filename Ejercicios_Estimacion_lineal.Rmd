@@ -652,3 +652,11 @@ En un modelo lineal, la matriz de diseño es
 
 Hallar la expresión general de las funciones paramétricas estimables
 
+```{r}
+# Creamos la matriz y comprobamos su rango
+matriz<-matrix(c(1,1,1,1,1,1,0,1,0,0,1,1,1,0,0,1,0,1,1,1),byrow = T, ncol=5)
+qr(matriz)$rank
+
+# Es de rango 3, con lo cual no es máximo
+```
+
