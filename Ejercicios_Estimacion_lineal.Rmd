@@ -551,9 +551,11 @@ coef(recta6)
 
 ```{r}
 matriz<-model.matrix(recta6)
-cbind(coef(recta6),solve(t(matriz) %*% matriz) %*% t(matriz) %*% y)
 ```
 
+```{r eval=FALSE, include=FALSE}
+cbind(coef(recta6),solve(t(matriz) %*% matriz) %*% t(matriz) %*% y)
+```
 
 
 ### 8. (∗) (Ejercicio 8 cap. 2 pág. 31)
@@ -614,11 +616,14 @@ What went wrong and why?
 
 ```{r}
 x<-model.matrix(lmodt3)
+```
+
+```{r eval=FALSE, include=FALSE}
 solve(t(x) %*% x)
 
 # La matriz no es de rango máximo y no tiene inversa
-```
 
+```
 
 (e) Use the QR decomposition method as seen in Section 2.7 to compute β̂. Are the results satisfactory?
 
@@ -697,7 +702,7 @@ y 2 = β 1 + β 3 + ϵ2
 y 3 = β 1 + β 2 + ϵ3
 
 
-1) ¿Es la función paramétrica ψ = β 1 + β 2 + β 3 estimable?
+1) ¿Es la función paramétrica ψ = β1 + β2 + β3 estimable?
 
 ```{r}
 
@@ -800,5 +805,132 @@ a0 = a4 + a5
 
 a0µ + a1 α1 + a2 α2 + a3 α3 + a4 β1 + a5 β2 es estimable cuando se cumplen las 
 2 ecuaciones anteriores.
+
+
+#### (b) ¿Es α 1 + α 2 estimable?
+
+Para esta función los coeficientes son: (a0,a1,a2,a3,a4,a5)= (0,1,1,0,0,0)
+
+Usando las ecuaciones anteriores
+
+a0 = a1 + a2 + a3
+
+a0 = a4 + a5
+
+Vemos que 
+
+0 = 1 + 1 + 0, no se cumple, así que no es estimable
+
+
+#### (c) ¿Es β 1 − β 2 estimable?
+
+Para esta función los coeficientes son: (a0,a1,a2,a3,a4,a5)= (0,0,0,0,1,-1)
+
+0 = 0 + 0 + 0
+0 = 1 -1
+
+Sería estimable
+
+#### (d) ¿Es µ + α 1 estimable?
+
+Para esta función los coeficientes son: (a0,a1,a2,a3,a4,a5)= (1,1,0,0,0,0)
+
+
+1 = 1 + 0 + 0
+1 = 0 + 0 
+
+No estimable
+
+#### (e) ¿Es 6µ + 2α1 + 2α2 + 2α3 + 3β1 + 3β2 estimable?
+
+Para esta función los coeficientes son: (a0,a1,a2,a3,a4,a5)= (6,2,2,2,3,3)
+
+6 = 2 + 2 + 2
+6 = 3 + 3
+
+Es estimable
+
+#### (f) ¿Es α1 − 2α2 + α3 estimable?
+
+Para esta función los coeficientes son: (a0,a1,a2,a3,a4,a5)= (0,1,-2,1,0,0)
+
+0 = 1 - 2 + 1
+0 = 0 + 0
+
+Es estimable
+
+#### (g) Hallar la covarianza entre los estimadores lineales MC de las funciones paramétricas β1 − β2 y α1 − α2
+
+Comprobamos que la segunda función sea estimable, la primera ya lo es.
+
+(0,1,-1,0,0,0,0)
+
+0 = 1 - 1 + 0
+0 = 0 + 0
+
+Es estimable
+
+La matriz de covarianzas es igual a:
+
+Σ = cov(β) = σ2 (X  X)⁻
+
+De este modo, podemos calcular la covarianza:
+
+cov(β1−β2,α1 − α2) = cov(β1,α1) − cov(β1,α2) − cov(β2,α1) + cov(β 2 , α2 ) = σ52 − σ53 − σ62 + σ63
+
+```{r}
+library(MASS)
+ginvxtx<-ginv(t(matriz) %*% matriz)
+ginvxtx[5,2] - ginvxtx[5,3] - ginvxtx[6,2] + ginvxtx[6,2]
+```
+
+#### (h) Hallar la dimensión del espacio paramétrico.
+
+La dimensión del espacio paramétrico es igual al rango de la matriz de diseño
+
+```{r}
+qr(matriz[c(1,2,4,5),])$rank
+```
+
+#### (i) Obtener una expresión del espacio de los errores.
+
+
+### Ejercicio 3.10
+Un transportista realiza diversos trayectos entre tres poblaciones A, B y C. En cuatro días consecutivos
+ha hecho los recorridos que muestra la siguiente tabla:
+
+trayecto
+A → B → A → C
+C → A → C → B
+B → C → A → C → A → B → A
+A → B → A → C → A → B → A
+
+km
+533
+583
+1111
+1069
+donde el kilometraje es, por diversas razones, aproximado.
+
+
+#### (a) Proponer un modelo lineal, con la matriz de diseño y las hipótesis necesarias, para estimar las
+distancias kilométricas entre las tres poblaciones.
+Con los datos proporcionados, ¿es posible estimar las distancias entre las tres poblaciones? ¿Cuales son
+las distancias o funciones paramétricas estimables (fpe) en este modelo?
+
+Partiendo de la idea de que la distancia de una ciudad a otra es la misma en los 
+dos trayectos tenemos:
+
+ α = d(A,B)
+ β = d(A,C)
+ γ = d(B,C)
+ 
+ El modelo lineal es:
+ 
+ 533 = 2α + β + ε1
+ 583 = 2β + γ + ε2
+1111 = 2α + 3β + γ + ε3
+1069 = 4α + 2β + ε4
+
 
 
