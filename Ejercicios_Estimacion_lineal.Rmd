@@ -1,6 +1,6 @@
 ---
 title: "Ejercicios_Estimacion_lineal"
-author: "David Caceres"
+author: "David Caceres Gallardo"
 date: "28/2/2022"
 output: html_document
 ---
@@ -695,15 +695,15 @@ Las ecuaciones paramétricas estimables cumplirán;
 a=c y d=e
 
 
-### Ejercicio 3.7
+### 4. (∗) (Ejercicio 3.7 del Capítulo 3 página 55)
 Consideremos el modelo lineal
 
-y 1 = β 1 + β 2 + ϵ1
-y 2 = β 1 + β 3 + ϵ2
-y 3 = β 1 + β 2 + ϵ3
+y1 = β1 + β2 + ϵ1
+y2 = β1 + β3 + ϵ2
+y3 = β1 + β2 + ϵ3
 
 
-1) ¿Es la función paramétrica ψ = β1 + β2 + β3 estimable?
+#### 1) ¿Es la función paramétrica ψ = β1 + β2 + β3 estimable?
 
 ```{r}
 
@@ -721,7 +721,7 @@ qr(matriz2)$rank
 ```
 
 
-2) Probar que toda función paramétrica
+#### 2) Probar que toda función paramétrica
 
 ψ = a1 β1 + a2 β2 + a3 β3
 
@@ -742,7 +742,7 @@ El resultado verifica que a1 = a2 + a3
 
 
 
-### Ejercicio 3.8
+### 5. (∗) (Ejercicio 3.8 del Capítulo 3 página 56)
 
 Consideremos el modelo lineal
 y1 = µ + α1 + β1 + ϵ1
@@ -753,7 +753,7 @@ y5 = µ + α3 + β1 + ϵ5
 y6 = µ + α3 + β2 + ϵ6
 
 
-(a) ¿Cuando es a0µ + a1 α1 + a2 α2 + a3 α3 + a4 β1 + a5 β2 estimable?
+#### (a) ¿Cuando es a0µ + a1 α1 + a2 α2 + a3 α3 + a4 β1 + a5 β2 estimable?
 
 
 ```{r}
@@ -896,7 +896,7 @@ qr(matriz[c(1,2,4,5),])$rank
 #### (i) Obtener una expresión del espacio de los errores.
 
 
-### Ejercicio 3.10
+### 6. (∗) (Ejercicio 3.10 del Capítulo 3 página 56)
 Un transportista realiza diversos trayectos entre tres poblaciones A, B y C. En cuatro días consecutivos
 ha hecho los recorridos que muestra la siguiente tabla:
 
