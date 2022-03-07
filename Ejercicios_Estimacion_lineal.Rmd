@@ -715,4 +715,90 @@ qr(matriz2)$rank
 ```
 
 
+2) Probar que toda función paramétrica
+
+ψ = a1 β1 + a2 β2 + a3 β3
+
+es estimable si y sólo si a1 = a2 + a3.
+
+Partiendo de la misma matriz que en el apartado anterior, tomamos 2 filas 
+independientes para rango 2
+
+(a1,a2,a3) =λ1 (1,1,0) + λ2(1,0,1)
+
+Sistema de ecuaciones:
+
+a1 =  λ1 + λ2
+a2 =  λ1
+a3 =  λ2
+
+El resultado verifica que a1 = a2 + a3
+
+
+
+### Ejercicio 3.8
+
+Consideremos el modelo lineal
+y1 = µ + α1 + β1 + ϵ1
+y2 = µ + α1 + β2 + ϵ2
+y3 = µ + α2 + β1 + ϵ3
+y4 = µ + α2 + β2 + ϵ4
+y5 = µ + α3 + β1 + ϵ5
+y6 = µ + α3 + β2 + ϵ6
+
+
+(a) ¿Cuando es a0µ + a1 α1 + a2 α2 + a3 α3 + a4 β1 + a5 β2 estimable?
+
+
+```{r}
+# Creamos la matriz y vemos su rango
+
+matriz<-matrix(c(1,1,0,0,1,0,
+                 1,1,0,0,0,1,
+                 1,0,1,0,1,0,
+                 1,0,1,0,0,1,
+                 1,0,0,1,1,0,
+                 1,0,0,1,0,1), byrow = T, ncol = 6)
+qr(matriz)$rank
+```
+
+Es de rango 4, y vemos que la suma de las columnas 2-4 es igual a la primera,
+lo mismo pasa con la 5ª y 6ª.
+
+```{r}
+# Buscamos 4 columnas linealmente independientes
+
+qr(matriz[1:4,])$rank
+# No
+qr(matriz[c(1,2,5,6)])$rank
+# No
+qr(matriz[c(1,2,4,5),])$rank
+# Si
+
+```
+
+
+
+(a0,a1,a2,a3,a4,a5) = λ1(1,1,0,0,1,0) + λ2(1,1,0,0,0,1) + λ3(1,0,1,0,1,0) + 
+λ4(1,0,0,1,1,0)
+
+a0 = λ1 + λ2 + λ3 + λ4
+a1 = λ1 + λ2
+a2 = λ3
+a3 = λ4
+a4 = λ1 + λ3 + λ4
+a5 = λ2
+
+Necesitamos 6-4 = 2 ecuaciones
+
+Así que:
+
+a0 = a1 + a2 + a3
+
+a0 = a4 + a5
+
+
+a0µ + a1 α1 + a2 α2 + a3 α3 + a4 β1 + a5 β2 es estimable cuando se cumplen las 
+2 ecuaciones anteriores.
+
 
