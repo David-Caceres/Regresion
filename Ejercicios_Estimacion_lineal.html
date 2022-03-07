@@ -223,9 +223,8 @@ summary(lmod)</code></pre>
 ## Residual standard error: 22.69 on 42 degrees of freedom
 ## Multiple R-squared:  0.5267, Adjusted R-squared:  0.4816 
 ## F-statistic: 11.69 on 4 and 42 DF,  p-value: 1.815e-06</code></pre>
-<ol style="list-style-type: lower-alpha">
-<li>What percentage of variation in the response is explained by these predictors?</li>
-</ol>
+<div id="a-what-percentage-of-variation-in-the-response-is-explained-by-these-predictors" class="section level4">
+<h4>(a) What percentage of variation in the response is explained by these predictors?</h4>
 <pre class="r"><code># El porcentaje de variación de la respuesta es R²
 
 lmodsum&lt;-summary(lmod)
@@ -259,9 +258,9 @@ names(lmodsum)</code></pre>
 <pre class="r"><code># Lo piden en porcentaje
 lmodsum$r.squared*100</code></pre>
 <pre><code>## [1] 52.67234</code></pre>
-<ol start="2" style="list-style-type: lower-alpha">
-<li>Which observation has the largest (positive) residual? Give the case number.</li>
-</ol>
+</div>
+<div id="b-which-observation-has-the-largest-positive-residual-give-the-case-number." class="section level4">
+<h4>(b) Which observation has the largest (positive) residual? Give the case number.</h4>
 <pre class="r"><code>e&lt;-lmodsum$residuals
 max(e)</code></pre>
 <pre><code>## [1] 94.25222</code></pre>
@@ -269,30 +268,32 @@ max(e)</code></pre>
 which.max(e)</code></pre>
 <pre><code>## 24 
 ## 24</code></pre>
-<ol start="3" style="list-style-type: lower-alpha">
-<li>Compute the mean and median of the residuals.</li>
-</ol>
+</div>
+<div id="c-compute-the-mean-and-median-of-the-residuals." class="section level4">
+<h4>(c) Compute the mean and median of the residuals.</h4>
 <pre class="r"><code>mean(e)</code></pre>
 <pre><code>## [1] 4.084351e-16</code></pre>
 <pre class="r"><code>median(e)</code></pre>
 <pre><code>## [1] -1.451392</code></pre>
-<ol start="4" style="list-style-type: lower-alpha">
-<li>Compute the correlation of the residuals with the fitted values.</li>
-</ol>
+</div>
+<div id="d-compute-the-correlation-of-the-residuals-with-the-fitted-values." class="section level4">
+<h4>(d) Compute the correlation of the residuals with the fitted values.</h4>
 <pre class="r"><code>cor(lmod$residuals,lmod$fitted.values)</code></pre>
 <pre><code>## [1] -1.141381e-16</code></pre>
-<ol start="5" style="list-style-type: lower-alpha">
-<li>Compute the correlation of the residuals with the income.</li>
-</ol>
+</div>
+<div id="e-compute-the-correlation-of-the-residuals-with-the-income." class="section level4">
+<h4>(e) Compute the correlation of the residuals with the income.</h4>
 <pre class="r"><code>cor(lmod$residuals, teengamb$income)</code></pre>
 <pre><code>## [1] -8.514748e-17</code></pre>
-<ol start="6" style="list-style-type: lower-alpha">
-<li>For all other predictors held constant, what would be the difference in predicted expenditure on gambling for a male compared to a female?</li>
-</ol>
+</div>
+<div id="f-for-all-other-predictors-held-constant-what-would-be-the-difference-in-predicted-expenditure" class="section level4">
+<h4>(f) For all other predictors held constant, what would be the difference in predicted expenditure</h4>
+<p>on gambling for a male compared to a female?</p>
 <pre class="r"><code># Nos piden el coeficiente de regresión para la varaible sex
 lmod$coefficients[&quot;sexfemale&quot;]</code></pre>
 <pre><code>## sexfemale 
 ## -22.11833</code></pre>
+</div>
 </div>
 <div id="ejercicio-2" class="section level3">
 <h3>Ejercicio 2</h3>
@@ -537,16 +538,17 @@ head(cheddar)</code></pre>
 ## 4  47.9  5.759 7.496   1.81
 ## 5   5.6  4.663 3.807   0.99
 ## 6  25.9  5.697 7.601   1.09</code></pre>
-<ol style="list-style-type: lower-alpha">
-<li>Fit a regression model with taste as the response and the three chemical contents as predictors. Report the values of the regression coefficients.</li>
-</ol>
+<div id="a-fit-a-regression-model-with-taste-as-the-response-and-the-three-chemical-contents-as-predictors." class="section level4">
+<h4>(a) Fit a regression model with taste as the response and the three chemical contents as predictors.</h4>
+<p>Report the values of the regression coefficients.</p>
 <pre class="r"><code>cheddarlm&lt;-lm(taste ~ Acetic + H2S + Lactic, data=cheddar)
 cheddarlm$coefficients</code></pre>
 <pre><code>## (Intercept)      Acetic         H2S      Lactic 
 ## -28.8767696   0.3277413   3.9118411  19.6705434</code></pre>
-<ol start="2" style="list-style-type: lower-alpha">
-<li>Compute the correlation between the fitted values and the response. Square it. Identify where this value appears in the regression output.</li>
-</ol>
+</div>
+<div id="b-compute-the-correlation-between-the-fitted-values-and-the-response.-square-it.-identify-where" class="section level4">
+<h4>(b) Compute the correlation between the fitted values and the response. Square it. Identify where</h4>
+<p>this value appears in the regression output.</p>
 <pre class="r"><code>attach(cheddar)
 correlacion&lt;-cor(fitted.values(cheddarlm),taste)
 correlacion^2</code></pre>
@@ -573,9 +575,10 @@ correlacion^2</code></pre>
 ## Multiple R-squared:  0.6518, Adjusted R-squared:  0.6116 
 ## F-statistic: 16.22 on 3 and 26 DF,  p-value: 3.81e-06</code></pre>
 <pre class="r"><code># El cuadrado de la correlación coincide con el coeficiente de determinación o R² </code></pre>
-<ol start="3" style="list-style-type: lower-alpha">
-<li>Fit the same regression model but without an intercept term. What is the value of R 2 reported in the output? Compute a more reasonable measure of the good- ness of fit for this example.</li>
-</ol>
+</div>
+<div id="c-fit-the-same-regression-model-but-without-an-intercept-term.-what-is-the-value-of-r-2-reported" class="section level4">
+<h4>(c) Fit the same regression model but without an intercept term. What is the value of R 2 reported</h4>
+<p>in the output? Compute a more reasonable measure of the good- ness of fit for this example.</p>
 <pre class="r"><code>cheddarlm2&lt;-lm(taste ~ 0 + Acetic + H2S + Lactic, data = cheddar)
 summary(cheddarlm2)</code></pre>
 <pre><code>## 
@@ -608,9 +611,10 @@ names(cheddarlm2sum)</code></pre>
 <pre class="r"><code># El ajuste en este segundo modelo es mejor que en el primero a priori, pero 
 # tenemos que tener en cuenta que cuando no se usa el intecepto, las fórmulas 
 # para clacular R² varían y no son comparables.</code></pre>
-<ol start="4" style="list-style-type: lower-alpha">
-<li>Compute the regression coefficients from the original fit using the QR decomposition showing your R code.</li>
-</ol>
+</div>
+<div id="d-compute-the-regression-coefficients-from-the-original-fit-using-the-qr-decomposition-showing" class="section level4">
+<h4>(d) Compute the regression coefficients from the original fit using the QR decomposition showing</h4>
+<p>your R code.</p>
 <pre class="r"><code>x&lt;-model.matrix(~ Acetic + H2S + Lactic, data = cheddar)
 y&lt;- cheddar$taste
 qrx&lt;-qr(x)
@@ -651,6 +655,7 @@ summary(cheddarlm)</code></pre>
 ## Multiple R-squared:  0.6518, Adjusted R-squared:  0.6116 
 ## F-statistic: 16.22 on 3 and 26 DF,  p-value: 3.81e-06</code></pre>
 </div>
+</div>
 <div id="ejercicio-7-cap.-2-pág.-31" class="section level3">
 <h3>7. (Ejercicio 7 cap. 2 pág. 31)</h3>
 <p>An experiment was conducted to determine the effect of four factors on the resistivity of a semi- conductor wafer. The data is found in wafer where each of the four factors is coded as − or + depending on whether the low or the high setting for that factor was used. Fit the linear model resist ~ x1 + x2 + x3 + x4.</p>
@@ -686,9 +691,9 @@ summary(waferlm)</code></pre>
 ## Residual standard error: 26.42 on 11 degrees of freedom
 ## Multiple R-squared:  0.7996, Adjusted R-squared:  0.7267 
 ## F-statistic: 10.97 on 4 and 11 DF,  p-value: 0.0007815</code></pre>
-<ol style="list-style-type: lower-alpha">
-<li>Extract the X matrix using the model.matrix function. Examine this to determine how the low and high levels have been coded in the model.</li>
-</ol>
+<div id="a-extract-the-x-matrix-using-the-model.matrix-function.-examine-this-to-determine-how-the" class="section level4">
+<h4>(a) Extract the X matrix using the model.matrix function. Examine this to determine how the</h4>
+<p>low and high levels have been coded in the model.</p>
 <pre class="r"><code>mx&lt;-model.matrix(waferlm)
 mx</code></pre>
 <pre><code>##    (Intercept) x1+ x2+ x3+ x4+
@@ -724,9 +729,9 @@ mx</code></pre>
 ## [1] &quot;contr.treatment&quot;</code></pre>
 <pre class="r"><code># Parece que los valores altos corresponden a los 1 o + en el dataset, y 
 # los más bajos a los 0 o -.</code></pre>
-<ol start="2" style="list-style-type: lower-alpha">
-<li>Compute the correlation in the X matrix. Why are there some missing values in the matrix?</li>
-</ol>
+</div>
+<div id="b-compute-the-correlation-in-the-x-matrix.-why-are-there-some-missing-values-in-the-matrix" class="section level4">
+<h4>(b) Compute the correlation in the X matrix. Why are there some missing values in the matrix?</h4>
 <pre class="r"><code>cor(mx)</code></pre>
 <pre><code>## Warning in cor(mx): the standard deviation is zero</code></pre>
 <pre><code>##             (Intercept) x1+ x2+ x3+ x4+
@@ -736,17 +741,18 @@ mx</code></pre>
 ## x3+                  NA   0   0   1   0
 ## x4+                  NA   0   0   0   1</code></pre>
 <pre class="r"><code># Hay valores perdidos porque corresponden a la intersección con el intercepto que tiene 1 como valor</code></pre>
-<ol start="3" style="list-style-type: lower-alpha">
-<li>What difference in resistance is expected when moving from the low to the high level of x1?</li>
-</ol>
+</div>
+<div id="c-what-difference-in-resistance-is-expected-when-moving-from-the-low-to-the-high-level-of-x1" class="section level4">
+<h4>(c) What difference in resistance is expected when moving from the low to the high level of x1?</h4>
 <pre class="r"><code># Nos piden el coeficiente de regresión de x1
 waferlm$coefficients</code></pre>
 <pre><code>## (Intercept)         x1+         x2+         x3+         x4+ 
 ##    236.7813     25.7625    -69.8875     43.5875    -14.4875</code></pre>
 <pre class="r"><code># Vemos que la resistencia es 25.76 veces mayor cuando los valores son altos</code></pre>
-<ol start="4" style="list-style-type: lower-alpha">
-<li>Refit the model without x4 and examine the regression coefficients and standard errors? What stayed the the same as the original fit and what changed?</li>
-</ol>
+</div>
+<div id="d-refit-the-model-without-x4-and-examine-the-regression-coefficients-and-standard-errors-what" class="section level4">
+<h4>(d) Refit the model without x4 and examine the regression coefficients and standard errors? What</h4>
+<p>stayed the the same as the original fit and what changed?</p>
 <pre class="r"><code>waferlm4&lt;-lm(resist ~ x1 + x2 + x3, data = wafer)
 summary(waferlm4)</code></pre>
 <pre><code>## 
@@ -820,14 +826,14 @@ summary(waferlm4)</code></pre>
 <p>La matriz contiene muchos ceros, por lo tanto, la covarianza entre x4 y los valores de x1, x2, x3, es cero. Por eso al quitar x4 del modelo, los demás coeficientes no varían.</p>
 </div>
 </div>
+</div>
 <div id="ejercicios-de-libro-de-carmona" class="section level2">
 <h2>Ejercicios de libro de Carmona</h2>
 <div id="ejercicio-2.1" class="section level3">
 <h3>Ejercicio 2.1</h3>
 <p>Una variable Y toma los valores y1, y2 y y3 en función de otra variable X con los valores x1, x2 y x3. Determinar cuales de los siguientes modelos son lineales y encontrar, en su caso, la matriz de diseño para x1=1, x2=2 y x3=3.</p>
-<ol style="list-style-type: lower-alpha">
-<li>y i = β 0 + β 1 x i + β 2 (x 2 i − 1) +  i</li>
-</ol>
+<div id="a-yi-β0-β1xi-β2-x2i-1-ei" class="section level4">
+<h4>a) yi = β0 + β1xi + β2 (x2i − 1) + ei</h4>
 <pre class="r"><code># Es un modelo lineal
 
 matriz_a&lt;-matrix(c(1,1,(1^2-1),1,2,(2^2-1),1,3,(3^2-1)), nrow = 3, 
@@ -846,6 +852,7 @@ matriz_b</code></pre>
 ## [3,]    1    3 20.085537</code></pre>
 <pre class="r"><code># No es lineal</code></pre>
 </div>
+</div>
 <div id="ejercicio-2.4-del-capítulo-2-página-42" class="section level3">
 <h3>2. (Ejercicio 2.4 del Capítulo 2 página 42)</h3>
 <p>Cuatro objetos cuyos pesos exactos son β 1 , β 2 , β 3 y β 4 han sido pesados en una balanza de platillos de acuerdo con el siguiente esquema:</p>
@@ -862,7 +869,8 @@ x</code></pre>
 ## [5,]    1    0    1    1
 ## [6,]    1    1   -1    1</code></pre>
 <pre class="r"><code>y&lt;-c(9.2,8.3,5.4,-1.6,8.7,3.5)</code></pre>
-<p>Hallar las estimaciones de cada β i y de la varianza del error.</p>
+<div id="hallar-las-estimaciones-de-cada-β-i-y-de-la-varianza-del-error." class="section level4">
+<h4>Hallar las estimaciones de cada β i y de la varianza del error.</h4>
 <pre class="r"><code># Primero calculamos las betas
 solve(crossprod(x,x),crossprod(x,y))</code></pre>
 <pre><code>##           [,1]
@@ -882,8 +890,11 @@ names(lmodsumpesos2)</code></pre>
 <pre><code>## [1] 0.08371429</code></pre>
 </div>
 </div>
+</div>
 <div id="ejercicios-opcionales" class="section level1">
 <h1>Ejercicios opcionales</h1>
+<div id="faraway" class="section level2">
+<h2>Faraway</h2>
 <div id="ejercicio-3-cap.-2-pág.-30" class="section level3">
 <h3>3. (∗) (Ejercicio 3 cap. 2 pág. 30)</h3>
 <p>In this question, we investigate the relative merits of methods for computing the coefficients. Generate some artificial data by:</p>
@@ -893,63 +904,63 @@ y &lt;- x+rnorm(20)</code></pre>
 <pre class="r"><code># Construimos la recta con el polinomiony hayamos los coeficientes
 recta2&lt;-lm(y ~ x + I(x^2))
 coef(recta2)</code></pre>
-<pre><code>## (Intercept)           x      I(x^2) 
-## 0.932249370 0.813648830 0.007459316</code></pre>
+<pre><code>##  (Intercept)            x       I(x^2) 
+##  1.197019696  0.955055706 -0.002440245</code></pre>
 <pre class="r"><code># Pide también el método directo
 matriz&lt;-model.matrix(recta2)
 solve(t(matriz) %*% matriz) %*% t(matriz) %*% y</code></pre>
-<pre><code>##                    [,1]
-## (Intercept) 0.932249370
-## x           0.813648830
-## I(x^2)      0.007459316</code></pre>
+<pre><code>##                     [,1]
+## (Intercept)  1.197019696
+## x            0.955055706
+## I(x^2)      -0.002440245</code></pre>
 <p>Para 3</p>
 <pre class="r"><code>recta3&lt;-lm(y ~ x + I(x^2) + I(x^3))
 coef(recta3)</code></pre>
 <pre><code>##  (Intercept)            x       I(x^2)       I(x^3) 
-## 0.8381895126 0.8616436117 0.0018826447 0.0001770372</code></pre>
+##  0.417692582  1.352713490 -0.048645410  0.001466831</code></pre>
 <pre class="r"><code>matriz&lt;-model.matrix(recta3)
 cbind(coef(recta3),solve(t(matriz) %*% matriz) %*% t(matriz) %*% y)</code></pre>
 <pre><code>##                     [,1]         [,2]
-## (Intercept) 0.8381895126 0.8381895126
-## x           0.8616436117 0.8616436117
-## I(x^2)      0.0018826447 0.0018826447
-## I(x^3)      0.0001770372 0.0001770372</code></pre>
+## (Intercept)  0.417692582  0.417692582
+## x            1.352713490  1.352713490
+## I(x^2)      -0.048645410 -0.048645410
+## I(x^3)       0.001466831  0.001466831</code></pre>
 <p>Para 4</p>
 <pre class="r"><code>recta4&lt;-lm(y ~ x + I(x^2) + I(x^3) + I(x^4))
 coef(recta4)</code></pre>
 <pre><code>##   (Intercept)             x        I(x^2)        I(x^3)        I(x^4) 
-##  1.7381853934  0.1575954507  0.1443509368 -0.0101984094  0.0002470344</code></pre>
+## -0.0136342776  1.6901315699 -0.1169239458  0.0064393076 -0.0001183923</code></pre>
 <pre class="r"><code>matriz&lt;-model.matrix(recta4)
 cbind(coef(recta4),solve(t(matriz) %*% matriz) %*% t(matriz) %*% y)</code></pre>
 <pre><code>##                      [,1]          [,2]
-## (Intercept)  1.7381853934  1.7381853935
-## x            0.1575954507  0.1575954507
-## I(x^2)       0.1443509368  0.1443509368
-## I(x^3)      -0.0101984094 -0.0101984094
-## I(x^4)       0.0002470344  0.0002470344</code></pre>
+## (Intercept) -0.0136342776 -0.0136342775
+## x            1.6901315699  1.6901315699
+## I(x^2)      -0.1169239458 -0.1169239458
+## I(x^3)       0.0064393076  0.0064393076
+## I(x^4)      -0.0001183923 -0.0001183923</code></pre>
 <p>Para 5</p>
 <pre class="r"><code>recta5&lt;-lm(y ~ x + I(x^2) + I(x^3) + I(x^4) + I(x^5))
 coef(recta5)</code></pre>
 <pre><code>##   (Intercept)             x        I(x^2)        I(x^3)        I(x^4) 
-##  2.060893e+00 -1.862674e-01  2.481468e-01 -2.286863e-02  9.166853e-04 
+##  1.6893644221 -0.1245060187  0.4308290944 -0.0604241460  0.0034154983 
 ##        I(x^5) 
-## -1.275526e-05</code></pre>
+## -0.0000673122</code></pre>
 <pre class="r"><code>matriz&lt;-model.matrix(recta5)
 cbind(coef(recta5),solve(t(matriz) %*% matriz) %*% t(matriz) %*% y)</code></pre>
 <pre><code>##                      [,1]          [,2]
-## (Intercept)  2.060893e+00  2.060893e+00
-## x           -1.862674e-01 -1.862674e-01
-## I(x^2)       2.481468e-01  2.481468e-01
-## I(x^3)      -2.286863e-02 -2.286863e-02
-## I(x^4)       9.166853e-04  9.166853e-04
-## I(x^5)      -1.275526e-05 -1.275526e-05</code></pre>
+## (Intercept)  1.6893644221  1.6893644202
+## x           -0.1245060187 -0.1245060185
+## I(x^2)       0.4308290944  0.4308290943
+## I(x^3)      -0.0604241460 -0.0604241459
+## I(x^4)       0.0034154983  0.0034154983
+## I(x^5)      -0.0000673122 -0.0000673122</code></pre>
 <p>Para 6</p>
 <pre class="r"><code>recta6&lt;-lm(y ~ x + I(x^2) + I(x^3) + I(x^4) + I(x^5) + I(x^6))
 coef(recta6)</code></pre>
 <pre><code>##   (Intercept)             x        I(x^2)        I(x^3)        I(x^4) 
-##  1.090326e-01  2.434632e+00 -8.262361e-01  1.683265e-01 -1.563071e-02 
+##  3.268664e+00 -2.245142e+00  1.300139e+00 -2.151249e-01  1.680441e-02 
 ##        I(x^5)        I(x^6) 
-##  6.726808e-04 -1.087994e-05</code></pre>
+## -6.219157e-04  8.803231e-06</code></pre>
 <pre class="r"><code>matriz&lt;-model.matrix(recta6)</code></pre>
 </div>
 <div id="ejercicio-8-cap.-2-pág.-31" class="section level3">
@@ -960,16 +971,17 @@ truck$C &lt;- sapply(truck$C, function(x) ifelse(x == &quot;-&quot;,-1,1))
 truck$D &lt;- sapply(truck$D, function(x) ifelse(x == &quot;-&quot;,-1,1))
 truck$E &lt;- sapply(truck$E, function(x) ifelse(x == &quot;-&quot;,-1,1))
 truck$O &lt;- sapply(truck$O, function(x) ifelse(x == &quot;-&quot;,-1,1))</code></pre>
-<ol style="list-style-type: lower-alpha">
-<li>Fit a linear model for the height in terms of the five factors. Report on the value of the regression coefficients.</li>
-</ol>
+<div id="a-fit-a-linear-model-for-the-height-in-terms-of-the-five-factors.-report-on-the-value-of-the" class="section level4">
+<h4>(a) Fit a linear model for the height in terms of the five factors. Report on the value of the</h4>
+<p>regression coefficients.</p>
 <pre class="r"><code>lmodt&lt;-lm(height ~ B + C + D + E + O, data = truck)
 lmodt$coefficients</code></pre>
 <pre><code>## (Intercept)           B           C           D           E           O 
 ##   7.6360417   0.1106250  -0.0881250  -0.0143750   0.0518750  -0.1297917</code></pre>
-<ol start="2" style="list-style-type: lower-alpha">
-<li>Fit a linear model using just factors B, C, D and E and report the coefficients. How do these com- pare to the previous question? Show how we could have anticipated this result by examining the X matrix.</li>
-</ol>
+</div>
+<div id="b-fit-a-linear-model-using-just-factors-b-c-d-and-e-and-report-the-coefficients.-how-do-these-com-" class="section level4">
+<h4>(b) Fit a linear model using just factors B, C, D and E and report the coefficients. How do these com-</h4>
+<p>pare to the previous question? Show how we could have anticipated this result by examining the X matrix.</p>
 <pre class="r"><code>lmodt2&lt;- lm(height ~ B + C + D + E, data = truck)
 lmodt2$coefficients</code></pre>
 <pre><code>## (Intercept)           B           C           D           E 
@@ -988,9 +1000,10 @@ t(x) %*% x</code></pre>
 ## E                     0  0  0  0 48  0
 ## O                     0  0  0  0  0 48</code></pre>
 <pre class="r"><code># Vemos que hay ortogonalidad, y que los coeficientes son independientes.</code></pre>
-<ol start="3" style="list-style-type: lower-alpha">
-<li>Construct a new predictor called A which is set to B+C+D+E. Fit a linear model with the predictors A, B, C, D, E and O. Do coefficients for all six predictors appear in the regression summary? Explain.</li>
-</ol>
+</div>
+<div id="c-construct-a-new-predictor-called-a-which-is-set-to-bcde.-fit-a-linear-model-with-the" class="section level4">
+<h4>(c) Construct a new predictor called A which is set to B+C+D+E. Fit a linear model with the</h4>
+<p>predictors A, B, C, D, E and O. Do coefficients for all six predictors appear in the regression summary? Explain.</p>
 <pre class="r"><code>attach(truck)
 A&lt;-B+C+D+E
 lmodt3&lt;-lm(height ~ A + B + C + D + E + O, data = truck)
@@ -1001,13 +1014,14 @@ lmodt3$coefficients</code></pre>
 ##  -0.1297917</code></pre>
 <pre class="r"><code># En este modelo, una de las variables es combinación de otras, así que el
 # rango de la matriz de diseño no es máximo y no podemos calcular todas las betas</code></pre>
-<ol start="4" style="list-style-type: lower-alpha">
-<li>Extract the model matrix X from the previous model. Attempt to compute β̂ from (X 0 X) −1 X 0 y. What went wrong and why?</li>
-</ol>
+</div>
+<div id="d-extract-the-model-matrix-x-from-the-previous-model.-attempt-to-compute-β-from-x-0-x-1-x-0-y." class="section level4">
+<h4>(d) Extract the model matrix X from the previous model. Attempt to compute β̂ from (X 0 X) −1 X 0 y.</h4>
+<p>What went wrong and why?</p>
 <pre class="r"><code>x&lt;-model.matrix(lmodt3)</code></pre>
-<ol start="5" style="list-style-type: lower-alpha">
-<li>Use the QR decomposition method as seen in Section 2.7 to compute β̂. Are the results satisfactory?</li>
-</ol>
+</div>
+<div id="e-use-the-qr-decomposition-method-as-seen-in-section-2.7-to-compute-β.-are-the-results-satisfactory" class="section level4">
+<h4>(e) Use the QR decomposition method as seen in Section 2.7 to compute β̂. Are the results satisfactory?</h4>
 <pre class="r"><code>qrx&lt;-qr(x)
 (f &lt;- t(qr.Q(qrx)) %*% height)</code></pre>
 <pre><code>##              [,1]
@@ -1029,14 +1043,16 @@ lmodt3$coefficients</code></pre>
 ## [7,] -8.071747e+12</code></pre>
 <pre class="r"><code># Los coeficientes no son iguales y tienen valores muy altos, la descomposición
 # QR no va bien aquí</code></pre>
-<ol start="6" style="list-style-type: lower-alpha">
-<li>Use the function qr.coef to correctly compute β̂.</li>
-</ol>
+</div>
+<div id="f-use-the-function-qr.coef-to-correctly-compute-β." class="section level4">
+<h4>(f) Use the function qr.coef to correctly compute β̂.</h4>
 <pre class="r"><code>qr.coef(qrx, height)</code></pre>
 <pre><code>## (Intercept)           A           B           C           D           E 
 ##   7.6360417   0.0518750   0.0587500  -0.1400000  -0.0662500          NA 
 ##           O 
 ##  -0.1297917</code></pre>
+</div>
+</div>
 </div>
 <div id="ejercicios-del-libro-de-carmona" class="section level2">
 <h2>Ejercicios del libro de Carmona</h2>
@@ -1204,6 +1220,57 @@ ginvxtx[5,2] - ginvxtx[5,3] - ginvxtx[6,2] + ginvxtx[6,2]</code></pre>
 <p>α = d(A,B) β = d(A,C) γ = d(B,C)</p>
 <p>El modelo lineal es:</p>
 <p>533 = 2α + β + ε1 583 = 2β + γ + ε2 1111 = 2α + 3β + γ + ε3 1069 = 4α + 2β + ε4</p>
+<pre class="r"><code># Creamos la matriz y vemos su rango
+matriz&lt;-matrix(c(2,1,0,
+0,2,1,
+2,3,1,
+4,2,0), byrow = T, ncol = 3)
+qr(matriz)$rank</code></pre>
+<pre><code>## [1] 2</code></pre>
+<pre class="r"><code># Vemos que es de rango 2</code></pre>
+<p>Buscamos las funciones paramétricas estimables</p>
+<p>(a1,a2,a3) = λ1(2,1,0) + λ2(0,2,1)</p>
+<p>a1 = 2λ1 a2 = λ1 + 2λ2 a3 = λ2</p>
+<p>4-2 = 2 ecuaciones</p>
+<p>a2 = a1/2 + 2a3 2a2 = a1 + 4a3</p>
+<p>Es posible estimar las distacias?</p>
+<p>-d(A,B) – (1,0,0) — 2 * 0 = 1 + 4 * 0 No es estimable</p>
+<p>-d(A,C) – (0,1,0) — 2 * 1 = 0 + 4 * 0 No es estimable</p>
+<p>-d(B,C) – (0.0,1) — 2 * 0 = 0 + 4 * 1 No es estimable</p>
+</div>
+<div id="b-se-puede-estimar-el-kilometraje-del-trayecto-m-bc-b-a-c-m-ac-donde-m-ij-es-el-punto" class="section level4">
+<h4>(b) ¿Se puede estimar el kilometraje del trayecto M BC → B → A → C → M AC , donde M IJ es el punto</h4>
+<p>medio entre dos poblaciones? ¿Es una buena estimación? ¿Cual es el error de esta estimación?</p>
+<p>Lo traducimos al modelo:</p>
+<p>1/2γ + α + β + 1/2β = α + 3/2β + 1/2γ</p>
+<p>Vemos que:</p>
+<p>2 * 3/2 = 1 + 4 * 1/2</p>
+<p>Es correcto así que es estimable</p>
+<pre class="r"><code># Construimos el modelo
+y&lt;-c(533,583,1111,1069)
+x&lt;-matrix(c(2,1,0,
+         0,2,1,
+         2,3,1,
+         4,2,0), byrow = T, ncol = 3)</code></pre>
+<pre class="r"><code># Estimamos el valor
+library(MASS)
+betas&lt;-ginv(t(x) %*% x) %*% t(x) %*% y
+a&lt;-c(1,3/2,1/2)
+t(a) %*% betas</code></pre>
+<pre><code>##          [,1]
+## [1,] 556.9091</code></pre>
+<pre class="r"><code># Caculamos el error de estimación
+
+n&lt;-length(y)
+r&lt;-2
+residuos&lt;-y-x %*% betas
+sigma2&lt;-sum(residuos^2)/(n-r)
+var.error&lt;-sigma2 * t(a) %*% ginv(t(x) %*% x) %*% a
+error&lt;-sqrt(var.error)
+error</code></pre>
+<pre><code>##         [,1]
+## [1,] 1.14632</code></pre>
+<p>Vemos que el error es del 0,21%. Muy pequeño, la estimación es bastante buena</p>
 </div>
 </div>
 </div>
