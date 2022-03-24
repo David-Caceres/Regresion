@@ -1,0 +1,51 @@
+---
+title: "Ejercicios de inferencia"
+author: "David Cáceres"
+date: "24/3/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Ejercicios del libro de Faraway
+
+### 1. (Ejercicio 1 cap. 3 pág. 48)
+### For the prostate data, fit a model with lpsa as the response and the other variables as predictors:
+
+#### (a) Compute 90 and 95% CIs for the parameter associated with age. Using just these intervals,
+what could we have deduced about the p-value for age in the regression summary?
+
+```{r}
+require(faraway)
+
+lmod<-lm(lpsa ~ lcavol + lweight + age + lbph + svi + lcp + gleason + pgg45,  data = prostate)
+summary(lmod)
+```
+
+```{r}
+confint(lmod, level=.90)
+# Vemos que para age (age         -0.038210200 -0.001064151)
+```
+
+```{r}
+confint(lmod, level=.95)
+# age         -0.041840618 0.002566267
+```
+
+Vemos que el intervalo de confianza del 90% no incluye el 0, cosa que si pasa 
+en el intervalo del 95%. Lo cual nos indica que el parámetro age no puede ser 0
+para un significación del 10%.
+
+#### (b) Compute and display a 95% joint confidence region for the parameters associated with age
+and lbph. Plot the origin on this display. The location of the origin on the display tells us the
+outcome of a certain hypothesis test. State that test and its outcome.
+
+Necesitamos el paquete ellipse para representar la región de confianza.
+
+```{r}
+require(ellipse)
+plot(ellipse(lmod,c(4,5)), type="l")
+```
+
