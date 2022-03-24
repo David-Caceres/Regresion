@@ -47,5 +47,81 @@ Necesitamos el paquete ellipse para representar la región de confianza.
 ```{r}
 require(ellipse)
 plot(ellipse(lmod,c(4,5)), type="l")
+points(coef(lmod)[4], coef(lmod)[5])
+points(0,0)
+text(0,0, labels="(0,0)", pos = 3)
 ```
+
+El punto 0,0 que es el equivalente a la hipótesis nula de beta = 0 para las 
+dos variables. Vemos que está dentro del intervalo de confianza, así que se 
+acepta.
+
+#### (c) In the text, we made a permutation test corresponding to the F -test for the significance of all
+the predictors. Execute the permutation test corresponding to the t-test for age in this model.
+(Hint: summary(g)$coef[4,3] gets you the t-statistic you need if the model is called g.)
+
+El contraste de hipótesis sería
+
+Ho: β age = 0
+H1: β age ≠ 0
+
+```{r}
+set.seed(123)
+nreps<- 4000
+tstats <- numeric(nreps)
+
+for(i in 1:nreps){
+lmod1<-lm(lpsa ~ lweight + sample(age) + lbph + svi + lcp + gleason + pgg45, data= prostate)
+tstats[i] <- summary(lmod1)$coef[4,3]
+}
+
+mean(abs(tstats) > abs(summary(lmod)$coef[4,3]))
+```
+
+
+#### (d) Remove all the predictors that are not significant at the 5% level. Test this model against the
+original model. Which model is preferred?
+
+
+Si tomamos los intervalos de confianza al 5%
+
+```{r}
+confint(lmod, level=.90)
+```
+
+Vemos que solo 3 superan 0.05, así que construimos el nuevo modelo
+
+```{r}
+lmod2<- lm(lpsa ~ lcavol + lweight + svi, data = prostate)
+summary(lmod2)
+```
+
+Para ver cual de los dos modelos es mejor, realizamos un anova para constrastar la hipótesis nula.
+
+```{r}
+anova(lmod2, lmod)
+```
+
+La diferencia entre ambos es muy poco significativa, así que optamos por el modelo más simple.
+
+
+### 2. (Ejercicio 2 cap. 3 pág. 49)
+Thirty samples of cheddar cheese were analyzed for their content of acetic acid, hydrogen sulfide
+and lactic acid. Each sample was tasted and scored by a panel of judges and the average taste score
+produced. Use the cheddar data to answer the following:
+
+#### (a) Fit a regression model with taste as the response and the three chemical contents as predictors.
+Identify the predictors that are statistically significant at the 5% level.
+
+
+```{r}
+# modelo
+
+lmod3<- lm(taste ~ Acetic + H2S + Lactic, data = cheddar)
+summary(lmod3)
+```
+
+Por debajo de 0.05 se encuentran H2S y Lactic. Estos serían estadísticamente
+significativos para ese intervalo.
+
 
