@@ -125,3 +125,40 @@ Por debajo de 0.05 se encuentran H2S y Lactic. Estos serían estadísticamente
 significativos para ese intervalo.
 
 
+#### (b) Acetic and H2S are measured on a log scale. Fit a linear model where all three predictors are
+measured on their original scale. Identify the predictors that are statistically significant at the
+5% level for this model.
+
+```{r}
+lmod4<-lm(taste ~ I(exp(Acetic)) + I(exp(H2S)) + Lactic, data=cheddar)
+summary(lmod4)
+```
+
+Tan solo el ácido láctico parece significativo al 5%.
+
+
+#### (c) Can we use an F -test to compare these two models? Explain. Which model provides a better
+fit to the data? Explain your reasoning.
+
+Para poder usar el F test, todas las variables de uno de los modelos tienen que estar presentes en el otro. En este caso, tenemos variables distintas ya que en un modelo se expresan de forma logarítmica. No pueden compararse y usar el F test.
+
+#### (d) If H2S is increased 0.01 for the model used in (a), what change in the taste would be expected?
+
+```{r}
+3.9118 * 0.01
+
+```
+
+
+#### (e) What is the percentage change in H2S on the original scale corresponding to an additive increase
+of 0.01 on the (natural) log scale?
+
+```{r eval=FALSE, include=FALSE}
+e^0.01 = 1.01
+# 1.01%
+```
+
+
+### 3. (Ejercicio 3 cap. 3 pág. 49)
+Using the teengamb data, fit a model with gamble as the response and the other variables as
+predictors.

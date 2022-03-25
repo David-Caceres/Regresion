@@ -355,6 +355,51 @@ summary(lmod3)</code></pre>
 ## F-statistic: 16.22 on 3 and 26 DF,  p-value: 3.81e-06</code></pre>
 <p>Por debajo de 0.05 se encuentran H2S y Lactic. Estos serían estadísticamente significativos para ese intervalo.</p>
 </div>
+<div id="b-acetic-and-h2s-are-measured-on-a-log-scale.-fit-a-linear-model-where-all-three-predictors-are" class="section level4">
+<h4>(b) Acetic and H2S are measured on a log scale. Fit a linear model where all three predictors are</h4>
+<p>measured on their original scale. Identify the predictors that are statistically significant at the 5% level for this model.</p>
+<pre class="r"><code>lmod4&lt;-lm(taste ~ I(exp(Acetic)) + I(exp(H2S)) + Lactic, data=cheddar)
+summary(lmod4)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = taste ~ I(exp(Acetic)) + I(exp(H2S)) + Lactic, data = cheddar)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -16.209  -7.266  -1.651   7.385  26.335 
+## 
+## Coefficients:
+##                  Estimate Std. Error t value Pr(&gt;|t|)  
+## (Intercept)    -1.897e+01  1.127e+01  -1.684   0.1042  
+## I(exp(Acetic))  1.891e-02  1.562e-02   1.210   0.2371  
+## I(exp(H2S))     7.668e-04  4.188e-04   1.831   0.0786 .
+## Lactic          2.501e+01  9.062e+00   2.760   0.0105 *
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 11.19 on 26 degrees of freedom
+## Multiple R-squared:  0.5754, Adjusted R-squared:  0.5264 
+## F-statistic: 11.75 on 3 and 26 DF,  p-value: 4.746e-05</code></pre>
+<p>Tan solo el ácido láctico parece significativo al 5%.</p>
+</div>
+<div id="c-can-we-use-an-f--test-to-compare-these-two-models-explain.-which-model-provides-a-better" class="section level4">
+<h4>(c) Can we use an F -test to compare these two models? Explain. Which model provides a better</h4>
+<p>fit to the data? Explain your reasoning.</p>
+<p>Para poder usar el F test, todas las variables de uno de los modelos tienen que estar presentes en el otro. En este caso, tenemos variables distintas ya que en un modelo se expresan de forma logarítmica. No pueden compararse y usar el F test.</p>
+</div>
+<div id="d-if-h2s-is-increased-0.01-for-the-model-used-in-a-what-change-in-the-taste-would-be-expected" class="section level4">
+<h4>(d) If H2S is increased 0.01 for the model used in (a), what change in the taste would be expected?</h4>
+<pre class="r"><code>3.9118 * 0.01</code></pre>
+<pre><code>## [1] 0.039118</code></pre>
+</div>
+<div id="e-what-is-the-percentage-change-in-h2s-on-the-original-scale-corresponding-to-an-additive-increase" class="section level4">
+<h4>(e) What is the percentage change in H2S on the original scale corresponding to an additive increase</h4>
+<p>of 0.01 on the (natural) log scale?</p>
+</div>
+</div>
+<div id="ejercicio-3-cap.-3-pág.-49" class="section level3">
+<h3>3. (Ejercicio 3 cap. 3 pág. 49)</h3>
+<p>Using the teengamb data, fit a model with gamble as the response and the other variables as predictors.</p>
 </div>
 </div>
 
