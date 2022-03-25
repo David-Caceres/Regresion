@@ -246,3 +246,92 @@ anova(lmod7,lmod8)
 ```
 
 El p-valor es casi idéntico, lo cual demuestra la equivalencia de ambos tests.
+
+## Ejercicios opcionales.
+
+## Faraway 
+
+
+### 5. (∗) (Ejercicio 5 cap. 3 pág. 50)
+Find a formula relating R 2 and the F -test for the regression.
+
+
+Si la fórmula de F:
+
+F =(T SS − RSS)/(m − 1) / RSS/(n − m)
+
+Y la de R² es:
+
+R² = 1- RSS/TSS , 1 - R^= RSS/TSS
+
+De este modo:
+
+F = (TSS − RSS)/RSS * n-m/m -1 = (TSS - RSS)/TSS / RSS/TSS * n-m/m-1 =
+
+R²/1-R² * m-1/n-m
+
+### 6. (∗) (Ejercicio 6 cap. 3 pág. 50)
+Thirty-nine MBA students were asked about happiness and how this related to their income and
+social life. The data are found in happy. Fit a regression model with happy as the response and
+the other four variables as predictors.
+
+
+```{r}
+data(happy)
+head(happy)
+
+```
+
+#### (a) Which predictors were statistically significant at the 1% level?
+
+```{r}
+lmod9<-lm(happy ~ money + sex + love + work, data=happy)
+fit<-lm(happy ~ ., data=happy)
+summary(lmod9)
+```
+
+Al 1%, el amor y solo el amor, es estadísticamente significativo.
+
+
+#### (b) Use the table() function to produce a numerical summary of the response. What assumption
+used to perform the t-tests seems questionable in light of this summary?
+
+```{r}
+table(happy$happy)
+```
+
+
+Los valores no muestran una distribución normal
+
+
+#### (c) Use the permutation procedure described in Section 3.3 to test the significance of the money
+predictor.
+
+```{r}
+lmod10<-lm(happy ~ sample(money) + sex + love + work, data= happy)
+
+nreps<-4000
+tstats<-numeric(nreps)
+set.seed(123)
+for(i in 1:nreps){
+  lmod10<-lm(happy ~ sample(money) + sex + love + work, data= happy)
+  tstats[i]<-summary(lmod10)$coef[2,3]
+}
+
+mean(abs(tstats) > abs(summary(lmod10)$coef[2,3]))
+
+summary(lmod10)
+```
+
+
+El resultado del test de permutaciones es de 0.269 que es muy parecido al 0.271 que ofrece el summary. La variable work no es significativa.
+
+
+#### (d) Plot a histogram of the permutation t-statistics. Make sure you use the the probability rather than
+frequency version of the histogram.
+
+```{r}
+hist(tstats, freq = FALSE)
+abline(v=summary(fit)$coef[2,3], lty =2, col= "red")
+```
+
