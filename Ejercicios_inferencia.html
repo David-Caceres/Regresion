@@ -400,6 +400,163 @@ summary(lmod4)</code></pre>
 <div id="ejercicio-3-cap.-3-pág.-49" class="section level3">
 <h3>3. (Ejercicio 3 cap. 3 pág. 49)</h3>
 <p>Using the teengamb data, fit a model with gamble as the response and the other variables as predictors.</p>
+<pre class="r"><code>require(faraway)
+data(teengamb)
+head(teengamb)</code></pre>
+<pre><code>##   sex status income verbal gamble
+## 1   1     51   2.00      8    0.0
+## 2   1     28   2.50      8    0.0
+## 3   1     37   2.00      6    0.0
+## 4   1     28   7.00      4    7.3
+## 5   1     65   2.00      8   19.6
+## 6   1     61   3.47      6    0.1</code></pre>
+<pre class="r"><code>lmod5&lt;-lm(gamble ~ sex + status + income + verbal, data = teengamb)</code></pre>
+<div id="a-which-variables-are-statistically-significant-at-the-5-level" class="section level4">
+<h4>(a) Which variables are statistically significant at the 5% level?</h4>
+<pre class="r"><code>summary(lmod5)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = gamble ~ sex + status + income + verbal, data = teengamb)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -51.082 -11.320  -1.451   9.452  94.252 
+## 
+## Coefficients:
+##              Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  22.55565   17.19680   1.312   0.1968    
+## sex         -22.11833    8.21111  -2.694   0.0101 *  
+## status        0.05223    0.28111   0.186   0.8535    
+## income        4.96198    1.02539   4.839 1.79e-05 ***
+## verbal       -2.95949    2.17215  -1.362   0.1803    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 22.69 on 42 degrees of freedom
+## Multiple R-squared:  0.5267, Adjusted R-squared:  0.4816 
+## F-statistic: 11.69 on 4 and 42 DF,  p-value: 1.815e-06</code></pre>
+<p>Tan solo el sexo, y los ingresos.</p>
+</div>
+<div id="b-what-interpretation-should-be-given-to-the-coefficient-for-sex" class="section level4">
+<h4>(b) What interpretation should be given to the coefficient for sex?</h4>
+<p>El coeficiente mide cuanto varía la variable respuesta por cada unidad de la variable explicativa. En este caso, sex es una variable cualitativa y se expresa en 0 para el hombre y 1 para la mujer. EL valor es de -22.118, lo cual siginifica que al pasar de 0 a 1, o de hombre a mujer, el dinero dedicado al juego (gamble), se reduce en 22.118 libras.</p>
+</div>
+<div id="c-fit-a-model-with-just-income-as-a-predictor-and-use-an-f--test-to-compare-it-to-the-full-model." class="section level4">
+<h4>(c) Fit a model with just income as a predictor and use an F -test to compare it to the full model.</h4>
+<pre class="r"><code>lmod6&lt;- lm(gamble ~ income, data = teengamb)
+summary(lmod6)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = gamble ~ income, data = teengamb)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -46.020 -11.874  -3.757  11.934 107.120 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)   -6.325      6.030  -1.049      0.3    
+## income         5.520      1.036   5.330 3.05e-06 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 24.95 on 45 degrees of freedom
+## Multiple R-squared:  0.387,  Adjusted R-squared:  0.3734 
+## F-statistic: 28.41 on 1 and 45 DF,  p-value: 3.045e-06</code></pre>
+<pre class="r"><code>anova(lmod6, lmod5)</code></pre>
+<pre><code>## Analysis of Variance Table
+## 
+## Model 1: gamble ~ income
+## Model 2: gamble ~ sex + status + income + verbal
+##   Res.Df   RSS Df Sum of Sq      F  Pr(&gt;F)  
+## 1     45 28009                              
+## 2     42 21624  3    6384.8 4.1338 0.01177 *
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<p>El p-valor es de 0.01177, lo cual nos hace rechazar la hipótesis nula de que las demás variables son cero y no influyen en la variable respuesta.</p>
+</div>
+</div>
+<div id="ejercicio-4-cap.-3-pág.-49" class="section level3">
+<h3>4. (Ejercicio 4 cap. 3 pág. 49)</h3>
+<p>Using the sat data:</p>
+<pre class="r"><code>data(sat)
+head(sat)</code></pre>
+<pre><code>##            expend ratio salary takers verbal math total
+## Alabama     4.405  17.2 31.144      8    491  538  1029
+## Alaska      8.963  17.6 47.951     47    445  489   934
+## Arizona     4.778  19.3 32.175     27    448  496   944
+## Arkansas    4.459  17.1 28.934      6    482  523  1005
+## California  4.992  24.0 41.078     45    417  485   902
+## Colorado    5.443  18.4 34.571     29    462  518   980</code></pre>
+<div id="a-fit-a-model-with-total-sat-score-as-the-response-and-expend-ratio-and-salary-as-predictors." class="section level4">
+<h4>(a) Fit a model with total sat score as the response and expend, ratio and salary as predictors.</h4>
+<p>Test the hypothesis that β salary = 0. Test the hypothesis that . Do any of these predictors have an effect on the response?</p>
+<pre class="r"><code>lmod7&lt;- lm(total ~ expend + ratio + salary, data = sat)
+summary(lmod7)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = total ~ expend + ratio + salary, data = sat)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -140.911  -46.740   -7.535   47.966  123.329 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) 1069.234    110.925   9.639 1.29e-12 ***
+## expend        16.469     22.050   0.747   0.4589    
+## ratio          6.330      6.542   0.968   0.3383    
+## salary        -8.823      4.697  -1.878   0.0667 .  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 68.65 on 46 degrees of freedom
+## Multiple R-squared:  0.2096, Adjusted R-squared:  0.1581 
+## F-statistic: 4.066 on 3 and 46 DF,  p-value: 0.01209</code></pre>
+<p>β salary = 0</p>
+<p>Vemos en el summary, que el p-valor para esta variable es de 0.0667 para un 5% de significación, lo cual significa que no podemos rechazar la hipótesis nula y que el salario no tiene influencia sobre el total.</p>
+<p>β salary = β ratio = β expend = 0</p>
+<p>El propio sumary nos da los valores del F test, con un p-valor de 0.01209, lo cual significa que tenemos que rechazar la hipótesis nula. En este caso, y a pesar de que el salario de forma independiente no tiene una influencia significativa, el conjunto de valores si la tiene.</p>
+</div>
+<div id="b-now-add-takers-to-the-model.-test-the-hypothesis-that-β-takers-0.-compare-this-model-to" class="section level4">
+<h4>(b) Now add takers to the model. Test the hypothesis that β takers = 0. Compare this model to</h4>
+<p>the previous one using an F -test. Demonstrate that the F -test and t-test here are equivalent.</p>
+<pre class="r"><code>lmod8&lt;- lm(total ~ expend + ratio + salary + takers, data = sat)
+summary(lmod8)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = total ~ expend + ratio + salary + takers, data = sat)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -90.531 -20.855  -1.746  15.979  66.571 
+## 
+## Coefficients:
+##              Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) 1045.9715    52.8698  19.784  &lt; 2e-16 ***
+## expend         4.4626    10.5465   0.423    0.674    
+## ratio         -3.6242     3.2154  -1.127    0.266    
+## salary         1.6379     2.3872   0.686    0.496    
+## takers        -2.9045     0.2313 -12.559 2.61e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 32.7 on 45 degrees of freedom
+## Multiple R-squared:  0.8246, Adjusted R-squared:  0.809 
+## F-statistic: 52.88 on 4 and 45 DF,  p-value: &lt; 2.2e-16</code></pre>
+<p>El p-valor para takers es tremendamente bajo, 2.61 e⁻16. Se rechaza la hipótesis nula. Esta variable tendrá efecto sobre la variable respuesta.</p>
+<pre class="r"><code>anova(lmod7,lmod8)</code></pre>
+<pre><code>## Analysis of Variance Table
+## 
+## Model 1: total ~ expend + ratio + salary
+## Model 2: total ~ expend + ratio + salary + takers
+##   Res.Df    RSS Df Sum of Sq      F    Pr(&gt;F)    
+## 1     46 216812                                  
+## 2     45  48124  1    168688 157.74 2.607e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<p>El p-valor es casi idéntico, lo cual demuestra la equivalencia de ambos tests.</p>
+</div>
 </div>
 </div>
 

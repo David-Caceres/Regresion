@@ -162,3 +162,87 @@ e^0.01 = 1.01
 ### 3. (Ejercicio 3 cap. 3 pág. 49)
 Using the teengamb data, fit a model with gamble as the response and the other variables as
 predictors.
+
+```{r}
+require(faraway)
+data(teengamb)
+head(teengamb)
+lmod5<-lm(gamble ~ sex + status + income + verbal, data = teengamb)
+```
+
+#### (a) Which variables are statistically significant at the 5% level?
+
+```{r}
+summary(lmod5)
+```
+
+
+Tan solo el sexo, y los ingresos.
+
+#### (b) What interpretation should be given to the coefficient for sex?
+
+El coeficiente mide cuanto varía la variable respuesta por cada unidad de la
+variable explicativa. En este caso, sex es una variable cualitativa y se expresa en 0 para el hombre y 1 para la mujer. EL valor es de -22.118, lo cual siginifica que al pasar de 0 a 1, o de hombre a mujer, el dinero dedicado al juego (gamble), se reduce en 22.118 libras.
+
+
+#### (c) Fit a model with just income as a predictor and use an F -test to compare it to the full model.
+
+```{r}
+lmod6<- lm(gamble ~ income, data = teengamb)
+summary(lmod6)
+```
+
+```{r}
+anova(lmod6, lmod5)
+```
+
+
+El p-valor es de 0.01177, lo cual nos hace rechazar la hipótesis nula de que las demás variables son cero y no influyen en la variable respuesta.
+
+
+
+### 4. (Ejercicio 4 cap. 3 pág. 49)
+Using the sat data:
+
+```{r}
+data(sat)
+head(sat)
+```
+
+#### (a) Fit a model with total sat score as the response and expend, ratio and salary as predictors.
+Test the hypothesis that β salary = 0. Test the hypothesis that .
+Do any of these predictors have an effect on the response?
+
+
+```{r}
+lmod7<- lm(total ~ expend + ratio + salary, data = sat)
+summary(lmod7)
+```
+
+β salary = 0
+
+Vemos en el summary, que el p-valor para esta variable es de 0.0667 para un 5% de significación, lo cual significa que no podemos rechazar la hipótesis nula y que el salario no tiene influencia sobre el total.
+
+
+β salary = β ratio = β expend = 0
+
+El propio sumary nos da los valores del F test, con un p-valor de 0.01209, lo cual significa que tenemos que rechazar la hipótesis nula. En este caso, y a pesar de que el salario de forma independiente no tiene una influencia significativa, el conjunto de valores si la tiene.
+
+
+#### (b) Now add takers to the model. Test the hypothesis that β takers = 0. Compare this model to
+the previous one using an F -test. Demonstrate that the F -test and t-test here are equivalent.
+
+```{r}
+lmod8<- lm(total ~ expend + ratio + salary + takers, data = sat)
+summary(lmod8)
+
+```
+
+El p-valor para takers es tremendamente bajo, 2.61 e⁻16. Se rechaza la hipótesis nula. Esta variable tendrá efecto sobre la variable respuesta.
+
+
+```{r}
+anova(lmod7,lmod8)
+```
+
+El p-valor es casi idéntico, lo cual demuestra la equivalencia de ambos tests.
