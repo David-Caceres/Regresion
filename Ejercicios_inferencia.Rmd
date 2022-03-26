@@ -335,3 +335,47 @@ hist(tstats, freq = FALSE)
 abline(v=summary(fit)$coef[2,3], lty =2, col= "red")
 ```
 
+
+#### (e) Overlay an appropriate t-density over the histogram.
+Hint: Use grid <- seq(-3, 3, length = 300) to create a grid of values, then use the dt()
+function to compute the t-density on this grid and the lines() function to superimpose the
+result.
+
+
+```{r}
+hist(tstats, freq = FALSE, ylim=c(0,0.4))
+curve(dt(x,df=34), col="red", lwd=2, add=T)
+```
+
+
+#### (f) Use the bootstrap procedure from Section 3.6 to compute 90 % and 95 % confidence intervals for
+β money . Does zero fall within these confidence intervals? Are these results consistent with previous
+tests?
+
+```{r}
+set.seed(123)
+nb<-4000
+coefmat<- matrix(NA,nb,5)
+
+resids<-residuals(fit)
+pred<-fitted(fit)
+for(i in 1:nb){
+boots<-pred + sample(resids, rep = TRUE)
+bmod<-update(fit, boots ~ .)
+coefmat[i,]<-coef(bmod)
+}
+
+colnames(coefmat) <- c("Intercept", colnames(happy[,2:5]))
+quantile(coefmat[,2],c(0.05, 0.95))
+
+# intervalo de confianza
+confint(fit, parm = 2, level=0.9)
+
+
+quantile(coefmat[,2],c(0.025,0.975))
+confint(fit, parm = 2, level = 0.95)
+```
+
+
+Solo con un intervalo de confianza del 95% los calculados con la t-student incluyen al cero, los demás no lo incluyen.
+
