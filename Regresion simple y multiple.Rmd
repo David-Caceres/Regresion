@@ -26,4 +26,147 @@ lmod1<-lm(rvel ~ dens)
 summary(lmod1)
 
 ```
+#### (i) La suma de los residuos es cero
 
+```{r}
+
+residuos<- residuals(lmod1)
+sum(residuos)
+
+# El valor es prácticamente cero por redondeo
+
+```
+
+
+#### (ii) Pyi = Pyˆi
+
+```{r}
+
+sum(rvel)
+
+sum(fitted(lmod1))
+
+```
+
+#### (iii) La suma de los residuos ponderada por los valores de la variable regresora es cero:
+
+```{r}
+sum(residuos*dens)
+```
+
+
+#### (iv) La suma de los residuos ponderada por las predicciones de los valores observados es cero:
+
+```{r}
+sum(fitted(lmod1)*residuos)
+```
+
+
+#### Calcular la estimación de σ² y, a partir de ella, las estimaciones de las desviaciones estándar de los estimadores de los parámetros βˆ0 y βˆ1.
+
+```{r}
+length<-length(dens)
+SCRlmod1<-sum(residuos^2)
+sigma<-SCRlmod1/(length-2)
+sigma
+```
+
+
+```{r}
+s2dens<-(1/length)*sum((dens-mean(dens))^2)
+Sdens<-length*s2dens
+ebeta1lmod1<.sqrt(sigma/Sdens)
+```
+
+```{r}
+ebeta0lmod1<-sqrt(sigma*((1/length)+(mean(dens)^2/Sdens)))
+ebeta0lmod1
+```
+
+
+#### Escribir los intervalos de confianza para los parámetros con un nivel de confianza del 95 %.
+
+```{r}
+# Para Beta1
+lmod1$coef[2]+c(-1,1)*tlmod1*ebeta1lmod1
+
+# Para beta0
+lmod1$coef[1]+c(-1,1)*tlmod1*ebeta0lmod1
+```
+
+#### Construir la tabla para la significación de la regresión y realizar dicho contraste. (H0: ß1=0 (No hay efecto de la relación entre ambas variables)
+
+
+```{r}
+summary(aov(lmod1))
+```
+
+
+Significativo a p<<alfa=0.005
+
+
+#### Hallar el intervalo de la predicción de la respuesta media cuando la densidades de 50 vehículos por km. Nivel de confianza: 90 %
+
+
+```{r}
+y0 <- recta68$coef[1]+recta68$coef[2]*50
+
+y0
+
+trecta68 <- qt(0.950,recta68$df)
+sigma68 <- sqrt(sigma268)
+y0+c(-1,1)*trecta68*sigma68*sqrt(1+(1/n68)+((((50-mean(dens))^2)/Sdens)))
+
+predict(recta68,new=data.frame(dens=50),interval="prediction",level=0.90)
+
+ predict(recta68,new=data.frame(dens=50),interval="confidence",level=0.90)
+```
+
+
+
+### 3. (Ejercicio 6.10 del Capítulo 6 página 118)
+####Se admite que una persona es proporcionada si su altura en cm es igual a su peso en kg más 100. En términos estadísticos si la recta de regresión de Y (altura) sobre X (peso) es:
+
+Y = 100 + X
+
+
+#### Contrastar, con un nivel de significación α = 0.05, si se puede considerar válida esta hipótesis a partir de los siguientes datos que corresponden a una muestra de mujeres jóvenes:
+
+```{r}
+x <- c(55,52,65,54,46,60,54,52,56,65,52,53,60)
+y <- c(164,164,173,163,157,168,171,158,169,172,168,160,172)
+```
+
+
+#### Razonar la bondad de la regresión y todos los detalles del contraste.
+
+```{r}
+lmod2<-lm(y  ~ x)
+summary(lmod2)
+
+```
+
+
+```{r}
+plot(y~x, xlim=c(40,75), ylim=c(140, 180))
+abline(lmod2)
+abline(100,1)
+```
+
+
+```{r}
+confint(lmod2)
+
+```
+
+
+```{r}
+modelo0<-lm(y ~ 0 + offset(100 + x))
+anova(modelo0, lmod2)
+```
+
+Rechazamos la hipótesis nula
+
+
+
+#### 4. (Ejercicio 6.11 del Capítulo 6 página 119)
