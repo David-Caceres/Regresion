@@ -170,3 +170,82 @@ Rechazamos la hipótesis nula
 
 
 #### 4. (Ejercicio 6.11 del Capítulo 6 página 119)
+
+
+El período de oscilación de un péndulo es 2π| l/g
+donde l es la longitud y g es la constante de
+gravitación. En un experimento observamos t ij (j = 1, . . . , n i ) períodos correspondientes a l i (i =
+1, . . . , k) longitudes.
+
+#### (a) Proponer un modelo, con las hipótesis que se necesiten, para estimar la constante método de los mínimos cuadrados.
+
+
+```{r}
+longitud<- c(rep(18.3,4),rep(20,2),rep(21.5,3),rep(15,2))
+x<-sqrt(longitud)
+y<-c(8.58,7.9,8.2,7.8,8.4,9.2,9.7,8.95,9.2,7.5,8)
+lmod3<-lm(y ~ 0 + sqrt(x))
+summary(lmod3)
+```
+
+#### (b) Contrastar H0:2πg√
+
+```{r}
+# Miramos si el intervalo de confianza contiene el 2
+
+confint(lmod3)
+```
+
+No lo contiene así que rechazamos la hipótesis nula
+
+
+
+#### 5. (Ejercicio 8.4 del Capítulo 8 página 157)
+Se dispone de los siguientes datos sobre diez empresas fabricantes de productos de limpieza doméstica:
+
+```{r}
+# Datos
+
+v <- c(60,48,42,36,78,36,72,42,54,90)
+ip <- c(100,110,130,100,80,80,90,120,120,90)
+pu <- c(1.8,2.4,3.6,0.6,1.8,0.6,3.6,1.2,2.4,4.2)
+```
+
+```{r}
+lmod4<-lm(v ~ ip +pu)
+summary(lmod4)
+```
+
+
+#### 1) Estimar el vector de coeficientes β = (β 0 , β 1 , β 2 ) 0 del modelo
+
+```{r}
+lmod4$coefficients
+```
+
+#### 2) Estimar la matriz de varianzas-covarianzas del vector β.
+
+
+```{r}
+summary(lmod4)$sigma^2 * summary(lmod4)$cov.unscaled
+```
+
+
+#### 3) Calcular el coeficiente de determinación.
+
+```{r}
+sum4<-summary(lmod4)
+names(sum4)
+sum4$r.squared
+```
+
+
+## Ejercicios del libro de Faraway
+
+#### 1. (Ejercicio 1 cap. 4 pág. 56)
+For the prostate data, fit a model with lpsa as the response and the other variables as predictors:
+
+```{r}
+require(faraway)
+```
+
