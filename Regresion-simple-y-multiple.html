@@ -182,8 +182,6 @@ pre code {
 <h4>Hallar la recta de regresión simple de la variable respuesta raíz cuadrada de la velocidad sobre la variable regresora densidad con los datos de la tabla 1.1 del capítulo 1.</h4>
 <pre class="r"><code>require(faraway)</code></pre>
 <pre><code>## Loading required package: faraway</code></pre>
-<pre><code>## Warning in library(package, lib.loc = lib.loc, character.only = TRUE,
-## logical.return = TRUE, : there is no package called &#39;faraway&#39;</code></pre>
 <pre class="r"><code>dens &lt;- c(12.7,17.0,66.0,50.0,87.8,81.4,75.6,66.2,81.1,62.8,77.0,89.6,
            18.3,19.1,16.5,22.2,18.6,66.0,60.3,56.0,66.3,61.7,66.6,67.8)
 vel &lt;- c(62.4,50.7,17.1,25.9,12.4,13.4,13.7,17.9,13.8,17.9,15.8,12.6,
@@ -209,6 +207,416 @@ summary(lmod1)</code></pre>
 ## Residual standard error: 0.2689 on 22 degrees of freedom
 ## Multiple R-squared:  0.9685, Adjusted R-squared:  0.9671 
 ## F-statistic: 676.4 on 1 and 22 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+<div id="i-la-suma-de-los-residuos-es-cero" class="section level4">
+<h4>(i) La suma de los residuos es cero</h4>
+<pre class="r"><code>residuos&lt;- residuals(lmod1)
+sum(residuos)</code></pre>
+<pre><code>## [1] 8.881784e-16</code></pre>
+<pre class="r"><code># El valor es prácticamente cero por redondeo</code></pre>
+</div>
+<div id="ii-pyi-pyˆi" class="section level4">
+<h4>(ii) Pyi = Pyˆi</h4>
+<pre class="r"><code>sum(rvel)</code></pre>
+<pre><code>## [1] 120.1685</code></pre>
+<pre class="r"><code>sum(fitted(lmod1))</code></pre>
+<pre><code>## [1] 120.1685</code></pre>
+</div>
+<div id="iii-la-suma-de-los-residuos-ponderada-por-los-valores-de-la-variable-regresora-es-cero" class="section level4">
+<h4>(iii) La suma de los residuos ponderada por los valores de la variable regresora es cero:</h4>
+<pre class="r"><code>sum(residuos*dens)</code></pre>
+<pre><code>## [1] -1.566802e-14</code></pre>
+</div>
+<div id="iv-la-suma-de-los-residuos-ponderada-por-las-predicciones-de-los-valores-observados-es-cero" class="section level4">
+<h4>(iv) La suma de los residuos ponderada por las predicciones de los valores observados es cero:</h4>
+<pre class="r"><code>sum(fitted(lmod1)*residuos)</code></pre>
+<pre><code>## [1] 2.491063e-15</code></pre>
+</div>
+<div id="calcular-la-estimación-de-σ²-y-a-partir-de-ella-las-estimaciones-de-las-desviaciones-estándar-de-los-estimadores-de-los-parámetros-βˆ0-y-βˆ1." class="section level4">
+<h4>Calcular la estimación de σ² y, a partir de ella, las estimaciones de las desviaciones estándar de los estimadores de los parámetros βˆ0 y βˆ1.</h4>
+<pre class="r"><code>length&lt;-length(dens)
+SCRlmod1&lt;-sum(residuos^2)
+sigma&lt;-SCRlmod1/(length-2)
+sigma</code></pre>
+<pre><code>## [1] 0.07232808</code></pre>
+<pre class="r"><code>s2dens&lt;-(1/length)*sum((dens-mean(dens))^2)
+Sdens&lt;-length*s2dens
+ebeta1lmod1&lt;-sqrt(sigma*((1/length)+(mean(dens)^2/Sdens)))</code></pre>
+<pre class="r"><code>ebeta0lmod1&lt;-sqrt(sigma*((1/length)+(mean(dens)^2/Sdens)))
+ebeta0lmod1</code></pre>
+<pre><code>## [1] 0.1306294</code></pre>
+</div>
+<div id="escribir-los-intervalos-de-confianza-para-los-parámetros-con-un-nivel-de-confianza-del-95-." class="section level4">
+<h4>Escribir los intervalos de confianza para los parámetros con un nivel de confianza del 95 %.</h4>
+<pre class="r"><code>tlmod1 &lt;- qt(0.975,lmod1$df)
+# Para Beta1
+lmod1$coef[2]+c(-1,1)*tlmod1*ebeta1lmod1</code></pre>
+<pre><code>## [1] -0.3275345  0.2142833</code></pre>
+<pre class="r"><code># Para beta0
+lmod1$coef[1]+c(-1,1)*tlmod1*ebeta0lmod1</code></pre>
+<pre><code>## [1] 7.818904 8.360722</code></pre>
+</div>
+<div id="construir-la-tabla-para-la-significación-de-la-regresión-y-realizar-dicho-contraste.-h0-ß10-no-hay-efecto-de-la-relación-entre-ambas-variables" class="section level4">
+<h4>Construir la tabla para la significación de la regresión y realizar dicho contraste. (H0: ß1=0 (No hay efecto de la relación entre ambas variables)</h4>
+<pre class="r"><code>summary(aov(lmod1))</code></pre>
+<pre><code>##             Df Sum Sq Mean Sq F value Pr(&gt;F)    
+## dens         1  48.92   48.92   676.4 &lt;2e-16 ***
+## Residuals   22   1.59    0.07                   
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<p>Significativo a p&lt;&lt;alfa=0.005</p>
+</div>
+<div id="hallar-el-intervalo-de-la-predicción-de-la-respuesta-media-cuando-la-densidades-de-50-vehículos-por-km.-nivel-de-confianza-90" class="section level4">
+<h4>Hallar el intervalo de la predicción de la respuesta media cuando la densidades de 50 vehículos por km. Nivel de confianza: 90 %</h4>
+<pre class="r"><code>y0 &lt;- lmod1$coef[1]+lmod1$coef[2]*50
+
+y0</code></pre>
+<pre><code>## (Intercept) 
+##    5.258534</code></pre>
+<pre class="r"><code>tlmod1 &lt;- qt(0.950,lmod1$df)
+sigma &lt;- sqrt(sigma)
+y0+c(-1,1)*tlmod1*sigma*sqrt(1+(1/length)+((((50-mean(dens))^2)/Sdens)))</code></pre>
+<pre><code>## [1] 4.786912 5.730156</code></pre>
+<pre class="r"><code>predict(lmod1,new=data.frame(dens=50),interval=&quot;prediction&quot;,level=0.90)</code></pre>
+<pre><code>##        fit      lwr      upr
+## 1 5.258534 4.786912 5.730156</code></pre>
+<pre class="r"><code> predict(lmod1,new=data.frame(dens=50),interval=&quot;confidence&quot;,level=0.90)</code></pre>
+<pre><code>##        fit      lwr      upr
+## 1 5.258534 5.162817 5.354251</code></pre>
+</div>
+<div id="ejercicio-6.10-del-capítulo-6-página-118" class="section level3">
+<h3>3. (Ejercicio 6.10 del Capítulo 6 página 118)</h3>
+<p>####Se admite que una persona es proporcionada si su altura en cm es igual a su peso en kg más 100. En términos estadísticos si la recta de regresión de Y (altura) sobre X (peso) es:</p>
+<p>Y = 100 + X</p>
+<div id="contrastar-con-un-nivel-de-significación-α-0.05-si-se-puede-considerar-válida-esta-hipótesis-a-partir-de-los-siguientes-datos-que-corresponden-a-una-muestra-de-mujeres-jóvenes" class="section level4">
+<h4>Contrastar, con un nivel de significación α = 0.05, si se puede considerar válida esta hipótesis a partir de los siguientes datos que corresponden a una muestra de mujeres jóvenes:</h4>
+<pre class="r"><code>x &lt;- c(55,52,65,54,46,60,54,52,56,65,52,53,60)
+y &lt;- c(164,164,173,163,157,168,171,158,169,172,168,160,172)</code></pre>
+</div>
+<div id="razonar-la-bondad-de-la-regresión-y-todos-los-detalles-del-contraste." class="section level4">
+<h4>Razonar la bondad de la regresión y todos los detalles del contraste.</h4>
+<pre class="r"><code>lmod2&lt;-lm(y  ~ x)
+summary(lmod2)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = y ~ x)
+## 
+## Residuals:
+##    Min     1Q Median     3Q    Max 
+## -5.120 -1.531 -1.315  2.473  6.278 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) 121.4777    10.1857  11.926 1.24e-07 ***
+## x             0.8008     0.1821   4.398  0.00107 ** 
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 3.449 on 11 degrees of freedom
+## Multiple R-squared:  0.6375, Adjusted R-squared:  0.6045 
+## F-statistic: 19.34 on 1 and 11 DF,  p-value: 0.001067</code></pre>
+<pre class="r"><code>plot(y~x, xlim=c(40,75), ylim=c(140, 180))
+abline(lmod2)
+abline(100,1)</code></pre>
+<p><img src="data:image/png;base64,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" width="672" /></p>
+<pre class="r"><code>confint(lmod2)</code></pre>
+<pre><code>##                  2.5 %     97.5 %
+## (Intercept) 99.0591808 143.896222
+## x            0.4000513   1.201578</code></pre>
+<pre class="r"><code>modelo0&lt;-lm(y ~ 0 + offset(100 + x))
+anova(modelo0, lmod2)</code></pre>
+<pre><code>## Analysis of Variance Table
+## 
+## Model 1: y ~ 0 + offset(100 + x)
+## Model 2: y ~ x
+##   Res.Df     RSS Df Sum of Sq      F    Pr(&gt;F)    
+## 1     13 1547.00                                  
+## 2     11  130.84  2    1416.2 59.528 1.259e-06 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<p>Rechazamos la hipótesis nula</p>
+</div>
+<div id="ejercicio-6.11-del-capítulo-6-página-119" class="section level4">
+<h4>4. (Ejercicio 6.11 del Capítulo 6 página 119)</h4>
+<p>El período de oscilación de un péndulo es 2π| l/g donde l es la longitud y g es la constante de gravitación. En un experimento observamos t ij (j = 1, . . . , n i ) períodos correspondientes a l i (i = 1, . . . , k) longitudes.</p>
+</div>
+<div id="a-proponer-un-modelo-con-las-hipótesis-que-se-necesiten-para-estimar-la-constante-método-de-los-mínimos-cuadrados." class="section level4">
+<h4>(a) Proponer un modelo, con las hipótesis que se necesiten, para estimar la constante método de los mínimos cuadrados.</h4>
+<pre class="r"><code>longitud&lt;- c(rep(18.3,4),rep(20,2),rep(21.5,3),rep(15,2))
+x&lt;-sqrt(longitud)
+y&lt;-c(8.58,7.9,8.2,7.8,8.4,9.2,9.7,8.95,9.2,7.5,8)
+lmod3&lt;-lm(y ~ 0 + sqrt(x))
+summary(lmod3)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = y ~ 0 + sqrt(x))
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -0.64760 -0.39276 -0.03791  0.28012  0.90512 
+## 
+## Coefficients:
+##         Estimate Std. Error t value Pr(&gt;|t|)    
+## sqrt(x)  4.08433    0.07194   56.77 6.97e-14 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.4969 on 10 degrees of freedom
+## Multiple R-squared:  0.9969, Adjusted R-squared:  0.9966 
+## F-statistic:  3223 on 1 and 10 DF,  p-value: 6.973e-14</code></pre>
+</div>
+<div id="b-contrastar-h02πg" class="section level4">
+<h4>(b) Contrastar H0:2πg√</h4>
+<pre class="r"><code># Miramos si el intervalo de confianza contiene el 2
+
+confint(lmod3)</code></pre>
+<pre><code>##            2.5 %   97.5 %
+## sqrt(x) 3.924036 4.244618</code></pre>
+<p>No lo contiene así que rechazamos la hipótesis nula</p>
+</div>
+<div id="ejercicio-8.4-del-capítulo-8-página-157" class="section level4">
+<h4>5. (Ejercicio 8.4 del Capítulo 8 página 157)</h4>
+<p>Se dispone de los siguientes datos sobre diez empresas fabricantes de productos de limpieza doméstica:</p>
+<pre class="r"><code># Datos
+
+v &lt;- c(60,48,42,36,78,36,72,42,54,90)
+ip &lt;- c(100,110,130,100,80,80,90,120,120,90)
+pu &lt;- c(1.8,2.4,3.6,0.6,1.8,0.6,3.6,1.2,2.4,4.2)</code></pre>
+<pre class="r"><code>lmod4&lt;-lm(v ~ ip +pu)
+summary(lmod4)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = v ~ ip + pu)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -15.865  -5.944   0.869   7.516  13.051 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)   
+## (Intercept)  95.2462    21.7077   4.388  0.00320 **
+## ip           -0.6240     0.2112  -2.954  0.02128 * 
+## pu           10.9038     2.9208   3.733  0.00733 **
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 10.94 on 7 degrees of freedom
+## Multiple R-squared:  0.7359, Adjusted R-squared:  0.6604 
+## F-statistic: 9.752 on 2 and 7 DF,  p-value: 0.009469</code></pre>
+</div>
+<div id="estimar-el-vector-de-coeficientes-β-β-0-β-1-β-2-0-del-modelo" class="section level4">
+<h4>1) Estimar el vector de coeficientes β = (β 0 , β 1 , β 2 ) 0 del modelo</h4>
+<pre class="r"><code>lmod4$coefficients</code></pre>
+<pre><code>## (Intercept)          ip          pu 
+##  95.2462340  -0.6240469  10.9038497</code></pre>
+</div>
+<div id="estimar-la-matriz-de-varianzas-covarianzas-del-vector-β." class="section level4">
+<h4>2) Estimar la matriz de varianzas-covarianzas del vector β.</h4>
+<pre class="r"><code>summary(lmod4)$sigma^2 * summary(lmod4)$cov.unscaled</code></pre>
+<pre><code>##             (Intercept)          ip         pu
+## (Intercept)  471.224820 -4.32088690 -8.3457769
+## ip            -4.320887  0.04462209 -0.1038586
+## pu            -8.345777 -0.10385856  8.5312386</code></pre>
+</div>
+<div id="calcular-el-coeficiente-de-determinación." class="section level4">
+<h4>3) Calcular el coeficiente de determinación.</h4>
+<pre class="r"><code>sum4&lt;-summary(lmod4)
+names(sum4)</code></pre>
+<pre><code>##  [1] &quot;call&quot;          &quot;terms&quot;         &quot;residuals&quot;     &quot;coefficients&quot; 
+##  [5] &quot;aliased&quot;       &quot;sigma&quot;         &quot;df&quot;            &quot;r.squared&quot;    
+##  [9] &quot;adj.r.squared&quot; &quot;fstatistic&quot;    &quot;cov.unscaled&quot;</code></pre>
+<pre class="r"><code>sum4$r.squared</code></pre>
+<pre><code>## [1] 0.7358837</code></pre>
+</div>
+</div>
+<div id="ejercicios-del-libro-de-faraway" class="section level2">
+<h2>Ejercicios del libro de Faraway</h2>
+<div id="ejercicio-1-cap.-4-pág.-56" class="section level4">
+<h4>1. (Ejercicio 1 cap. 4 pág. 56)</h4>
+<p>For the prostate data, fit a model with lpsa as the response and the other variables as predictors:</p>
+<pre class="r"><code>require(faraway)
+data(prostate)</code></pre>
+<pre class="r"><code>lmod5&lt;- lm(lpsa~lcavol + lweight + age + lbph + svi +lcp+ gleason+pgg45, data = prostate)
+summary(lmod5)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = lpsa ~ lcavol + lweight + age + lbph + svi + lcp + 
+##     gleason + pgg45, data = prostate)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -1.7331 -0.3713 -0.0170  0.4141  1.6381 
+## 
+## Coefficients:
+##              Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  0.669337   1.296387   0.516  0.60693    
+## lcavol       0.587022   0.087920   6.677 2.11e-09 ***
+## lweight      0.454467   0.170012   2.673  0.00896 ** 
+## age         -0.019637   0.011173  -1.758  0.08229 .  
+## lbph         0.107054   0.058449   1.832  0.07040 .  
+## svi          0.766157   0.244309   3.136  0.00233 ** 
+## lcp         -0.105474   0.091013  -1.159  0.24964    
+## gleason      0.045142   0.157465   0.287  0.77503    
+## pgg45        0.004525   0.004421   1.024  0.30886    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.7084 on 88 degrees of freedom
+## Multiple R-squared:  0.6548, Adjusted R-squared:  0.6234 
+## F-statistic: 20.86 on 8 and 88 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+<div id="a-suppose-a-new-patient-with-the-following-values-arrives" class="section level4">
+<h4>(a) Suppose a new patient with the following values arrives:</h4>
+<p>Predict the lpsa for this patient along with an appropriate 95% CI.</p>
+<pre class="r"><code>head(x0pros &lt;- data.frame(lcavol=1.44692,
+                                              lweight=3.62301,
+                                              age=65,
+                                              lbph=0.30010,
+                                              svi=0,
+                                              lcp=-0.79851,
+                                              gleason=7,
+                                              pgg45=15))</code></pre>
+<pre><code>##    lcavol lweight age   lbph svi      lcp gleason pgg45
+## 1 1.44692 3.62301  65 0.3001   0 -0.79851       7    15</code></pre>
+<pre class="r"><code>predict(lmod5, x0pros, interval=&quot;prediction&quot;, level=0.95)</code></pre>
+<pre><code>##        fit       lwr      upr
+## 1 2.389053 0.9646584 3.813447</code></pre>
+</div>
+<div id="b-repeat-the-last-question-for-a-patient-with-the-same-values-except-that-he-is-age-20.-explain-why-the-ci-is-wider." class="section level4">
+<h4>(b) Repeat the last question for a patient with the same values except that he is age 20. Explain why the CI is wider.</h4>
+<pre class="r"><code>x1pros &lt;- data.frame(lcavol=1.44692,lweight=3.62301,age=20,lbph=0.30010,svi=0,lcp=-0.79851,gleason=7,pgg45=15)
+predict(lmod5,x1pros,interval=&quot;prediction&quot;)</code></pre>
+<pre><code>##        fit      lwr      upr
+## 1 3.272726 1.538744 5.006707</code></pre>
+<p>E el apartado B, el valor para la edad, está fuera del rango de los valores del dataset, por eso el intervalo de confianza es mayor.</p>
+</div>
+<div id="c-for-the-model-of-the-previous-question-remove-all-the-predictors-that-are-not-significant-at-the-5-level.-now-recompute-the-predictions-of-the-previous-question.-are-the-cis-wider-or-narrower-which-predictions-would-you-prefer-explain." class="section level4">
+<h4>(c) For the model of the previous question, remove all the predictors that are not significant at the 5% level. Now recompute the predictions of the previous question. Are the CIs wider or narrower? Which predictions would you prefer? Explain.</h4>
+<pre class="r"><code> summary(lmod5)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = lpsa ~ lcavol + lweight + age + lbph + svi + lcp + 
+##     gleason + pgg45, data = prostate)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -1.7331 -0.3713 -0.0170  0.4141  1.6381 
+## 
+## Coefficients:
+##              Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  0.669337   1.296387   0.516  0.60693    
+## lcavol       0.587022   0.087920   6.677 2.11e-09 ***
+## lweight      0.454467   0.170012   2.673  0.00896 ** 
+## age         -0.019637   0.011173  -1.758  0.08229 .  
+## lbph         0.107054   0.058449   1.832  0.07040 .  
+## svi          0.766157   0.244309   3.136  0.00233 ** 
+## lcp         -0.105474   0.091013  -1.159  0.24964    
+## gleason      0.045142   0.157465   0.287  0.77503    
+## pgg45        0.004525   0.004421   1.024  0.30886    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.7084 on 88 degrees of freedom
+## Multiple R-squared:  0.6548, Adjusted R-squared:  0.6234 
+## F-statistic: 20.86 on 8 and 88 DF,  p-value: &lt; 2.2e-16</code></pre>
+<p>Las variables con significación al 5% son “lcavol”, “lweight”, “svi”. Creamos un nuevo modelo con ellas.</p>
+<pre class="r"><code>lmod6&lt;-lm(lpsa ~ lcavol + lweight + svi, data=prostate)
+summary(lmod6)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = lpsa ~ lcavol + lweight + svi, data = prostate)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -1.72964 -0.45764  0.02812  0.46403  1.57013 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) -0.26809    0.54350  -0.493  0.62298    
+## lcavol       0.55164    0.07467   7.388  6.3e-11 ***
+## lweight      0.50854    0.15017   3.386  0.00104 ** 
+## svi          0.66616    0.20978   3.176  0.00203 ** 
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.7168 on 93 degrees of freedom
+## Multiple R-squared:  0.6264, Adjusted R-squared:  0.6144 
+## F-statistic: 51.99 on 3 and 93 DF,  p-value: &lt; 2.2e-16</code></pre>
+<pre class="r"><code>predict(lmod6, x0pros, interval=&quot;prediction&quot;)</code></pre>
+<pre><code>##        fit       lwr      upr
+## 1 2.372534 0.9383436 3.806724</code></pre>
+<pre class="r"><code>predict(lmod6, x1pros, interval=&quot;prediction&quot;)</code></pre>
+<pre><code>##        fit       lwr      upr
+## 1 2.372534 0.9383436 3.806724</code></pre>
+</div>
+<div id="ejercicio-2-cap.-4-pág.-57" class="section level4">
+<h4>2. (Ejercicio 2 cap. 4 pág. 57)</h4>
+<p>Using the teengamb data, fit a model with gamble as the response and the other variables as predictors.</p>
+<pre class="r"><code>data(teengamb)
+lmod7&lt;-lm(gamble ~ sex + status + income +verbal, data=teengamb)
+summary(lmod7)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = gamble ~ sex + status + income + verbal, data = teengamb)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -51.082 -11.320  -1.451   9.452  94.252 
+## 
+## Coefficients:
+##              Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  22.55565   17.19680   1.312   0.1968    
+## sex         -22.11833    8.21111  -2.694   0.0101 *  
+## status        0.05223    0.28111   0.186   0.8535    
+## income        4.96198    1.02539   4.839 1.79e-05 ***
+## verbal       -2.95949    2.17215  -1.362   0.1803    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 22.69 on 42 degrees of freedom
+## Multiple R-squared:  0.5267, Adjusted R-squared:  0.4816 
+## F-statistic: 11.69 on 4 and 42 DF,  p-value: 1.815e-06</code></pre>
+</div>
+<div id="a-predict-the-amount-that-a-male-with-average-given-these-data-status-income-and-verbal-score-would-gamble-along-with-an-appropriate-95-ci." class="section level4">
+<h4>(a) Predict the amount that a male with average (given these data) status, income and verbal score would gamble along with an appropriate 95% CI.</h4>
+<pre class="r"><code>attach(teengamb)
+x0gamb&lt;-data.frame( sex=0, status=median(status), 
+                                  income=median(income), verbal=median(verbal))
+
+predict(lmod7,x0gamb,interval=&quot;prediction&quot;)</code></pre>
+<pre><code>##        fit       lwr      upr
+## 1 20.21168 -26.98701 67.41037</code></pre>
+</div>
+<div id="b-repeat-the-prediction-for-a-male-with-maximal-values-for-this-data-of-status-income-and-verbal-score.-which-ci-is-wider-and-why-is-this-result-expected" class="section level4">
+<h4>(b) Repeat the prediction for a male with maximal values (for this data) of status, income and verbal score. Which CI is wider and why is this result expected?</h4>
+<pre class="r"><code>x1gamb &lt;- data.frame(sex=0, status=max(status),
+                                            income=max(income),verbal=max(verbal))
+
+predict(lmod7,x1gamb,interval=&quot;prediction&quot;)</code></pre>
+<pre><code>##        fit      lwr    upr
+## 1 71.30794 17.06588 125.55</code></pre>
+</div>
+<div id="c-fit-a-model-with-sqrtgamble-as-the-response-but-with-the-same-predictors.-now-predict-the-response-and-give-a-95-prediction-interval-for-the-individual-in-a.-take-care-to-give-your-answer-in-the-original-units-of-the-response." class="section level4">
+<h4>(c) Fit a model with sqrt(gamble) as the response but with the same predictors. Now predict the response and give a 95% prediction interval for the individual in (a). Take care to give your answer in the original units of the response.</h4>
+<pre class="r"><code>lmod8&lt;-lm(sqrt(gamble) ~ sex + status + income +verbal, data=teengamb)
+predict(lmod8,x0gamb,interval=&quot;prediction&quot;)</code></pre>
+<pre><code>##        fit       lwr      upr
+## 1 3.155673 -1.179373 7.490718</code></pre>
+<pre class="r"><code>predict(lmod8,x0gamb,interval=&quot;prediction&quot;)^2</code></pre>
+<pre><code>##        fit     lwr      upr
+## 1 9.958271 1.39092 56.11086</code></pre>
+</div>
+<div id="d-repeat-the-prediction-for-the-model-in-c-for-a-female-with-status-20-income-1-verbal-10.-comment-on-the-credibility-of-the-result" class="section level4">
+<h4>(d) Repeat the prediction for the model in (c) for a female with status = 20, income = 1, verbal = 10. Comment on the credibility of the result</h4>
+<pre class="r"><code>x2gamb &lt;- data.frame(sex=1,status=20,income=1,verbal=10)
+ predict(lmod8,x2gamb,interval=&quot;prediction&quot;)^2</code></pre>
+<pre><code>##        fit      lwr      upr
+## 1 4.353398 47.73238 7.485167</code></pre>
+</div>
+</div>
+<div id="ejercicio-3-cap.-4-pág.-57" class="section level2">
+<h2>3. (Ejercicio 3 cap. 4 pág. 57)</h2>
+<p>The snail dataset contains percentage water content of the tissues of snails grown under three different levels of relative humidity and two different temperatures.</p>
 </div>
 
 

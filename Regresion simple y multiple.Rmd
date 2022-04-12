@@ -75,7 +75,7 @@ sigma
 ```{r}
 s2dens<-(1/length)*sum((dens-mean(dens))^2)
 Sdens<-length*s2dens
-ebeta1lmod1<.sqrt(sigma/Sdens)
+ebeta1lmod1<-sqrt(sigma*((1/length)+(mean(dens)^2/Sdens)))
 ```
 
 ```{r}
@@ -87,6 +87,8 @@ ebeta0lmod1
 #### Escribir los intervalos de confianza para los parámetros con un nivel de confianza del 95 %.
 
 ```{r}
+
+tlmod1 <- qt(0.975,lmod1$df)
 # Para Beta1
 lmod1$coef[2]+c(-1,1)*tlmod1*ebeta1lmod1
 
@@ -109,17 +111,17 @@ Significativo a p<<alfa=0.005
 
 
 ```{r}
-y0 <- recta68$coef[1]+recta68$coef[2]*50
+y0 <- lmod1$coef[1]+lmod1$coef[2]*50
 
 y0
 
-trecta68 <- qt(0.950,recta68$df)
-sigma68 <- sqrt(sigma268)
-y0+c(-1,1)*trecta68*sigma68*sqrt(1+(1/n68)+((((50-mean(dens))^2)/Sdens)))
+tlmod1 <- qt(0.950,lmod1$df)
+sigma <- sqrt(sigma)
+y0+c(-1,1)*tlmod1*sigma*sqrt(1+(1/length)+((((50-mean(dens))^2)/Sdens)))
 
-predict(recta68,new=data.frame(dens=50),interval="prediction",level=0.90)
+predict(lmod1,new=data.frame(dens=50),interval="prediction",level=0.90)
 
- predict(recta68,new=data.frame(dens=50),interval="confidence",level=0.90)
+ predict(lmod1,new=data.frame(dens=50),interval="confidence",level=0.90)
 ```
 
 
@@ -247,5 +249,119 @@ For the prostate data, fit a model with lpsa as the response and the other varia
 
 ```{r}
 require(faraway)
+data(prostate)
 ```
 
+```{r}
+lmod5<- lm(lpsa~lcavol + lweight + age + lbph + svi +lcp+ gleason+pgg45, data = prostate)
+summary(lmod5)
+```
+
+
+#### (a) Suppose a new patient with the following values arrives:
+
+Predict the lpsa for this patient along with an appropriate 95% CI.
+
+
+```{r}
+head(x0pros <- data.frame(lcavol=1.44692,
+                                              lweight=3.62301,
+                                              age=65,
+                                              lbph=0.30010,
+                                              svi=0,
+                                              lcp=-0.79851,
+                                              gleason=7,
+                                              pgg45=15))
+
+
+```
+
+
+
+```{r}
+predict(lmod5, x0pros, interval="prediction", level=0.95)
+```
+
+#### (b) Repeat the last question for a patient with the same values except that he is age 20. Explain why the CI is wider.
+
+```{r}
+x1pros <- data.frame(lcavol=1.44692,lweight=3.62301,age=20,lbph=0.30010,svi=0,lcp=-0.79851,gleason=7,pgg45=15)
+predict(lmod5,x1pros,interval="prediction")
+```
+
+E el apartado B, el valor para la edad, está fuera del rango de los valores del dataset, por eso el intervalo de confianza es mayor.
+
+#### (c) For the model of the previous question, remove all the predictors that are not significant at the 5% level. Now recompute the predictions of the previous question. Are the CIs wider or narrower? Which predictions would you prefer? Explain.
+```{r}
+ summary(lmod5)
+```
+
+Las variables con significación al 5% son "lcavol", "lweight", "svi". Creamos un nuevo modelo con ellas.
+
+```{r}
+lmod6<-lm(lpsa ~ lcavol + lweight + svi, data=prostate)
+summary(lmod6)
+```
+
+
+```{r}
+predict(lmod6, x0pros, interval="prediction")
+
+predict(lmod6, x1pros, interval="prediction")
+```
+
+
+#### 2. (Ejercicio 2 cap. 4 pág. 57)
+Using the teengamb data, fit a model with gamble as the response and the other variables as predictors.
+
+```{r}
+data(teengamb)
+lmod7<-lm(gamble ~ sex + status + income +verbal, data=teengamb)
+summary(lmod7)
+```
+
+#### (a) Predict the amount that a male with average (given these data) status, income and verbal score would gamble along with an appropriate 95% CI.
+
+```{r}
+
+attach(teengamb)
+x0gamb<-data.frame( sex=0, status=median(status), 
+                                  income=median(income), verbal=median(verbal))
+
+predict(lmod7,x0gamb,interval="prediction")
+```
+
+
+#### (b) Repeat the prediction for a male with maximal values (for this data) of status, income and verbal score. Which CI is wider and why is this result expected?
+
+```{r}
+x1gamb <- data.frame(sex=0, status=max(status),
+                                            income=max(income),verbal=max(verbal))
+
+predict(lmod7,x1gamb,interval="prediction")
+```
+
+
+#### (c) Fit a model with sqrt(gamble) as the response but with the same predictors. Now predict the response and give a 95% prediction interval for the individual in (a). Take care to give your answer in the original units of the response.
+
+```{r}
+lmod8<-lm(sqrt(gamble) ~ sex + status + income +verbal, data=teengamb)
+predict(lmod8,x0gamb,interval="prediction")
+```
+
+```{r}
+predict(lmod8,x0gamb,interval="prediction")^2
+```
+
+
+#### (d) Repeat the prediction for the model in (c) for a female with status = 20, income = 1, verbal = 10. Comment on the credibility of the result
+
+```{r}
+x2gamb <- data.frame(sex=1,status=20,income=1,verbal=10)
+ predict(lmod8,x2gamb,interval="prediction")^2
+```
+
+
+
+## 3. (Ejercicio 3 cap. 4 pág. 57)
+The snail dataset contains percentage water content of the tissues of snails grown under three different levels of relative humidity and two different temperatures.
