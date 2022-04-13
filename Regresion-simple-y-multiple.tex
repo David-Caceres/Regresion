@@ -1,0 +1,1730 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\title{Ejercicios\_Regresión\_simple\_multiple}
+\author{David Cáceres}
+\date{11/4/2022}
+
+\usepackage{amsmath,amssymb}
+\usepackage{lmodern}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  pdftitle={Ejercicios\_Regresión\_simple\_multiple},
+  pdfauthor={David Cáceres},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+
+\begin{document}
+\maketitle
+
+\hypertarget{ejercicio-6.8-del-capuxedtulo-6-puxe1gina-118}{%
+\paragraph{1. (Ejercicio 6.8 del Capítulo 6 página
+118)}\label{ejercicio-6.8-del-capuxedtulo-6-puxe1gina-118}}
+
+\hypertarget{hallar-la-recta-de-regresiuxf3n-simple-de-la-variable-respuesta-rauxedz-cuadrada-de-la-velocidad-sobre-la-variable-regresora-densidad-con-los-datos-de-la-tabla-1.1-del-capuxedtulo-1.}{%
+\paragraph{Hallar la recta de regresión simple de la variable respuesta
+raíz cuadrada de la velocidad sobre la variable regresora densidad con
+los datos de la tabla 1.1 del capítulo
+1.}\label{hallar-la-recta-de-regresiuxf3n-simple-de-la-variable-respuesta-rauxedz-cuadrada-de-la-velocidad-sobre-la-variable-regresora-densidad-con-los-datos-de-la-tabla-1.1-del-capuxedtulo-1.}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{require}\NormalTok{(faraway)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Loading required package: faraway
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{dens }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\FloatTok{12.7}\NormalTok{,}\FloatTok{17.0}\NormalTok{,}\FloatTok{66.0}\NormalTok{,}\FloatTok{50.0}\NormalTok{,}\FloatTok{87.8}\NormalTok{,}\FloatTok{81.4}\NormalTok{,}\FloatTok{75.6}\NormalTok{,}\FloatTok{66.2}\NormalTok{,}\FloatTok{81.1}\NormalTok{,}\FloatTok{62.8}\NormalTok{,}\FloatTok{77.0}\NormalTok{,}\FloatTok{89.6}\NormalTok{,}
+           \FloatTok{18.3}\NormalTok{,}\FloatTok{19.1}\NormalTok{,}\FloatTok{16.5}\NormalTok{,}\FloatTok{22.2}\NormalTok{,}\FloatTok{18.6}\NormalTok{,}\FloatTok{66.0}\NormalTok{,}\FloatTok{60.3}\NormalTok{,}\FloatTok{56.0}\NormalTok{,}\FloatTok{66.3}\NormalTok{,}\FloatTok{61.7}\NormalTok{,}\FloatTok{66.6}\NormalTok{,}\FloatTok{67.8}\NormalTok{)}
+\NormalTok{vel }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\FloatTok{62.4}\NormalTok{,}\FloatTok{50.7}\NormalTok{,}\FloatTok{17.1}\NormalTok{,}\FloatTok{25.9}\NormalTok{,}\FloatTok{12.4}\NormalTok{,}\FloatTok{13.4}\NormalTok{,}\FloatTok{13.7}\NormalTok{,}\FloatTok{17.9}\NormalTok{,}\FloatTok{13.8}\NormalTok{,}\FloatTok{17.9}\NormalTok{,}\FloatTok{15.8}\NormalTok{,}\FloatTok{12.6}\NormalTok{,}
+          \FloatTok{51.2}\NormalTok{,}\FloatTok{50.8}\NormalTok{,}\FloatTok{54.7}\NormalTok{,}\FloatTok{46.5}\NormalTok{,}\FloatTok{46.3}\NormalTok{,}\FloatTok{16.9}\NormalTok{,}\FloatTok{19.8}\NormalTok{,}\FloatTok{21.2}\NormalTok{,}\FloatTok{18.3}\NormalTok{,}\FloatTok{18.0}\NormalTok{,}\FloatTok{16.6}\NormalTok{,}\FloatTok{18.3}\NormalTok{)}
+\NormalTok{rvel }\OtherTok{\textless{}{-}} \FunctionTok{sqrt}\NormalTok{(vel)}
+\NormalTok{lmod1}\OtherTok{\textless{}{-}}\FunctionTok{lm}\NormalTok{(rvel }\SpecialCharTok{\textasciitilde{}}\NormalTok{ dens)}
+\FunctionTok{summary}\NormalTok{(lmod1)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = rvel ~ dens)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -0.35337 -0.22722 -0.03566  0.18942  0.53349 
+## 
+## Coefficients:
+##              Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)  8.089813   0.130629   61.93   <2e-16 ***
+## dens        -0.056626   0.002177  -26.01   <2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 0.2689 on 22 degrees of freedom
+## Multiple R-squared:  0.9685, Adjusted R-squared:  0.9671 
+## F-statistic: 676.4 on 1 and 22 DF,  p-value: < 2.2e-16
+\end{verbatim}
+
+\hypertarget{i-la-suma-de-los-residuos-es-cero}{%
+\paragraph{(i) La suma de los residuos es
+cero}\label{i-la-suma-de-los-residuos-es-cero}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{residuos}\OtherTok{\textless{}{-}} \FunctionTok{residuals}\NormalTok{(lmod1)}
+\FunctionTok{sum}\NormalTok{(residuos)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 8.881784e-16
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# El valor es prácticamente cero por redondeo}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{ii-pyi-pyux2c6i}{%
+\paragraph{(ii) Pyi = Pyˆi}\label{ii-pyi-pyux2c6i}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{sum}\NormalTok{(rvel)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 120.1685
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{sum}\NormalTok{(}\FunctionTok{fitted}\NormalTok{(lmod1))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 120.1685
+\end{verbatim}
+
+\hypertarget{iii-la-suma-de-los-residuos-ponderada-por-los-valores-de-la-variable-regresora-es-cero}{%
+\paragraph{(iii) La suma de los residuos ponderada por los valores de la
+variable regresora es
+cero:}\label{iii-la-suma-de-los-residuos-ponderada-por-los-valores-de-la-variable-regresora-es-cero}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{sum}\NormalTok{(residuos}\SpecialCharTok{*}\NormalTok{dens)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] -1.566802e-14
+\end{verbatim}
+
+\hypertarget{iv-la-suma-de-los-residuos-ponderada-por-las-predicciones-de-los-valores-observados-es-cero}{%
+\paragraph{(iv) La suma de los residuos ponderada por las predicciones
+de los valores observados es
+cero:}\label{iv-la-suma-de-los-residuos-ponderada-por-las-predicciones-de-los-valores-observados-es-cero}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{sum}\NormalTok{(}\FunctionTok{fitted}\NormalTok{(lmod1)}\SpecialCharTok{*}\NormalTok{residuos)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 2.491063e-15
+\end{verbatim}
+
+\hypertarget{calcular-la-estimaciuxf3n-de-ux3c3uxb2-y-a-partir-de-ella-las-estimaciones-de-las-desviaciones-estuxe1ndar-de-los-estimadores-de-los-paruxe1metros-ux3b2ux2c60-y-ux3b2ux2c61.}{%
+\paragraph{Calcular la estimación de σ² y, a partir de ella, las
+estimaciones de las desviaciones estándar de los estimadores de los
+parámetros βˆ0 y
+βˆ1.}\label{calcular-la-estimaciuxf3n-de-ux3c3uxb2-y-a-partir-de-ella-las-estimaciones-de-las-desviaciones-estuxe1ndar-de-los-estimadores-de-los-paruxe1metros-ux3b2ux2c60-y-ux3b2ux2c61.}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{length}\OtherTok{\textless{}{-}}\FunctionTok{length}\NormalTok{(dens)}
+\NormalTok{SCRlmod1}\OtherTok{\textless{}{-}}\FunctionTok{sum}\NormalTok{(residuos}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{)}
+\NormalTok{sigma}\OtherTok{\textless{}{-}}\NormalTok{SCRlmod1}\SpecialCharTok{/}\NormalTok{(length}\DecValTok{{-}2}\NormalTok{)}
+\NormalTok{sigma}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.07232808
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{s2dens}\OtherTok{\textless{}{-}}\NormalTok{(}\DecValTok{1}\SpecialCharTok{/}\NormalTok{length)}\SpecialCharTok{*}\FunctionTok{sum}\NormalTok{((dens}\SpecialCharTok{{-}}\FunctionTok{mean}\NormalTok{(dens))}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{)}
+\NormalTok{Sdens}\OtherTok{\textless{}{-}}\NormalTok{length}\SpecialCharTok{*}\NormalTok{s2dens}
+\NormalTok{ebeta1lmod1}\OtherTok{\textless{}{-}}\FunctionTok{sqrt}\NormalTok{(sigma}\SpecialCharTok{*}\NormalTok{((}\DecValTok{1}\SpecialCharTok{/}\NormalTok{length)}\SpecialCharTok{+}\NormalTok{(}\FunctionTok{mean}\NormalTok{(dens)}\SpecialCharTok{\^{}}\DecValTok{2}\SpecialCharTok{/}\NormalTok{Sdens)))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ebeta0lmod1}\OtherTok{\textless{}{-}}\FunctionTok{sqrt}\NormalTok{(sigma}\SpecialCharTok{*}\NormalTok{((}\DecValTok{1}\SpecialCharTok{/}\NormalTok{length)}\SpecialCharTok{+}\NormalTok{(}\FunctionTok{mean}\NormalTok{(dens)}\SpecialCharTok{\^{}}\DecValTok{2}\SpecialCharTok{/}\NormalTok{Sdens)))}
+\NormalTok{ebeta0lmod1}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.1306294
+\end{verbatim}
+
+\hypertarget{escribir-los-intervalos-de-confianza-para-los-paruxe1metros-con-un-nivel-de-confianza-del-95-.}{%
+\paragraph{Escribir los intervalos de confianza para los parámetros con
+un nivel de confianza del 95
+\%.}\label{escribir-los-intervalos-de-confianza-para-los-paruxe1metros-con-un-nivel-de-confianza-del-95-.}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{tlmod1 }\OtherTok{\textless{}{-}} \FunctionTok{qt}\NormalTok{(}\FloatTok{0.975}\NormalTok{,lmod1}\SpecialCharTok{$}\NormalTok{df)}
+\CommentTok{\# Para Beta1}
+\NormalTok{lmod1}\SpecialCharTok{$}\NormalTok{coef[}\DecValTok{2}\NormalTok{]}\SpecialCharTok{+}\FunctionTok{c}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{)}\SpecialCharTok{*}\NormalTok{tlmod1}\SpecialCharTok{*}\NormalTok{ebeta1lmod1}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] -0.3275345  0.2142833
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Para beta0}
+\NormalTok{lmod1}\SpecialCharTok{$}\NormalTok{coef[}\DecValTok{1}\NormalTok{]}\SpecialCharTok{+}\FunctionTok{c}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{)}\SpecialCharTok{*}\NormalTok{tlmod1}\SpecialCharTok{*}\NormalTok{ebeta0lmod1}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 7.818904 8.360722
+\end{verbatim}
+
+\hypertarget{construir-la-tabla-para-la-significaciuxf3n-de-la-regresiuxf3n-y-realizar-dicho-contraste.-h0-uxdf10-no-hay-efecto-de-la-relaciuxf3n-entre-ambas-variables}{%
+\paragraph{Construir la tabla para la significación de la regresión y
+realizar dicho contraste. (H0: ß1=0 (No hay efecto de la relación entre
+ambas
+variables)}\label{construir-la-tabla-para-la-significaciuxf3n-de-la-regresiuxf3n-y-realizar-dicho-contraste.-h0-uxdf10-no-hay-efecto-de-la-relaciuxf3n-entre-ambas-variables}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{summary}\NormalTok{(}\FunctionTok{aov}\NormalTok{(lmod1))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##             Df Sum Sq Mean Sq F value Pr(>F)    
+## dens         1  48.92   48.92   676.4 <2e-16 ***
+## Residuals   22   1.59    0.07                   
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+\end{verbatim}
+
+Significativo a p\textless\textless alfa=0.005
+
+\hypertarget{hallar-el-intervalo-de-la-predicciuxf3n-de-la-respuesta-media-cuando-la-densidades-de-50-vehuxedculos-por-km.-nivel-de-confianza-90}{%
+\paragraph{Hallar el intervalo de la predicción de la respuesta media
+cuando la densidades de 50 vehículos por km. Nivel de confianza: 90
+\%}\label{hallar-el-intervalo-de-la-predicciuxf3n-de-la-respuesta-media-cuando-la-densidades-de-50-vehuxedculos-por-km.-nivel-de-confianza-90}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{y0 }\OtherTok{\textless{}{-}}\NormalTok{ lmod1}\SpecialCharTok{$}\NormalTok{coef[}\DecValTok{1}\NormalTok{]}\SpecialCharTok{+}\NormalTok{lmod1}\SpecialCharTok{$}\NormalTok{coef[}\DecValTok{2}\NormalTok{]}\SpecialCharTok{*}\DecValTok{50}
+
+\NormalTok{y0}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## (Intercept) 
+##    5.258534
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{tlmod1 }\OtherTok{\textless{}{-}} \FunctionTok{qt}\NormalTok{(}\FloatTok{0.950}\NormalTok{,lmod1}\SpecialCharTok{$}\NormalTok{df)}
+\NormalTok{sigma }\OtherTok{\textless{}{-}} \FunctionTok{sqrt}\NormalTok{(sigma)}
+\NormalTok{y0}\SpecialCharTok{+}\FunctionTok{c}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{)}\SpecialCharTok{*}\NormalTok{tlmod1}\SpecialCharTok{*}\NormalTok{sigma}\SpecialCharTok{*}\FunctionTok{sqrt}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\NormalTok{(}\DecValTok{1}\SpecialCharTok{/}\NormalTok{length)}\SpecialCharTok{+}\NormalTok{((((}\DecValTok{50}\SpecialCharTok{{-}}\FunctionTok{mean}\NormalTok{(dens))}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{)}\SpecialCharTok{/}\NormalTok{Sdens)))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 4.786912 5.730156
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{predict}\NormalTok{(lmod1,}\AttributeTok{new=}\FunctionTok{data.frame}\NormalTok{(}\AttributeTok{dens=}\DecValTok{50}\NormalTok{),}\AttributeTok{interval=}\StringTok{"prediction"}\NormalTok{,}\AttributeTok{level=}\FloatTok{0.90}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##        fit      lwr      upr
+## 1 5.258534 4.786912 5.730156
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+ \FunctionTok{predict}\NormalTok{(lmod1,}\AttributeTok{new=}\FunctionTok{data.frame}\NormalTok{(}\AttributeTok{dens=}\DecValTok{50}\NormalTok{),}\AttributeTok{interval=}\StringTok{"confidence"}\NormalTok{,}\AttributeTok{level=}\FloatTok{0.90}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##        fit      lwr      upr
+## 1 5.258534 5.162817 5.354251
+\end{verbatim}
+
+\hypertarget{ejercicio-6.10-del-capuxedtulo-6-puxe1gina-118}{%
+\subsubsection{3. (Ejercicio 6.10 del Capítulo 6 página
+118)}\label{ejercicio-6.10-del-capuxedtulo-6-puxe1gina-118}}
+
+\#\#\#\#Se admite que una persona es proporcionada si su altura en cm es
+igual a su peso en kg más 100. En términos estadísticos si la recta de
+regresión de Y (altura) sobre X (peso) es:
+
+Y = 100 + X
+
+\hypertarget{contrastar-con-un-nivel-de-significaciuxf3n-ux3b1-0.05-si-se-puede-considerar-vuxe1lida-esta-hipuxf3tesis-a-partir-de-los-siguientes-datos-que-corresponden-a-una-muestra-de-mujeres-juxf3venes}{%
+\paragraph{Contrastar, con un nivel de significación α = 0.05, si se
+puede considerar válida esta hipótesis a partir de los siguientes datos
+que corresponden a una muestra de mujeres
+jóvenes:}\label{contrastar-con-un-nivel-de-significaciuxf3n-ux3b1-0.05-si-se-puede-considerar-vuxe1lida-esta-hipuxf3tesis-a-partir-de-los-siguientes-datos-que-corresponden-a-una-muestra-de-mujeres-juxf3venes}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\DecValTok{55}\NormalTok{,}\DecValTok{52}\NormalTok{,}\DecValTok{65}\NormalTok{,}\DecValTok{54}\NormalTok{,}\DecValTok{46}\NormalTok{,}\DecValTok{60}\NormalTok{,}\DecValTok{54}\NormalTok{,}\DecValTok{52}\NormalTok{,}\DecValTok{56}\NormalTok{,}\DecValTok{65}\NormalTok{,}\DecValTok{52}\NormalTok{,}\DecValTok{53}\NormalTok{,}\DecValTok{60}\NormalTok{)}
+\NormalTok{y }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\DecValTok{164}\NormalTok{,}\DecValTok{164}\NormalTok{,}\DecValTok{173}\NormalTok{,}\DecValTok{163}\NormalTok{,}\DecValTok{157}\NormalTok{,}\DecValTok{168}\NormalTok{,}\DecValTok{171}\NormalTok{,}\DecValTok{158}\NormalTok{,}\DecValTok{169}\NormalTok{,}\DecValTok{172}\NormalTok{,}\DecValTok{168}\NormalTok{,}\DecValTok{160}\NormalTok{,}\DecValTok{172}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{razonar-la-bondad-de-la-regresiuxf3n-y-todos-los-detalles-del-contraste.}{%
+\paragraph{Razonar la bondad de la regresión y todos los detalles del
+contraste.}\label{razonar-la-bondad-de-la-regresiuxf3n-y-todos-los-detalles-del-contraste.}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{lmod2}\OtherTok{\textless{}{-}}\FunctionTok{lm}\NormalTok{(y  }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x)}
+\FunctionTok{summary}\NormalTok{(lmod2)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = y ~ x)
+## 
+## Residuals:
+##    Min     1Q Median     3Q    Max 
+## -5.120 -1.531 -1.315  2.473  6.278 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(>|t|)    
+## (Intercept) 121.4777    10.1857  11.926 1.24e-07 ***
+## x             0.8008     0.1821   4.398  0.00107 ** 
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 3.449 on 11 degrees of freedom
+## Multiple R-squared:  0.6375, Adjusted R-squared:  0.6045 
+## F-statistic: 19.34 on 1 and 11 DF,  p-value: 0.001067
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{plot}\NormalTok{(y}\SpecialCharTok{\textasciitilde{}}\NormalTok{x, }\AttributeTok{xlim=}\FunctionTok{c}\NormalTok{(}\DecValTok{40}\NormalTok{,}\DecValTok{75}\NormalTok{), }\AttributeTok{ylim=}\FunctionTok{c}\NormalTok{(}\DecValTok{140}\NormalTok{, }\DecValTok{180}\NormalTok{))}
+\FunctionTok{abline}\NormalTok{(lmod2)}
+\FunctionTok{abline}\NormalTok{(}\DecValTok{100}\NormalTok{,}\DecValTok{1}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Regresion-simple-y-multiple_files/figure-latex/unnamed-chunk-14-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{confint}\NormalTok{(lmod2)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##                  2.5 %     97.5 %
+## (Intercept) 99.0591808 143.896222
+## x            0.4000513   1.201578
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{modelo0}\OtherTok{\textless{}{-}}\FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}} \DecValTok{0} \SpecialCharTok{+} \FunctionTok{offset}\NormalTok{(}\DecValTok{100} \SpecialCharTok{+}\NormalTok{ x))}
+\FunctionTok{anova}\NormalTok{(modelo0, lmod2)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Analysis of Variance Table
+## 
+## Model 1: y ~ 0 + offset(100 + x)
+## Model 2: y ~ x
+##   Res.Df     RSS Df Sum of Sq      F    Pr(>F)    
+## 1     13 1547.00                                  
+## 2     11  130.84  2    1416.2 59.528 1.259e-06 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+\end{verbatim}
+
+Rechazamos la hipótesis nula
+
+\hypertarget{ejercicio-6.11-del-capuxedtulo-6-puxe1gina-119}{%
+\paragraph{4. (Ejercicio 6.11 del Capítulo 6 página
+119)}\label{ejercicio-6.11-del-capuxedtulo-6-puxe1gina-119}}
+
+El período de oscilación de un péndulo es 2π\textbar{} l/g donde l es la
+longitud y g es la constante de gravitación. En un experimento
+observamos t ij (j = 1, . . . , n i ) períodos correspondientes a l i (i
+= 1, . . . , k) longitudes.
+
+\hypertarget{a-proponer-un-modelo-con-las-hipuxf3tesis-que-se-necesiten-para-estimar-la-constante-muxe9todo-de-los-muxednimos-cuadrados.}{%
+\paragraph{(a) Proponer un modelo, con las hipótesis que se necesiten,
+para estimar la constante método de los mínimos
+cuadrados.}\label{a-proponer-un-modelo-con-las-hipuxf3tesis-que-se-necesiten-para-estimar-la-constante-muxe9todo-de-los-muxednimos-cuadrados.}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{longitud}\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\FunctionTok{rep}\NormalTok{(}\FloatTok{18.3}\NormalTok{,}\DecValTok{4}\NormalTok{),}\FunctionTok{rep}\NormalTok{(}\DecValTok{20}\NormalTok{,}\DecValTok{2}\NormalTok{),}\FunctionTok{rep}\NormalTok{(}\FloatTok{21.5}\NormalTok{,}\DecValTok{3}\NormalTok{),}\FunctionTok{rep}\NormalTok{(}\DecValTok{15}\NormalTok{,}\DecValTok{2}\NormalTok{))}
+\NormalTok{x}\OtherTok{\textless{}{-}}\FunctionTok{sqrt}\NormalTok{(longitud)}
+\NormalTok{y}\OtherTok{\textless{}{-}}\FunctionTok{c}\NormalTok{(}\FloatTok{8.58}\NormalTok{,}\FloatTok{7.9}\NormalTok{,}\FloatTok{8.2}\NormalTok{,}\FloatTok{7.8}\NormalTok{,}\FloatTok{8.4}\NormalTok{,}\FloatTok{9.2}\NormalTok{,}\FloatTok{9.7}\NormalTok{,}\FloatTok{8.95}\NormalTok{,}\FloatTok{9.2}\NormalTok{,}\FloatTok{7.5}\NormalTok{,}\DecValTok{8}\NormalTok{)}
+\NormalTok{lmod3}\OtherTok{\textless{}{-}}\FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}} \DecValTok{0} \SpecialCharTok{+} \FunctionTok{sqrt}\NormalTok{(x))}
+\FunctionTok{summary}\NormalTok{(lmod3)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = y ~ 0 + sqrt(x))
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -0.64760 -0.39276 -0.03791  0.28012  0.90512 
+## 
+## Coefficients:
+##         Estimate Std. Error t value Pr(>|t|)    
+## sqrt(x)  4.08433    0.07194   56.77 6.97e-14 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 0.4969 on 10 degrees of freedom
+## Multiple R-squared:  0.9969, Adjusted R-squared:  0.9966 
+## F-statistic:  3223 on 1 and 10 DF,  p-value: 6.973e-14
+\end{verbatim}
+
+\hypertarget{b-contrastar-h02ux3c0g}{%
+\paragraph{(b) Contrastar H0:2πg√}\label{b-contrastar-h02ux3c0g}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Miramos si el intervalo de confianza contiene el 2}
+
+\FunctionTok{confint}\NormalTok{(lmod3)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##            2.5 %   97.5 %
+## sqrt(x) 3.924036 4.244618
+\end{verbatim}
+
+No lo contiene así que rechazamos la hipótesis nula
+
+\hypertarget{ejercicio-8.4-del-capuxedtulo-8-puxe1gina-157}{%
+\paragraph{5. (Ejercicio 8.4 del Capítulo 8 página
+157)}\label{ejercicio-8.4-del-capuxedtulo-8-puxe1gina-157}}
+
+Se dispone de los siguientes datos sobre diez empresas fabricantes de
+productos de limpieza doméstica:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Datos}
+
+\NormalTok{v }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\DecValTok{60}\NormalTok{,}\DecValTok{48}\NormalTok{,}\DecValTok{42}\NormalTok{,}\DecValTok{36}\NormalTok{,}\DecValTok{78}\NormalTok{,}\DecValTok{36}\NormalTok{,}\DecValTok{72}\NormalTok{,}\DecValTok{42}\NormalTok{,}\DecValTok{54}\NormalTok{,}\DecValTok{90}\NormalTok{)}
+\NormalTok{ip }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\DecValTok{100}\NormalTok{,}\DecValTok{110}\NormalTok{,}\DecValTok{130}\NormalTok{,}\DecValTok{100}\NormalTok{,}\DecValTok{80}\NormalTok{,}\DecValTok{80}\NormalTok{,}\DecValTok{90}\NormalTok{,}\DecValTok{120}\NormalTok{,}\DecValTok{120}\NormalTok{,}\DecValTok{90}\NormalTok{)}
+\NormalTok{pu }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\FloatTok{1.8}\NormalTok{,}\FloatTok{2.4}\NormalTok{,}\FloatTok{3.6}\NormalTok{,}\FloatTok{0.6}\NormalTok{,}\FloatTok{1.8}\NormalTok{,}\FloatTok{0.6}\NormalTok{,}\FloatTok{3.6}\NormalTok{,}\FloatTok{1.2}\NormalTok{,}\FloatTok{2.4}\NormalTok{,}\FloatTok{4.2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{lmod4}\OtherTok{\textless{}{-}}\FunctionTok{lm}\NormalTok{(v }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ip }\SpecialCharTok{+}\NormalTok{pu)}
+\FunctionTok{summary}\NormalTok{(lmod4)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = v ~ ip + pu)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -15.865  -5.944   0.869   7.516  13.051 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(>|t|)   
+## (Intercept)  95.2462    21.7077   4.388  0.00320 **
+## ip           -0.6240     0.2112  -2.954  0.02128 * 
+## pu           10.9038     2.9208   3.733  0.00733 **
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 10.94 on 7 degrees of freedom
+## Multiple R-squared:  0.7359, Adjusted R-squared:  0.6604 
+## F-statistic: 9.752 on 2 and 7 DF,  p-value: 0.009469
+\end{verbatim}
+
+\hypertarget{estimar-el-vector-de-coeficientes-ux3b2-ux3b2-0-ux3b2-1-ux3b2-2-0-del-modelo}{%
+\paragraph{1) Estimar el vector de coeficientes β = (β 0 , β 1 , β 2 ) 0
+del
+modelo}\label{estimar-el-vector-de-coeficientes-ux3b2-ux3b2-0-ux3b2-1-ux3b2-2-0-del-modelo}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{lmod4}\SpecialCharTok{$}\NormalTok{coefficients}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## (Intercept)          ip          pu 
+##  95.2462340  -0.6240469  10.9038497
+\end{verbatim}
+
+\hypertarget{estimar-la-matriz-de-varianzas-covarianzas-del-vector-ux3b2.}{%
+\paragraph{2) Estimar la matriz de varianzas-covarianzas del vector
+β.}\label{estimar-la-matriz-de-varianzas-covarianzas-del-vector-ux3b2.}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{summary}\NormalTok{(lmod4)}\SpecialCharTok{$}\NormalTok{sigma}\SpecialCharTok{\^{}}\DecValTok{2} \SpecialCharTok{*} \FunctionTok{summary}\NormalTok{(lmod4)}\SpecialCharTok{$}\NormalTok{cov.unscaled}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##             (Intercept)          ip         pu
+## (Intercept)  471.224820 -4.32088690 -8.3457769
+## ip            -4.320887  0.04462209 -0.1038586
+## pu            -8.345777 -0.10385856  8.5312386
+\end{verbatim}
+
+\hypertarget{calcular-el-coeficiente-de-determinaciuxf3n.}{%
+\paragraph{3) Calcular el coeficiente de
+determinación.}\label{calcular-el-coeficiente-de-determinaciuxf3n.}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{sum4}\OtherTok{\textless{}{-}}\FunctionTok{summary}\NormalTok{(lmod4)}
+\FunctionTok{names}\NormalTok{(sum4)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1] "call"          "terms"         "residuals"     "coefficients" 
+##  [5] "aliased"       "sigma"         "df"            "r.squared"    
+##  [9] "adj.r.squared" "fstatistic"    "cov.unscaled"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{sum4}\SpecialCharTok{$}\NormalTok{r.squared}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.7358837
+\end{verbatim}
+
+\hypertarget{ejercicios-del-libro-de-faraway}{%
+\subsection{Ejercicios del libro de
+Faraway}\label{ejercicios-del-libro-de-faraway}}
+
+\hypertarget{ejercicio-1-cap.-4-puxe1g.-56}{%
+\paragraph{1. (Ejercicio 1 cap. 4 pág.
+56)}\label{ejercicio-1-cap.-4-puxe1g.-56}}
+
+For the prostate data, fit a model with lpsa as the response and the
+other variables as predictors:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{require}\NormalTok{(faraway)}
+\FunctionTok{data}\NormalTok{(prostate)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{lmod5}\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(lpsa}\SpecialCharTok{\textasciitilde{}}\NormalTok{lcavol }\SpecialCharTok{+}\NormalTok{ lweight }\SpecialCharTok{+}\NormalTok{ age }\SpecialCharTok{+}\NormalTok{ lbph }\SpecialCharTok{+}\NormalTok{ svi }\SpecialCharTok{+}\NormalTok{lcp}\SpecialCharTok{+}\NormalTok{ gleason}\SpecialCharTok{+}\NormalTok{pgg45, }\AttributeTok{data =}\NormalTok{ prostate)}
+\FunctionTok{summary}\NormalTok{(lmod5)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = lpsa ~ lcavol + lweight + age + lbph + svi + lcp + 
+##     gleason + pgg45, data = prostate)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -1.7331 -0.3713 -0.0170  0.4141  1.6381 
+## 
+## Coefficients:
+##              Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)  0.669337   1.296387   0.516  0.60693    
+## lcavol       0.587022   0.087920   6.677 2.11e-09 ***
+## lweight      0.454467   0.170012   2.673  0.00896 ** 
+## age         -0.019637   0.011173  -1.758  0.08229 .  
+## lbph         0.107054   0.058449   1.832  0.07040 .  
+## svi          0.766157   0.244309   3.136  0.00233 ** 
+## lcp         -0.105474   0.091013  -1.159  0.24964    
+## gleason      0.045142   0.157465   0.287  0.77503    
+## pgg45        0.004525   0.004421   1.024  0.30886    
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 0.7084 on 88 degrees of freedom
+## Multiple R-squared:  0.6548, Adjusted R-squared:  0.6234 
+## F-statistic: 20.86 on 8 and 88 DF,  p-value: < 2.2e-16
+\end{verbatim}
+
+\hypertarget{a-suppose-a-new-patient-with-the-following-values-arrives}{%
+\paragraph{(a) Suppose a new patient with the following values
+arrives:}\label{a-suppose-a-new-patient-with-the-following-values-arrives}}
+
+Predict the lpsa for this patient along with an appropriate 95\% CI.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{head}\NormalTok{(x0pros }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}\AttributeTok{lcavol=}\FloatTok{1.44692}\NormalTok{,}
+                                              \AttributeTok{lweight=}\FloatTok{3.62301}\NormalTok{,}
+                                              \AttributeTok{age=}\DecValTok{65}\NormalTok{,}
+                                              \AttributeTok{lbph=}\FloatTok{0.30010}\NormalTok{,}
+                                              \AttributeTok{svi=}\DecValTok{0}\NormalTok{,}
+                                              \AttributeTok{lcp=}\SpecialCharTok{{-}}\FloatTok{0.79851}\NormalTok{,}
+                                              \AttributeTok{gleason=}\DecValTok{7}\NormalTok{,}
+                                              \AttributeTok{pgg45=}\DecValTok{15}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    lcavol lweight age   lbph svi      lcp gleason pgg45
+## 1 1.44692 3.62301  65 0.3001   0 -0.79851       7    15
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{predict}\NormalTok{(lmod5, x0pros, }\AttributeTok{interval=}\StringTok{"prediction"}\NormalTok{, }\AttributeTok{level=}\FloatTok{0.95}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##        fit       lwr      upr
+## 1 2.389053 0.9646584 3.813447
+\end{verbatim}
+
+\hypertarget{b-repeat-the-last-question-for-a-patient-with-the-same-values-except-that-he-is-age-20.-explain-why-the-ci-is-wider.}{%
+\paragraph{(b) Repeat the last question for a patient with the same
+values except that he is age 20. Explain why the CI is
+wider.}\label{b-repeat-the-last-question-for-a-patient-with-the-same-values-except-that-he-is-age-20.-explain-why-the-ci-is-wider.}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x1pros }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}\AttributeTok{lcavol=}\FloatTok{1.44692}\NormalTok{,}\AttributeTok{lweight=}\FloatTok{3.62301}\NormalTok{,}\AttributeTok{age=}\DecValTok{20}\NormalTok{,}\AttributeTok{lbph=}\FloatTok{0.30010}\NormalTok{,}\AttributeTok{svi=}\DecValTok{0}\NormalTok{,}\AttributeTok{lcp=}\SpecialCharTok{{-}}\FloatTok{0.79851}\NormalTok{,}\AttributeTok{gleason=}\DecValTok{7}\NormalTok{,}\AttributeTok{pgg45=}\DecValTok{15}\NormalTok{)}
+\FunctionTok{predict}\NormalTok{(lmod5,x1pros,}\AttributeTok{interval=}\StringTok{"prediction"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##        fit      lwr      upr
+## 1 3.272726 1.538744 5.006707
+\end{verbatim}
+
+E el apartado B, el valor para la edad, está fuera del rango de los
+valores del dataset, por eso el intervalo de confianza es mayor.
+
+\hypertarget{c-for-the-model-of-the-previous-question-remove-all-the-predictors-that-are-not-significant-at-the-5-level.-now-recompute-the-predictions-of-the-previous-question.-are-the-cis-wider-or-narrower-which-predictions-would-you-prefer-explain.}{%
+\paragraph{(c) For the model of the previous question, remove all the
+predictors that are not significant at the 5\% level. Now recompute the
+predictions of the previous question. Are the CIs wider or narrower?
+Which predictions would you prefer?
+Explain.}\label{c-for-the-model-of-the-previous-question-remove-all-the-predictors-that-are-not-significant-at-the-5-level.-now-recompute-the-predictions-of-the-previous-question.-are-the-cis-wider-or-narrower-which-predictions-would-you-prefer-explain.}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+ \FunctionTok{summary}\NormalTok{(lmod5)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = lpsa ~ lcavol + lweight + age + lbph + svi + lcp + 
+##     gleason + pgg45, data = prostate)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -1.7331 -0.3713 -0.0170  0.4141  1.6381 
+## 
+## Coefficients:
+##              Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)  0.669337   1.296387   0.516  0.60693    
+## lcavol       0.587022   0.087920   6.677 2.11e-09 ***
+## lweight      0.454467   0.170012   2.673  0.00896 ** 
+## age         -0.019637   0.011173  -1.758  0.08229 .  
+## lbph         0.107054   0.058449   1.832  0.07040 .  
+## svi          0.766157   0.244309   3.136  0.00233 ** 
+## lcp         -0.105474   0.091013  -1.159  0.24964    
+## gleason      0.045142   0.157465   0.287  0.77503    
+## pgg45        0.004525   0.004421   1.024  0.30886    
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 0.7084 on 88 degrees of freedom
+## Multiple R-squared:  0.6548, Adjusted R-squared:  0.6234 
+## F-statistic: 20.86 on 8 and 88 DF,  p-value: < 2.2e-16
+\end{verbatim}
+
+Las variables con significación al 5\% son ``lcavol'', ``lweight'',
+``svi''. Creamos un nuevo modelo con ellas.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{lmod6}\OtherTok{\textless{}{-}}\FunctionTok{lm}\NormalTok{(lpsa }\SpecialCharTok{\textasciitilde{}}\NormalTok{ lcavol }\SpecialCharTok{+}\NormalTok{ lweight }\SpecialCharTok{+}\NormalTok{ svi, }\AttributeTok{data=}\NormalTok{prostate)}
+\FunctionTok{summary}\NormalTok{(lmod6)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = lpsa ~ lcavol + lweight + svi, data = prostate)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -1.72964 -0.45764  0.02812  0.46403  1.57013 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(>|t|)    
+## (Intercept) -0.26809    0.54350  -0.493  0.62298    
+## lcavol       0.55164    0.07467   7.388  6.3e-11 ***
+## lweight      0.50854    0.15017   3.386  0.00104 ** 
+## svi          0.66616    0.20978   3.176  0.00203 ** 
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 0.7168 on 93 degrees of freedom
+## Multiple R-squared:  0.6264, Adjusted R-squared:  0.6144 
+## F-statistic: 51.99 on 3 and 93 DF,  p-value: < 2.2e-16
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{predict}\NormalTok{(lmod6, x0pros, }\AttributeTok{interval=}\StringTok{"prediction"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##        fit       lwr      upr
+## 1 2.372534 0.9383436 3.806724
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{predict}\NormalTok{(lmod6, x1pros, }\AttributeTok{interval=}\StringTok{"prediction"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##        fit       lwr      upr
+## 1 2.372534 0.9383436 3.806724
+\end{verbatim}
+
+\hypertarget{ejercicio-2-cap.-4-puxe1g.-57}{%
+\paragraph{2. (Ejercicio 2 cap. 4 pág.
+57)}\label{ejercicio-2-cap.-4-puxe1g.-57}}
+
+Using the teengamb data, fit a model with gamble as the response and the
+other variables as predictors.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{data}\NormalTok{(teengamb)}
+\NormalTok{lmod7}\OtherTok{\textless{}{-}}\FunctionTok{lm}\NormalTok{(gamble }\SpecialCharTok{\textasciitilde{}}\NormalTok{ sex }\SpecialCharTok{+}\NormalTok{ status }\SpecialCharTok{+}\NormalTok{ income }\SpecialCharTok{+}\NormalTok{verbal, }\AttributeTok{data=}\NormalTok{teengamb)}
+\FunctionTok{summary}\NormalTok{(lmod7)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = gamble ~ sex + status + income + verbal, data = teengamb)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -51.082 -11.320  -1.451   9.452  94.252 
+## 
+## Coefficients:
+##              Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)  22.55565   17.19680   1.312   0.1968    
+## sex         -22.11833    8.21111  -2.694   0.0101 *  
+## status        0.05223    0.28111   0.186   0.8535    
+## income        4.96198    1.02539   4.839 1.79e-05 ***
+## verbal       -2.95949    2.17215  -1.362   0.1803    
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 22.69 on 42 degrees of freedom
+## Multiple R-squared:  0.5267, Adjusted R-squared:  0.4816 
+## F-statistic: 11.69 on 4 and 42 DF,  p-value: 1.815e-06
+\end{verbatim}
+
+\hypertarget{a-predict-the-amount-that-a-male-with-average-given-these-data-status-income-and-verbal-score-would-gamble-along-with-an-appropriate-95-ci.}{%
+\paragraph{(a) Predict the amount that a male with average (given these
+data) status, income and verbal score would gamble along with an
+appropriate 95\%
+CI.}\label{a-predict-the-amount-that-a-male-with-average-given-these-data-status-income-and-verbal-score-would-gamble-along-with-an-appropriate-95-ci.}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{attach}\NormalTok{(teengamb)}
+\NormalTok{x0gamb}\OtherTok{\textless{}{-}}\FunctionTok{data.frame}\NormalTok{( }\AttributeTok{sex=}\DecValTok{0}\NormalTok{, }\AttributeTok{status=}\FunctionTok{median}\NormalTok{(status), }
+                                  \AttributeTok{income=}\FunctionTok{median}\NormalTok{(income), }\AttributeTok{verbal=}\FunctionTok{median}\NormalTok{(verbal))}
+
+\FunctionTok{predict}\NormalTok{(lmod7,x0gamb,}\AttributeTok{interval=}\StringTok{"prediction"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##        fit       lwr      upr
+## 1 20.21168 -26.98701 67.41037
+\end{verbatim}
+
+\hypertarget{b-repeat-the-prediction-for-a-male-with-maximal-values-for-this-data-of-status-income-and-verbal-score.-which-ci-is-wider-and-why-is-this-result-expected}{%
+\paragraph{(b) Repeat the prediction for a male with maximal values (for
+this data) of status, income and verbal score. Which CI is wider and why
+is this result
+expected?}\label{b-repeat-the-prediction-for-a-male-with-maximal-values-for-this-data-of-status-income-and-verbal-score.-which-ci-is-wider-and-why-is-this-result-expected}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x1gamb }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}\AttributeTok{sex=}\DecValTok{0}\NormalTok{, }\AttributeTok{status=}\FunctionTok{max}\NormalTok{(status),}
+                                            \AttributeTok{income=}\FunctionTok{max}\NormalTok{(income),}\AttributeTok{verbal=}\FunctionTok{max}\NormalTok{(verbal))}
+
+\FunctionTok{predict}\NormalTok{(lmod7,x1gamb,}\AttributeTok{interval=}\StringTok{"prediction"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##        fit      lwr    upr
+## 1 71.30794 17.06588 125.55
+\end{verbatim}
+
+\hypertarget{c-fit-a-model-with-sqrtgamble-as-the-response-but-with-the-same-predictors.-now-predict-the-response-and-give-a-95-prediction-interval-for-the-individual-in-a.-take-care-to-give-your-answer-in-the-original-units-of-the-response.}{%
+\paragraph{(c) Fit a model with sqrt(gamble) as the response but with
+the same predictors. Now predict the response and give a 95\% prediction
+interval for the individual in (a). Take care to give your answer in the
+original units of the
+response.}\label{c-fit-a-model-with-sqrtgamble-as-the-response-but-with-the-same-predictors.-now-predict-the-response-and-give-a-95-prediction-interval-for-the-individual-in-a.-take-care-to-give-your-answer-in-the-original-units-of-the-response.}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{lmod8}\OtherTok{\textless{}{-}}\FunctionTok{lm}\NormalTok{(}\FunctionTok{sqrt}\NormalTok{(gamble) }\SpecialCharTok{\textasciitilde{}}\NormalTok{ sex }\SpecialCharTok{+}\NormalTok{ status }\SpecialCharTok{+}\NormalTok{ income }\SpecialCharTok{+}\NormalTok{verbal, }\AttributeTok{data=}\NormalTok{teengamb)}
+\FunctionTok{predict}\NormalTok{(lmod8,x0gamb,}\AttributeTok{interval=}\StringTok{"prediction"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##        fit       lwr      upr
+## 1 3.155673 -1.179373 7.490718
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{predict}\NormalTok{(lmod8,x0gamb,}\AttributeTok{interval=}\StringTok{"prediction"}\NormalTok{)}\SpecialCharTok{\^{}}\DecValTok{2}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##        fit     lwr      upr
+## 1 9.958271 1.39092 56.11086
+\end{verbatim}
+
+\hypertarget{d-repeat-the-prediction-for-the-model-in-c-for-a-female-with-status-20-income-1-verbal-10.-comment-on-the-credibility-of-the-result}{%
+\paragraph{(d) Repeat the prediction for the model in (c) for a female
+with status = 20, income = 1, verbal = 10. Comment on the credibility of
+the
+result}\label{d-repeat-the-prediction-for-the-model-in-c-for-a-female-with-status-20-income-1-verbal-10.-comment-on-the-credibility-of-the-result}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x2gamb }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}\AttributeTok{sex=}\DecValTok{1}\NormalTok{,}\AttributeTok{status=}\DecValTok{20}\NormalTok{,}\AttributeTok{income=}\DecValTok{1}\NormalTok{,}\AttributeTok{verbal=}\DecValTok{10}\NormalTok{)}
+ \FunctionTok{predict}\NormalTok{(lmod8,x2gamb,}\AttributeTok{interval=}\StringTok{"prediction"}\NormalTok{)}\SpecialCharTok{\^{}}\DecValTok{2}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##        fit      lwr      upr
+## 1 4.353398 47.73238 7.485167
+\end{verbatim}
+
+\hypertarget{ejercicio-3-cap.-4-puxe1g.-57}{%
+\subsection{3. (Ejercicio 3 cap. 4 pág.
+57)}\label{ejercicio-3-cap.-4-puxe1g.-57}}
+
+The snail dataset contains percentage water content of the tissues of
+snails grown under three different levels of relative humidity and two
+different temperatures.
+
+\hypertarget{a-use-the-command-xtabswater-temp-humid-snail4-to-produce-a-table-of-mean-water-content-for-each-combination-of-temperature-and-humidity.-can-you-use-this-table-to-predict-the-water-content-for-a-temperature-of-25-c-and-a-humidity-of-60-explain.}{%
+\paragraph{(a) Use the command xtabs(water \textasciitilde{} temp +
+humid, snail)/4 to produce a table of mean water content for each
+combination of temperature and humidity. Can you use this table to
+predict the water content for a temperature of 25 ◦ C and a humidity of
+60\%?
+Explain.}\label{a-use-the-command-xtabswater-temp-humid-snail4-to-produce-a-table-of-mean-water-content-for-each-combination-of-temperature-and-humidity.-can-you-use-this-table-to-predict-the-water-content-for-a-temperature-of-25-c-and-a-humidity-of-60-explain.}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{require}\NormalTok{(faraway)}
+\FunctionTok{data}\NormalTok{(snail)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{xtabs}\NormalTok{(water }\SpecialCharTok{\textasciitilde{}}\NormalTok{ temp }\SpecialCharTok{+}\NormalTok{ humid, snail)}\SpecialCharTok{/}\DecValTok{4}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##     humid
+## temp    45    75   100
+##   20 72.50 81.50 97.00
+##   30 69.50 78.25 97.75
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{mytable }\OtherTok{\textless{}{-}} \FunctionTok{xtabs}\NormalTok{(water}\SpecialCharTok{\textasciitilde{}}\NormalTok{temp}\SpecialCharTok{+}\NormalTok{humid,snail)}\SpecialCharTok{/}\DecValTok{4}
+\FunctionTok{colnames}\NormalTok{(mytable) }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\DecValTok{45}\NormalTok{,}\DecValTok{75}\NormalTok{,}\DecValTok{100}\NormalTok{)}
+\FunctionTok{rownames}\NormalTok{(mytable) }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\DecValTok{20}\NormalTok{, }\DecValTok{30}\NormalTok{)}
+\FunctionTok{matplot}\NormalTok{ (}\FunctionTok{t}\NormalTok{(mytable), }\AttributeTok{type=}\StringTok{"l"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Regresion-simple-y-multiple_files/figure-latex/unnamed-chunk-40-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{xtabs}\NormalTok{(}\FunctionTok{mean}\NormalTok{(water[humid}\SpecialCharTok{\textless{}}\DecValTok{100}\NormalTok{])}\SpecialCharTok{\textasciitilde{}}\FunctionTok{mean}\NormalTok{(temp[humid}\SpecialCharTok{\textless{}}\DecValTok{100}\NormalTok{])}\SpecialCharTok{+}\FunctionTok{mean}\NormalTok{(humid[humid}\SpecialCharTok{\textless{}}\DecValTok{100}\NormalTok{]),snail)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##                        mean(humid[humid < 100])
+## mean(temp[humid < 100])      60
+##                      25 75.4375
+\end{verbatim}
+
+\hypertarget{b-fit-a-regression-model-with-the-water-content-as-the-response-and-the-temperature-and-humidity-as-predictors.-use-this-model-to-predict-the-water-content-for-a-temperature-of-25-c-and-a-humidity-of-60}{%
+\paragraph{(b) Fit a regression model with the water content as the
+response and the temperature and humidity as predictors. Use this model
+to predict the water content for a temperature of 25 ◦ C and a humidity
+of
+60\%?}\label{b-fit-a-regression-model-with-the-water-content-as-the-response-and-the-temperature-and-humidity-as-predictors.-use-this-model-to-predict-the-water-content-for-a-temperature-of-25-c-and-a-humidity-of-60}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{lmod9}\OtherTok{\textless{}{-}}\NormalTok{(}\FunctionTok{lm}\NormalTok{(water }\SpecialCharTok{\textasciitilde{}}\NormalTok{ temp }\SpecialCharTok{+}\NormalTok{ humid, }\AttributeTok{data=}\NormalTok{snail))}
+\FunctionTok{summary}\NormalTok{(lmod9)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = water ~ temp + humid, data = snail)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -12.456  -2.915   1.461   3.613   8.749 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(>|t|)    
+## (Intercept) 52.61081    6.85346   7.677 1.59e-07 ***
+## temp        -0.18333    0.22645  -0.810    0.427    
+## humid        0.47349    0.05036   9.403 5.63e-09 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 5.547 on 21 degrees of freedom
+## Multiple R-squared:  0.8092, Adjusted R-squared:  0.791 
+## F-statistic: 44.53 on 2 and 21 DF,  p-value: 2.793e-08
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x0wat}\OtherTok{\textless{}{-}}\FunctionTok{data.frame}\NormalTok{(}\AttributeTok{temp=}\DecValTok{25}\NormalTok{,}\AttributeTok{humid=}\DecValTok{60}\NormalTok{)}
+\FunctionTok{predict}\NormalTok{(lmod9, x0wat, }\AttributeTok{interval=}\StringTok{"prediction"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##        fit      lwr      upr
+## 1 76.43681 64.58094 88.29269
+\end{verbatim}
+
+\hypertarget{c-use-this-model-to-predict-water-content-for-a-temperature-of-30-c-and-a-humidity-of-75.-compare-your-prediction-to-the-prediction-from-a.-discuss-the-relative-merits-of-these-two-predictions.}{%
+\paragraph{(c) Use this model to predict water content for a temperature
+of 30 ◦ C and a humidity of 75\%?. Compare your prediction to the
+prediction from (a). Discuss the relative merits of these two
+predictions.}\label{c-use-this-model-to-predict-water-content-for-a-temperature-of-30-c-and-a-humidity-of-75.-compare-your-prediction-to-the-prediction-from-a.-discuss-the-relative-merits-of-these-two-predictions.}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x1wat}\OtherTok{\textless{}{-}}\FunctionTok{data.frame}\NormalTok{(}\AttributeTok{temp=}\DecValTok{30}\NormalTok{,}\AttributeTok{humid=}\DecValTok{75}\NormalTok{)}
+\FunctionTok{predict}\NormalTok{(lmod9, x1wat, }\AttributeTok{interval=}\StringTok{"prediction"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##        fit     lwr      upr
+## 1 82.62248 70.6147 94.63027
+\end{verbatim}
+
+\hypertarget{d-the-intercept-in-your-model-is-52.6.-give-two-values-of-the-predictors-for-which-this-represents-the-predicted-response.-is-your-answer-unique-do-you-think-this-represents-a-reasonable-prediction}{%
+\paragraph{(d) The intercept in your model is 52.6\%. Give two values of
+the predictors for which this represents the predicted response. Is your
+answer unique? Do you think this represents a reasonable
+prediction?}\label{d-the-intercept-in-your-model-is-52.6.-give-two-values-of-the-predictors-for-which-this-represents-the-predicted-response.-is-your-answer-unique-do-you-think-this-represents-a-reasonable-prediction}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x3wat}\OtherTok{\textless{}{-}}\FunctionTok{data.frame}\NormalTok{(}\AttributeTok{temp=}\DecValTok{0}\NormalTok{,}\AttributeTok{humid=}\DecValTok{0}\NormalTok{)}
+\FunctionTok{predict}\NormalTok{(lmod9,x3wat,}\AttributeTok{interval=}\StringTok{"prediction"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##        fit      lwr      upr
+## 1 52.61081 34.27498 70.94663
+\end{verbatim}
+
+\hypertarget{e-for-a-temperature-of-25-c-what-value-of-humidity-would-give-a-predicted-response-of-80-water-content.}{%
+\paragraph{(e) For a temperature of 25 ◦ C, what value of humidity would
+give a predicted response of 80\% water
+content.}\label{e-for-a-temperature-of-25-c-what-value-of-humidity-would-give-a-predicted-response-of-80-water-content.}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x6wat}\OtherTok{\textless{}{-}}\FunctionTok{data.frame}\NormalTok{(}\AttributeTok{temp=}\DecValTok{25}\NormalTok{,}\AttributeTok{humid=}\FunctionTok{seq}\NormalTok{(}\FloatTok{67.1}\NormalTok{,}\FloatTok{68.0}\NormalTok{,}\FloatTok{0.1}\NormalTok{))}
+\FunctionTok{predict}\NormalTok{(lmod9,x6wat,}\AttributeTok{interval=}\StringTok{"prediction"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##         fit      lwr      upr
+## 1  79.79859 68.00714 91.59003
+## 2  79.84593 68.05507 91.63680
+## 3  79.89328 68.10298 91.68358
+## 4  79.94063 68.15089 91.73038
+## 5  79.98798 68.19878 91.77718
+## 6  80.03533 68.24667 91.82399
+## 7  80.08268 68.29455 91.87081
+## 8  80.13003 68.34242 91.91764
+## 9  80.17738 68.39028 91.96448
+## 10 80.22473 68.43813 92.01133
+\end{verbatim}
+
+\hypertarget{ejercicios-opcionales}{%
+\subsection{Ejercicios Opcionales}\label{ejercicios-opcionales}}
+
+\hypertarget{ejercicios-del-libro-de-carmona}{%
+\subsection{Ejercicios del libro de
+Carmona}\label{ejercicios-del-libro-de-carmona}}
+
+\hypertarget{ejercicio-6.9-del-capuxedtulo-6-puxe1gina-118}{%
+\paragraph{2. (∗) (Ejercicio 6.9 del Capítulo 6 página
+118)}\label{ejercicio-6.9-del-capuxedtulo-6-puxe1gina-118}}
+
+Comparar las rectas de regresión de hombres y mujeres con los logaritmos
+de los datos del ejercicio 1.4.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Datos}
+\NormalTok{TPO\_H }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\FloatTok{9.84}\NormalTok{,}\FloatTok{19.32}\NormalTok{,}\FloatTok{43.19}\NormalTok{,}\FloatTok{102.58}\NormalTok{,}\FloatTok{215.78}\NormalTok{,}\FloatTok{787.96}\NormalTok{,}\FloatTok{1627.34}\NormalTok{,}\DecValTok{7956}\NormalTok{)}
+\NormalTok{TPO\_M }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\FloatTok{10.94}\NormalTok{,}\FloatTok{22.12}\NormalTok{,}\FloatTok{48.25}\NormalTok{,}\FloatTok{117.73}\NormalTok{,}\FloatTok{240.83}\NormalTok{,}\FloatTok{899.88}\NormalTok{,}\FloatTok{1861.63}\NormalTok{,}\DecValTok{8765}\NormalTok{)}
+\NormalTok{distancia }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\DecValTok{100}\NormalTok{,}\DecValTok{200}\NormalTok{,}\DecValTok{400}\NormalTok{,}\DecValTok{800}\NormalTok{,}\DecValTok{1500}\NormalTok{,}\DecValTok{5000}\NormalTok{,}\DecValTok{10000}\NormalTok{,}\DecValTok{42192}\NormalTok{)}
+\NormalTok{lTPO\_H }\OtherTok{\textless{}{-}} \FunctionTok{log}\NormalTok{(TPO\_H)}
+\NormalTok{lTPO\_M }\OtherTok{\textless{}{-}} \FunctionTok{log}\NormalTok{(TPO\_M)}
+\NormalTok{ldistancia }\OtherTok{\textless{}{-}} \FunctionTok{log}\NormalTok{(distancia)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{n }\OtherTok{\textless{}{-}} \FunctionTok{length}\NormalTok{(distancia)}
+\NormalTok{uno.h }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\FunctionTok{rep}\NormalTok{(}\DecValTok{1}\NormalTok{,n),}\FunctionTok{rep}\NormalTok{(}\DecValTok{0}\NormalTok{,n))}
+\NormalTok{uno.m }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\FunctionTok{rep}\NormalTok{(}\DecValTok{0}\NormalTok{,n),}\FunctionTok{rep}\NormalTok{(}\DecValTok{1}\NormalTok{,n))}
+\NormalTok{x.h }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(ldistancia,}\FunctionTok{rep}\NormalTok{(}\DecValTok{0}\NormalTok{,n))}
+\NormalTok{x.m }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\FunctionTok{rep}\NormalTok{(}\DecValTok{0}\NormalTok{,n),ldistancia)}
+\NormalTok{y }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(lTPO\_H,lTPO\_M)}
+\NormalTok{modc }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}} \DecValTok{0} \SpecialCharTok{+}\NormalTok{ uno.h }\SpecialCharTok{+}\NormalTok{ uno.m }\SpecialCharTok{+}\NormalTok{ x.h }\SpecialCharTok{+}\NormalTok{ x.m)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(ldistancia,ldistancia)}
+\NormalTok{modp }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}} \DecValTok{0} \SpecialCharTok{+}\NormalTok{ uno.h }\SpecialCharTok{+}\NormalTok{ uno.m }\SpecialCharTok{+}\NormalTok{ x)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{mod0 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x)}
+\FunctionTok{anova}\NormalTok{(mod0,modp)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Analysis of Variance Table
+## 
+## Model 1: y ~ x
+## Model 2: y ~ 0 + uno.h + uno.m + x
+##   Res.Df      RSS Df Sum of Sq     F   Pr(>F)   
+## 1     14 0.100610                               
+## 2     13 0.042548  1  0.058062 17.74 0.001017 **
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+\end{verbatim}
+
+\hypertarget{ejercicio-8.5-del-capuxedtulo-8-puxe1gina-157}{%
+\paragraph{6. (∗) (Ejercicio 8.5 del Capítulo 8 página
+157)}\label{ejercicio-8.5-del-capuxedtulo-8-puxe1gina-157}}
+
+Dado el modelo Y t = β 0 + β 1 X 1t + β 2 X 2t + u t y los siguientes
+datos:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{y }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\DecValTok{10}\NormalTok{,}\DecValTok{25}\NormalTok{,}\DecValTok{32}\NormalTok{,}\DecValTok{43}\NormalTok{,}\DecValTok{58}\NormalTok{,}\DecValTok{62}\NormalTok{,}\DecValTok{67}\NormalTok{,}\DecValTok{71}\NormalTok{)}
+\NormalTok{x1 }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{3}\NormalTok{,}\DecValTok{4}\NormalTok{,}\DecValTok{5}\NormalTok{,}\DecValTok{7}\NormalTok{,}\DecValTok{8}\NormalTok{,}\DecValTok{10}\NormalTok{,}\DecValTok{10}\NormalTok{)}
+\NormalTok{x2 }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{1}\NormalTok{,}\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{,}\DecValTok{0}\NormalTok{,}\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{a-la-estimaciuxf3n-mc-de-ux3b2-0-ux3b2-1-ux3b2-2-utilizando-los-valores-originales.uxe7}{%
+\paragraph{(a) La estimación MC de β 0 , β 1 , β 2 utilizando los
+valores
+originales.ç}\label{a-la-estimaciuxf3n-mc-de-ux3b2-0-ux3b2-1-ux3b2-2-utilizando-los-valores-originales.uxe7}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{lmod10}\OtherTok{\textless{}{-}}\FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x1 }\SpecialCharTok{+}\NormalTok{ x2)}
+\FunctionTok{coef}\NormalTok{(lmod10)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## (Intercept)          x1          x2 
+##   6.4699828   6.5883362   0.2572899
+\end{verbatim}
+
+\hypertarget{b-la-estimaciuxf3n-mc-de-ux3b2-0-ux3b2-1-ux3b2-2-utilizando-los-datos-expresados-en-desviaciones-respecto-de-la-media.}{%
+\paragraph{(b) La estimación MC de β 0 , β 1 , β 2 utilizando los datos
+expresados en desviaciones respecto de la
+media.}\label{b-la-estimaciuxf3n-mc-de-ux3b2-0-ux3b2-1-ux3b2-2-utilizando-los-datos-expresados-en-desviaciones-respecto-de-la-media.}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ys }\OtherTok{\textless{}{-}} \FunctionTok{scale}\NormalTok{(y, }\AttributeTok{center=}\ConstantTok{TRUE}\NormalTok{, }\AttributeTok{scale=}\ConstantTok{FALSE}\NormalTok{)}
+\NormalTok{x1s }\OtherTok{\textless{}{-}} \FunctionTok{scale}\NormalTok{(x1, }\AttributeTok{center=}\ConstantTok{TRUE}\NormalTok{, }\AttributeTok{scale=}\ConstantTok{FALSE}\NormalTok{)}
+\NormalTok{x2s }\OtherTok{\textless{}{-}} \FunctionTok{scale}\NormalTok{(x2, }\AttributeTok{center=}\ConstantTok{TRUE}\NormalTok{, }\AttributeTok{scale=}\ConstantTok{FALSE}\NormalTok{)}
+\NormalTok{lmod11 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(ys }\SpecialCharTok{\textasciitilde{}} \DecValTok{0} \SpecialCharTok{+}\NormalTok{ x1s }\SpecialCharTok{+}\NormalTok{ x2s)}
+\FunctionTok{coef}\NormalTok{(lmod11)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##       x1s       x2s 
+## 6.5883362 0.2572899
+\end{verbatim}
+
+\hypertarget{c-la-estimaciuxf3n-insesgada-de-ux3c32}{%
+\paragraph{(c) La estimación insesgada de
+σ2}\label{c-la-estimaciuxf3n-insesgada-de-ux3c32}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{sg }\OtherTok{\textless{}{-}} \FunctionTok{summary}\NormalTok{(lmod10)}
+\NormalTok{sgs }\OtherTok{\textless{}{-}} \FunctionTok{summary}\NormalTok{(lmod11)}
+\FunctionTok{c}\NormalTok{(sg}\SpecialCharTok{$}\NormalTok{sigma}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{, sgs}\SpecialCharTok{$}\NormalTok{sigma}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 18.33002 15.27501
+\end{verbatim}
+
+\hypertarget{d-el-coeficiente-de-determinaciuxf3n}{%
+\paragraph{(d) El coeficiente de
+determinación}\label{d-el-coeficiente-de-determinaciuxf3n}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{c}\NormalTok{(sg}\SpecialCharTok{$}\NormalTok{r.squared,sgs}\SpecialCharTok{$}\NormalTok{r.squared)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.9731074 0.9731074
+\end{verbatim}
+
+\hypertarget{e-el-coeficiente-de-determinaciuxf3n-corregido}{%
+\paragraph{(e) El coeficiente de determinación
+corregido}\label{e-el-coeficiente-de-determinaciuxf3n-corregido}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{c}\NormalTok{(sg}\SpecialCharTok{$}\NormalTok{adj.r.squared,sgs}\SpecialCharTok{$}\NormalTok{adj.r.squared)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.9623503 0.9641432
+\end{verbatim}
+
+\hypertarget{f-el-contraste-de-la-hipuxf3tesis-nula-h-0-ux3b20ux3b21ux3b220}{%
+\paragraph{(f) El contraste de la hipótesis nula H 0 :
+β0=β1=β2=0}\label{f-el-contraste-de-la-hipuxf3tesis-nula-h-0-ux3b20ux3b21ux3b220}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{g0 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}} \DecValTok{0}\NormalTok{)}
+\FunctionTok{anova}\NormalTok{(g0,lmod10)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Analysis of Variance Table
+## 
+## Model 1: y ~ 0
+## Model 2: y ~ x1 + x2
+##   Res.Df     RSS Df Sum of Sq      F    Pr(>F)    
+## 1      8 20336.0                                  
+## 2      5    91.7  3     20244 368.15 2.773e-06 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+\end{verbatim}
+
+Se rechaza
+
+\hypertarget{g-el-contraste-de-la-hipuxf3tesis-nula-h-0-ux3b2-1-ux3b2-2-0-utilizando-datos-originales.}{%
+\paragraph{(g) El contraste de la hipótesis nula H 0 : β 1 = β 2 = 0
+utilizando datos
+originales.}\label{g-el-contraste-de-la-hipuxf3tesis-nula-h-0-ux3b2-1-ux3b2-2-0-utilizando-datos-originales.}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{g1}\OtherTok{\textless{}{-}}\FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}} \DecValTok{1}\NormalTok{)}
+\FunctionTok{anova}\NormalTok{(g1,lmod10)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Analysis of Variance Table
+## 
+## Model 1: y ~ 1
+## Model 2: y ~ x1 + x2
+##   Res.Df    RSS Df Sum of Sq      F    Pr(>F)    
+## 1      7 3408.0                                  
+## 2      5   91.7  2    3316.3 90.462 0.0001186 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+\end{verbatim}
+
+Se rechaza
+
+\hypertarget{h-el-contraste-de-la-hipuxf3tesis-nula-h-0-ux3b2-1-ux3b2-2-0-utilizando-datos-en-desviaciones-respecto-a-la-media.}{%
+\paragraph{(h) El contraste de la hipótesis nula H 0 : β 1 = β 2 = 0
+utilizando datos en desviaciones respecto a la
+media.}\label{h-el-contraste-de-la-hipuxf3tesis-nula-h-0-ux3b2-1-ux3b2-2-0-utilizando-datos-en-desviaciones-respecto-a-la-media.}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{g1s}\OtherTok{\textless{}{-}}\FunctionTok{lm}\NormalTok{(ys }\SpecialCharTok{\textasciitilde{}} \DecValTok{1}\NormalTok{)}
+\FunctionTok{anova}\NormalTok{(g1s, lmod11)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Analysis of Variance Table
+## 
+## Model 1: ys ~ 1
+## Model 2: ys ~ 0 + x1s + x2s
+##   Res.Df    RSS Df Sum of Sq      F   Pr(>F)    
+## 1      7 3408.0                                 
+## 2      6   91.7  1    3316.3 217.11 6.14e-06 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+\end{verbatim}
+
+\hypertarget{i-la-representaciuxf3n-gruxe1fica-de-una-regiuxf3n-de-confianza-del-95-para-ux3b2-1-y-ux3b2-2-.}{%
+\paragraph{(i) La representación gráfica de una región de confianza del
+95 \% para β 1 y β 2
+.}\label{i-la-representaciuxf3n-gruxe1fica-de-una-regiuxf3n-de-confianza-del-95-para-ux3b2-1-y-ux3b2-2-.}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(ellipse)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Attaching package: 'ellipse'
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:graphics':
+## 
+##     pairs
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{plot}\NormalTok{(}\FunctionTok{ellipse}\NormalTok{(lmod10,}\DecValTok{2}\SpecialCharTok{:}\DecValTok{3}\NormalTok{),}\AttributeTok{type=}\StringTok{"l"}\NormalTok{)}
+\FunctionTok{points}\NormalTok{(}\FunctionTok{coef}\NormalTok{(lmod10)[}\DecValTok{2}\NormalTok{], }\FunctionTok{coef}\NormalTok{(lmod10)[}\DecValTok{3}\NormalTok{], }\AttributeTok{pch=}\DecValTok{19}\NormalTok{)}
+\FunctionTok{abline}\NormalTok{(}\AttributeTok{v=}\FunctionTok{confint}\NormalTok{(lmod10)[}\DecValTok{2}\NormalTok{,],}\AttributeTok{lty=}\DecValTok{2}\NormalTok{,}\AttributeTok{col=}\DecValTok{2}\NormalTok{)}
+\FunctionTok{abline}\NormalTok{(}\AttributeTok{h=}\FunctionTok{confint}\NormalTok{(lmod10)[}\DecValTok{3}\NormalTok{,],}\AttributeTok{lty=}\DecValTok{2}\NormalTok{,}\AttributeTok{col=}\DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Regresion-simple-y-multiple_files/figure-latex/unnamed-chunk-59-1.pdf}
+
+\hypertarget{j-el-contraste-individual-de-los-paruxe1metros-ux3b2-0-ux3b2-1-y-ux3b2-2-.}{%
+\paragraph{(j) El contraste individual de los parámetros β 0 , β 1 y β 2
+.}\label{j-el-contraste-individual-de-los-paruxe1metros-ux3b2-0-ux3b2-1-y-ux3b2-2-.}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{summary}\NormalTok{(lmod10)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = y ~ x1 + x2)
+## 
+## Residuals:
+##       1       2       3       4       5       6       7       8 
+## -3.0583 -0.9777 -0.8233  3.3310  5.6690  2.8233 -5.0961 -1.8679 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)   6.4700     3.3684   1.921    0.113    
+## x1            6.5883     0.5015  13.137 4.56e-05 ***
+## x2            0.2573     1.5458   0.166    0.874    
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 4.281 on 5 degrees of freedom
+## Multiple R-squared:  0.9731, Adjusted R-squared:  0.9624 
+## F-statistic: 90.46 on 2 and 5 DF,  p-value: 0.0001186
+\end{verbatim}
+
+Beta 1 es significativo
+
+\hypertarget{k-el-contraste-de-la-hipuxf3tesis-nula-h0-ux3b21-10-ux3b22-.}{%
+\paragraph{(k) El contraste de la hipótesis nula H0: β1 = 10 β2
+.}\label{k-el-contraste-de-la-hipuxf3tesis-nula-h0-ux3b21-10-ux3b22-.}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{lmod12}\OtherTok{\textless{}{-}}\FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}} \FunctionTok{I}\NormalTok{(}\DecValTok{10}\SpecialCharTok{*}\NormalTok{x1 }\SpecialCharTok{+}\NormalTok{ x2))}
+\FunctionTok{anova}\NormalTok{(lmod12,lmod10)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Analysis of Variance Table
+## 
+## Model 1: y ~ I(10 * x1 + x2)
+## Model 2: y ~ x1 + x2
+##   Res.Df   RSS Df Sum of Sq      F Pr(>F)
+## 1      6 92.87                           
+## 2      5 91.65  1    1.2195 0.0665 0.8067
+\end{verbatim}
+
+Se acepta
+
+\hypertarget{ejercicios-del-libro-de-faraway-1}{%
+\subsection{Ejercicios del libro de
+Faraway}\label{ejercicios-del-libro-de-faraway-1}}
+
+\hypertarget{ejercicio-4-cap.-4-puxe1g.-57}{%
+\paragraph{4. (∗) (Ejercicio 4 cap. 4 pág.
+57)}\label{ejercicio-4-cap.-4-puxe1g.-57}}
+
+The dataset mdeaths reports the number of deaths from lung diseases for
+men in the UK from 1974 to 1979.
+
+\hypertarget{a-make-an-appropriate-plot-of-the-data.-at-what-time-of-year-are-deaths-most-likely-to-occur}{%
+\paragraph{(a) Make an appropriate plot of the data. At what time of
+year are deaths most likely to
+occur?}\label{a-make-an-appropriate-plot-of-the-data.-at-what-time-of-year-are-deaths-most-likely-to-occur}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(datasets)}
+\FunctionTok{data}\NormalTok{(UKLungDeaths)}
+\FunctionTok{plot}\NormalTok{(mdeaths)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Regresion-simple-y-multiple_files/figure-latex/unnamed-chunk-62-1.pdf}
+Hay más muertes a primeros de año
+
+\hypertarget{b-fit-an-autoregressive-model-of-the-same-form-used-for-the-airline-data.-are-all-the-predictors-statistically-significant}{%
+\paragraph{(b) Fit an autoregressive model of the same form used for the
+airline data. Are all the predictors statistically
+significant?}\label{b-fit-an-autoregressive-model-of-the-same-form-used-for-the-airline-data.-are-all-the-predictors-statistically-significant}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{lagdf }\OtherTok{\textless{}{-}} \FunctionTok{embed}\NormalTok{(}\FunctionTok{as.vector}\NormalTok{(mdeaths),}\DecValTok{14}\NormalTok{)}
+\FunctionTok{colnames}\NormalTok{(lagdf) }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"y"}\NormalTok{,}\FunctionTok{paste0}\NormalTok{(}\StringTok{"lag"}\NormalTok{,}\DecValTok{1}\SpecialCharTok{:}\DecValTok{13}\NormalTok{))}
+\NormalTok{lagdf }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(lagdf)}
+\NormalTok{armod }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ lag1 }\SpecialCharTok{+}\NormalTok{ lag12 }\SpecialCharTok{+}\NormalTok{ lag13, }\AttributeTok{data=}\NormalTok{lagdf)}
+\FunctionTok{summary}\NormalTok{(armod)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = y ~ lag1 + lag12 + lag13, data = lagdf)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -762.71  -81.13  -21.12   61.76  724.06 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)  58.1985   120.7358   0.482   0.6317    
+## lag1          0.2501     0.1327   1.885   0.0647 .  
+## lag12         0.5356     0.1179   4.542 3.09e-05 ***
+## lag13         0.1512     0.1386   1.091   0.2801    
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 238.7 on 55 degrees of freedom
+## Multiple R-squared:   0.73,  Adjusted R-squared:  0.7153 
+## F-statistic: 49.56 on 3 and 55 DF,  p-value: 1.19e-15
+\end{verbatim}
+
+\hypertarget{c-use-the-model-to-predict-the-number-of-deaths-in-january-1980-along-with-a-95-prediction-interval.}{%
+\paragraph{c) Use the model to predict the number of deaths in January
+1980 along with a 95\% prediction
+interval.}\label{c-use-the-model-to-predict-the-number-of-deaths-in-january-1980-along-with-a-95-prediction-interval.}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{lagdf[}\FunctionTok{nrow}\NormalTok{(lagdf),]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##       y lag1 lag2 lag3 lag4 lag5 lag6 lag7 lag8 lag9 lag10 lag11 lag12 lag13
+## 59 1341 1294 1081  940  975 1056 1075 1215 1531 1846  1820  2263  1812  1110
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{predict}\NormalTok{(armod, }\FunctionTok{data.frame}\NormalTok{(}\AttributeTok{lag1=}\DecValTok{1341}\NormalTok{, }\AttributeTok{lag12=}\DecValTok{2263}\NormalTok{, }\AttributeTok{lag13=}\DecValTok{1812}\NormalTok{),}\AttributeTok{interval=}\StringTok{"prediction"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##        fit      lwr      upr
+## 1 1879.599 1359.725 2399.474
+\end{verbatim}
+
+\hypertarget{d-use-your-answer-from-the-previous-question-to-compute-a-prediction-and-interval-for-february-1980.}{%
+\paragraph{(d) Use your answer from the previous question to compute a
+prediction and interval for February
+1980.}\label{d-use-your-answer-from-the-previous-question-to-compute-a-prediction-and-interval-for-february-1980.}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{predict}\NormalTok{(armod, }\FunctionTok{data.frame}\NormalTok{(}\AttributeTok{lag1=}\FloatTok{1879.599}\NormalTok{, }\AttributeTok{lag12=}\DecValTok{1820}\NormalTok{, }\AttributeTok{lag13=}\DecValTok{2263}\NormalTok{),}\AttributeTok{interval=}\StringTok{"prediction"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##        fit     lwr      upr
+## 1 1845.247 1345.87 2344.625
+\end{verbatim}
+
+\hypertarget{e-compute-the-fitted-values.-plot-these-against-the-observed-values.-note-that-you-will-need-to-select-the-appropriate-observed-values.-do-you-think-the-accuracy-of-predictions-will-be-the-same-for-all-months-of-the-year}{%
+\paragraph{(e) Compute the fitted values. Plot these against the
+observed values. Note that you will need to select the appropriate
+observed values. Do you think the accuracy of predictions will be the
+same for all months of the
+year?}\label{e-compute-the-fitted-values.-plot-these-against-the-observed-values.-note-that-you-will-need-to-select-the-appropriate-observed-values.-do-you-think-the-accuracy-of-predictions-will-be-the-same-for-all-months-of-the-year}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{plot}\NormalTok{(lagdf}\SpecialCharTok{$}\NormalTok{y, }\AttributeTok{type=}\StringTok{"l"}\NormalTok{, }\AttributeTok{xlim=}\FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{62}\NormalTok{), }\AttributeTok{ylab=}\StringTok{"deaths"}\NormalTok{)}
+\FunctionTok{lines}\NormalTok{(}\FunctionTok{predict}\NormalTok{(armod), }\AttributeTok{lty=}\DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Regresion-simple-y-multiple_files/figure-latex/unnamed-chunk-66-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{pred.int }\OtherTok{\textless{}{-}} \FunctionTok{predict}\NormalTok{(armod, }\AttributeTok{interval =} \StringTok{"prediction"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning in predict.lm(armod, interval = "prediction"): predictions on current data refer to _future_ responses
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{plot}\NormalTok{(pred.int[,}\DecValTok{3}\NormalTok{]}\SpecialCharTok{{-}}\NormalTok{pred.int[,}\DecValTok{2}\NormalTok{], }\AttributeTok{type=}\StringTok{"l"}\NormalTok{, }\AttributeTok{ylab=}\StringTok{"Anchura del intervalo"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Regresion-simple-y-multiple_files/figure-latex/unnamed-chunk-67-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{which.max}\NormalTok{(pred.int[,}\DecValTok{3}\NormalTok{]}\SpecialCharTok{{-}}\NormalTok{pred.int[,}\DecValTok{2}\NormalTok{])}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 26 
+## 26
+\end{verbatim}
+
+\hypertarget{ejercicio-5-cap.-4-puxe1g.-58}{%
+\paragraph{5. (∗) (Ejercicio 5 cap. 4 pág.
+58)}\label{ejercicio-5-cap.-4-puxe1g.-58}}
+
+For the fat data used in this chapter, a smaller model using only age,
+weight, height and abdom was proposed on the grounds that these
+predictors are either known by the individual or easily measured.
+
+\hypertarget{a-compare-this-model-to-the-full-thirteen-predictor-model-used-earlier-in-the-chapter.-is-it-justifiable-to-use-the-smaller-model}{%
+\paragraph{(a) Compare this model to the full thirteen-predictor model
+used earlier in the chapter. Is it justifiable to use the smaller
+model?}\label{a-compare-this-model-to-the-full-thirteen-predictor-model-used-earlier-in-the-chapter.-is-it-justifiable-to-use-the-smaller-model}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{data}\NormalTok{(fat,}\AttributeTok{package=}\StringTok{"faraway"}\NormalTok{)}
+
+\NormalTok{lmod13}\OtherTok{\textless{}{-}}\FunctionTok{lm}\NormalTok{(brozek }\SpecialCharTok{\textasciitilde{}}\NormalTok{ age }\SpecialCharTok{+}\NormalTok{ weight }\SpecialCharTok{+}\NormalTok{ height }\SpecialCharTok{+}\NormalTok{ neck }\SpecialCharTok{+}\NormalTok{ chest }\SpecialCharTok{+}\NormalTok{ abdom }\SpecialCharTok{+}
+\NormalTok{               hip }\SpecialCharTok{+}\NormalTok{ thigh }\SpecialCharTok{+}\NormalTok{ knee }\SpecialCharTok{+}\NormalTok{ ankle }\SpecialCharTok{+}\NormalTok{ biceps }\SpecialCharTok{+}\NormalTok{ forearm }\SpecialCharTok{+}\NormalTok{ wrist, }\AttributeTok{data=}\NormalTok{fat)}
+
+\NormalTok{lmod14}\OtherTok{\textless{}{-}}\FunctionTok{lm}\NormalTok{(brozek }\SpecialCharTok{\textasciitilde{}}\NormalTok{ age }\SpecialCharTok{+}\NormalTok{  weight }\SpecialCharTok{+}\NormalTok{  height }\SpecialCharTok{+}\NormalTok{ abdom, }\AttributeTok{data=}\NormalTok{fat)}
+
+\FunctionTok{anova}\NormalTok{(lmod13, lmod14)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Analysis of Variance Table
+## 
+## Model 1: brozek ~ age + weight + height + neck + chest + abdom + hip + 
+##     thigh + knee + ankle + biceps + forearm + wrist
+## Model 2: brozek ~ age + weight + height + abdom
+##   Res.Df    RSS Df Sum of Sq      F   Pr(>F)   
+## 1    238 3785.1                                
+## 2    247 4205.0 -9    -419.9 2.9336 0.002558 **
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+\end{verbatim}
+
+Es significativo, así que no podemos usar el modelo simple.
+
+\hypertarget{b-compute-a-95-prediction-interval-for-median-predictor-values-and-compare-to-the-results-to-the-interval-for-the-full-model.-do-the-intervals-differ-by-a-practically-important-amount}{%
+\paragraph{(b) Compute a 95\% prediction interval for median predictor
+values and compare to the results to the interval for the full model. Do
+the intervals differ by a practically important
+amount?}\label{b-compute-a-95-prediction-interval-for-median-predictor-values-and-compare-to-the-results-to-the-interval-for-the-full-model.-do-the-intervals-differ-by-a-practically-important-amount}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{medianas }\OtherTok{\textless{}{-}} \FunctionTok{apply}\NormalTok{(fat[,}\DecValTok{4}\SpecialCharTok{:}\DecValTok{18}\NormalTok{],}\DecValTok{2}\NormalTok{,median)}
+\FunctionTok{predict}\NormalTok{(lmod14, }\AttributeTok{newdata =} \FunctionTok{data.frame}\NormalTok{(}\AttributeTok{age=}\NormalTok{medianas[}\DecValTok{1}\NormalTok{],}\AttributeTok{weight=}\NormalTok{medianas[}\DecValTok{2}\NormalTok{],}\AttributeTok{height=}\NormalTok{medianas[}\DecValTok{3}\NormalTok{],}\AttributeTok{abdom=}\NormalTok{medianas[}\DecValTok{8}\NormalTok{]), }\AttributeTok{interval=}\StringTok{"prediction"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##          fit      lwr      upr
+## age 17.84028 9.696631 25.98392
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{predict}\NormalTok{(lmod13, }\AttributeTok{newdata =} \FunctionTok{as.data.frame}\NormalTok{(}\FunctionTok{t}\NormalTok{(medianas[}\FunctionTok{c}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\DecValTok{3}\NormalTok{,}\DecValTok{6}\SpecialCharTok{:}\DecValTok{15}\NormalTok{)])), }\AttributeTok{interval=}\StringTok{"prediction"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##        fit     lwr      upr
+## 1 17.49322 9.61783 25.36861
+\end{verbatim}
+
+\hypertarget{c-for-the-smaller-model-examine-all-the-observations-from-case-numbers-25-to-50.-which-two-observations-seem-particularly-anomalous}{%
+\paragraph{(c) For the smaller model, examine all the observations from
+case numbers 25 to 50. Which two observations seem particularly
+anomalous?}\label{c-for-the-smaller-model-examine-all-the-observations-from-case-numbers-25-to-50.-which-two-observations-seem-particularly-anomalous}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{plot}\NormalTok{(lmod14, }\AttributeTok{which=}\DecValTok{5}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Regresion-simple-y-multiple_files/figure-latex/unnamed-chunk-70-1.pdf}
+
+\hypertarget{d-recompute-the-95-prediction-interval-for-median-predictor-values-after-these-two-anomalous-cases-have-been-excluded-from-the-data.-did-this-make-much-difference-to-the-outcome}{%
+\paragraph{(d) Recompute the 95\% prediction interval for median
+predictor values after these two anomalous cases have been excluded from
+the data. Did this make much difference to the
+outcome?}\label{d-recompute-the-95-prediction-interval-for-median-predictor-values-after-these-two-anomalous-cases-have-been-excluded-from-the-data.-did-this-make-much-difference-to-the-outcome}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{lmod15 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(brozek }\SpecialCharTok{\textasciitilde{}}\NormalTok{ age }\SpecialCharTok{+}\NormalTok{ weight }\SpecialCharTok{+}\NormalTok{ height }\SpecialCharTok{+}\NormalTok{ abdom, }\AttributeTok{data=}\NormalTok{fat[}\SpecialCharTok{{-}}\FunctionTok{c}\NormalTok{(}\DecValTok{39}\NormalTok{,}\DecValTok{42}\NormalTok{),])}
+\NormalTok{medianas }\OtherTok{\textless{}{-}} \FunctionTok{apply}\NormalTok{(fat[}\SpecialCharTok{{-}}\FunctionTok{c}\NormalTok{(}\DecValTok{39}\NormalTok{,}\DecValTok{42}\NormalTok{),}\DecValTok{4}\SpecialCharTok{:}\DecValTok{18}\NormalTok{],}\DecValTok{2}\NormalTok{,median)}
+
+\FunctionTok{predict}\NormalTok{(lmod15, }\AttributeTok{newdata =} \FunctionTok{data.frame}\NormalTok{(}\AttributeTok{age=}\NormalTok{medianas[}\DecValTok{1}\NormalTok{],}\AttributeTok{weight=}\NormalTok{medianas[}\DecValTok{2}\NormalTok{],}\AttributeTok{height=}\NormalTok{medianas[}\DecValTok{3}\NormalTok{],}\AttributeTok{abdom=}\NormalTok{medianas[}\DecValTok{8}\NormalTok{]), }\AttributeTok{interval=}\StringTok{"prediction"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##         fit      lwr      upr
+## age 17.9033 9.887851 25.91874
+\end{verbatim}
+
+\end{document}
