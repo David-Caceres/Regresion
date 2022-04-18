@@ -1,0 +1,670 @@
+---
+title: "Ejercicios_Regresión_simple_multiple"
+author: "David Cáceres"
+date: "11/4/2022"
+output:
+  word_document: default
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#### 1. (Ejercicio 6.8 del Capítulo 6 página 118)
+
+#### Hallar la recta de regresión simple de la variable respuesta raíz cuadrada de la velocidad sobre la variable regresora densidad con los datos de la tabla 1.1 del capítulo 1.
+
+
+```{r}
+require(faraway)
+
+dens <- c(12.7,17.0,66.0,50.0,87.8,81.4,75.6,66.2,81.1,62.8,77.0,89.6,
+           18.3,19.1,16.5,22.2,18.6,66.0,60.3,56.0,66.3,61.7,66.6,67.8)
+vel <- c(62.4,50.7,17.1,25.9,12.4,13.4,13.7,17.9,13.8,17.9,15.8,12.6,
+          51.2,50.8,54.7,46.5,46.3,16.9,19.8,21.2,18.3,18.0,16.6,18.3)
+rvel <- sqrt(vel)
+lmod1<-lm(rvel ~ dens)
+summary(lmod1)
+
+```
+#### (i) La suma de los residuos es cero
+
+```{r}
+
+residuos<- residuals(lmod1)
+sum(residuos)
+
+# El valor es prácticamente cero por redondeo
+
+```
+
+
+#### (ii) Pyi = Pyˆi
+
+```{r}
+
+sum(rvel)
+
+sum(fitted(lmod1))
+
+```
+
+#### (iii) La suma de los residuos ponderada por los valores de la variable regresora es cero:
+
+```{r}
+sum(residuos*dens)
+```
+
+
+#### (iv) La suma de los residuos ponderada por las predicciones de los valores observados es cero:
+
+```{r}
+sum(fitted(lmod1)*residuos)
+```
+
+
+#### Calcular la estimación de σ² y, a partir de ella, las estimaciones de las desviaciones estándar de los estimadores de los parámetros βˆ0 y βˆ1.
+
+```{r}
+length<-length(dens)
+SCRlmod1<-sum(residuos^2)
+sigma<-SCRlmod1/(length-2)
+sigma
+```
+
+
+```{r}
+s2dens<-(1/length)*sum((dens-mean(dens))^2)
+Sdens<-length*s2dens
+ebeta1lmod1<-sqrt(sigma*((1/length)+(mean(dens)^2/Sdens)))
+```
+
+```{r}
+ebeta0lmod1<-sqrt(sigma*((1/length)+(mean(dens)^2/Sdens)))
+ebeta0lmod1
+```
+
+
+#### Escribir los intervalos de confianza para los parámetros con un nivel de confianza del 95 %.
+
+```{r}
+
+tlmod1 <- qt(0.975,lmod1$df)
+# Para Beta1
+lmod1$coef[2]+c(-1,1)*tlmod1*ebeta1lmod1
+
+# Para beta0
+lmod1$coef[1]+c(-1,1)*tlmod1*ebeta0lmod1
+```
+
+#### Construir la tabla para la significación de la regresión y realizar dicho contraste. (H0: ß1=0 (No hay efecto de la relación entre ambas variables)
+
+
+```{r}
+summary(aov(lmod1))
+```
+
+
+Significativo a p<<alfa=0.005
+
+
+#### Hallar el intervalo de la predicción de la respuesta media cuando la densidades de 50 vehículos por km. Nivel de confianza: 90 %
+
+
+```{r}
+y0 <- lmod1$coef[1]+lmod1$coef[2]*50
+
+y0
+
+tlmod1 <- qt(0.950,lmod1$df)
+sigma <- sqrt(sigma)
+y0+c(-1,1)*tlmod1*sigma*sqrt(1+(1/length)+((((50-mean(dens))^2)/Sdens)))
+
+predict(lmod1,new=data.frame(dens=50),interval="prediction",level=0.90)
+
+ predict(lmod1,new=data.frame(dens=50),interval="confidence",level=0.90)
+```
+
+
+
+### 3. (Ejercicio 6.10 del Capítulo 6 página 118)
+####Se admite que una persona es proporcionada si su altura en cm es igual a su peso en kg más 100. En términos estadísticos si la recta de regresión de Y (altura) sobre X (peso) es:
+
+Y = 100 + X
+
+
+#### Contrastar, con un nivel de significación α = 0.05, si se puede considerar válida esta hipótesis a partir de los siguientes datos que corresponden a una muestra de mujeres jóvenes:
+
+```{r}
+x <- c(55,52,65,54,46,60,54,52,56,65,52,53,60)
+y <- c(164,164,173,163,157,168,171,158,169,172,168,160,172)
+```
+
+
+#### Razonar la bondad de la regresión y todos los detalles del contraste.
+
+```{r}
+lmod2<-lm(y  ~ x)
+summary(lmod2)
+
+```
+
+
+```{r}
+plot(y~x, xlim=c(40,75), ylim=c(140, 180))
+abline(lmod2)
+abline(100,1)
+```
+
+
+```{r}
+confint(lmod2)
+
+```
+
+
+```{r}
+modelo0<-lm(y ~ 0 + offset(100 + x))
+anova(modelo0, lmod2)
+```
+
+Rechazamos la hipótesis nula
+
+
+
+#### 4. (Ejercicio 6.11 del Capítulo 6 página 119)
+
+
+El período de oscilación de un péndulo es 2π| l/g
+donde l es la longitud y g es la constante de
+gravitación. En un experimento observamos t ij (j = 1, . . . , n i ) períodos correspondientes a l i (i =
+1, . . . , k) longitudes.
+
+#### (a) Proponer un modelo, con las hipótesis que se necesiten, para estimar la constante método de los mínimos cuadrados.
+
+
+```{r}
+longitud<- c(rep(18.3,4),rep(20,2),rep(21.5,3),rep(15,2))
+x<-sqrt(longitud)
+y<-c(8.58,7.9,8.2,7.8,8.4,9.2,9.7,8.95,9.2,7.5,8)
+lmod3<-lm(y ~ 0 + sqrt(x))
+summary(lmod3)
+```
+
+#### (b) Contrastar H0:2πg√
+
+```{r}
+# Miramos si el intervalo de confianza contiene el 2
+
+confint(lmod3)
+```
+
+No lo contiene así que rechazamos la hipótesis nula
+
+
+
+#### 5. (Ejercicio 8.4 del Capítulo 8 página 157)
+Se dispone de los siguientes datos sobre diez empresas fabricantes de productos de limpieza doméstica:
+
+```{r}
+# Datos
+
+v <- c(60,48,42,36,78,36,72,42,54,90)
+ip <- c(100,110,130,100,80,80,90,120,120,90)
+pu <- c(1.8,2.4,3.6,0.6,1.8,0.6,3.6,1.2,2.4,4.2)
+```
+
+```{r}
+lmod4<-lm(v ~ ip +pu)
+summary(lmod4)
+```
+
+
+#### 1) Estimar el vector de coeficientes β = (β 0 , β 1 , β 2 ) 0 del modelo
+
+```{r}
+lmod4$coefficients
+```
+
+#### 2) Estimar la matriz de varianzas-covarianzas del vector β.
+
+
+```{r}
+summary(lmod4)$sigma^2 * summary(lmod4)$cov.unscaled
+```
+
+
+#### 3) Calcular el coeficiente de determinación.
+
+```{r}
+sum4<-summary(lmod4)
+names(sum4)
+sum4$r.squared
+```
+
+
+## Ejercicios del libro de Faraway
+
+#### 1. (Ejercicio 1 cap. 4 pág. 56)
+For the prostate data, fit a model with lpsa as the response and the other variables as predictors:
+
+```{r}
+require(faraway)
+data(prostate)
+```
+
+```{r}
+lmod5<- lm(lpsa~lcavol + lweight + age + lbph + svi +lcp+ gleason+pgg45, data = prostate)
+summary(lmod5)
+```
+
+
+#### (a) Suppose a new patient with the following values arrives:
+
+Predict the lpsa for this patient along with an appropriate 95% CI.
+
+
+```{r}
+head(x0pros <- data.frame(lcavol=1.44692,
+                                              lweight=3.62301,
+                                              age=65,
+                                              lbph=0.30010,
+                                              svi=0,
+                                              lcp=-0.79851,
+                                              gleason=7,
+                                              pgg45=15))
+
+
+```
+
+
+
+```{r}
+predict(lmod5, x0pros, interval="prediction", level=0.95)
+```
+
+#### (b) Repeat the last question for a patient with the same values except that he is age 20. Explain why the CI is wider.
+
+```{r}
+x1pros <- data.frame(lcavol=1.44692,lweight=3.62301,age=20,lbph=0.30010,svi=0,lcp=-0.79851,gleason=7,pgg45=15)
+predict(lmod5,x1pros,interval="prediction")
+```
+
+E el apartado B, el valor para la edad, está fuera del rango de los valores del dataset, por eso el intervalo de confianza es mayor.
+
+#### (c) For the model of the previous question, remove all the predictors that are not significant at the 5% level. Now recompute the predictions of the previous question. Are the CIs wider or narrower? Which predictions would you prefer? Explain.
+```{r}
+ summary(lmod5)
+```
+
+Las variables con significación al 5% son "lcavol", "lweight", "svi". Creamos un nuevo modelo con ellas.
+
+```{r}
+lmod6<-lm(lpsa ~ lcavol + lweight + svi, data=prostate)
+summary(lmod6)
+```
+
+
+```{r}
+predict(lmod6, x0pros, interval="prediction")
+
+predict(lmod6, x1pros, interval="prediction")
+```
+
+
+#### 2. (Ejercicio 2 cap. 4 pág. 57)
+Using the teengamb data, fit a model with gamble as the response and the other variables as predictors.
+
+```{r}
+data(teengamb)
+lmod7<-lm(gamble ~ sex + status + income +verbal, data=teengamb)
+summary(lmod7)
+```
+
+#### (a) Predict the amount that a male with average (given these data) status, income and verbal score would gamble along with an appropriate 95% CI.
+
+```{r}
+
+attach(teengamb)
+x0gamb<-data.frame( sex=0, status=median(status), 
+                                  income=median(income), verbal=median(verbal))
+
+predict(lmod7,x0gamb,interval="prediction")
+```
+
+
+#### (b) Repeat the prediction for a male with maximal values (for this data) of status, income and verbal score. Which CI is wider and why is this result expected?
+
+```{r}
+x1gamb <- data.frame(sex=0, status=max(status),
+                                            income=max(income),verbal=max(verbal))
+
+predict(lmod7,x1gamb,interval="prediction")
+```
+
+
+#### (c) Fit a model with sqrt(gamble) as the response but with the same predictors. Now predict the response and give a 95% prediction interval for the individual in (a). Take care to give your answer in the original units of the response.
+
+```{r}
+lmod8<-lm(sqrt(gamble) ~ sex + status + income +verbal, data=teengamb)
+predict(lmod8,x0gamb,interval="prediction")
+```
+
+```{r}
+predict(lmod8,x0gamb,interval="prediction")^2
+```
+
+
+#### (d) Repeat the prediction for the model in (c) for a female with status = 20, income = 1, verbal = 10. Comment on the credibility of the result
+
+```{r}
+x2gamb <- data.frame(sex=1,status=20,income=1,verbal=10)
+ predict(lmod8,x2gamb,interval="prediction")^2
+```
+
+
+
+## 3. (Ejercicio 3 cap. 4 pág. 57)
+The snail dataset contains percentage water content of the tissues of snails grown under three different levels of relative humidity and two different temperatures.
+
+#### (a) Use the command xtabs(water ~ temp + humid, snail)/4 to produce a table of mean water content for each combination of temperature and humidity. Can you use this table to predict the water content for a temperature of 25 ◦ C and a humidity of 60%? Explain.
+
+```{r}
+require(faraway)
+data(snail)
+```
+
+```{r}
+xtabs(water ~ temp + humid, snail)/4
+```
+
+```{r}
+mytable <- xtabs(water~temp+humid,snail)/4
+colnames(mytable) <- c(45,75,100)
+rownames(mytable) <- c(20, 30)
+matplot (t(mytable), type="l")
+xtabs(mean(water[humid<100])~mean(temp[humid<100])+mean(humid[humid<100]),snail)
+```
+
+#### (b) Fit a regression model with the water content as the response and the temperature and humidity as predictors. Use this model to predict the water content for a temperature of 25 ◦ C and a humidity of 60%?
+
+```{r}
+lmod9<-(lm(water ~ temp + humid, data=snail))
+summary(lmod9)
+```
+
+
+```{r}
+x0wat<-data.frame(temp=25,humid=60)
+predict(lmod9, x0wat, interval="prediction")
+```
+
+#### (c) Use this model to predict water content for a temperature of 30 ◦ C and a humidity of 75%?. Compare your prediction to the prediction from (a). Discuss the relative merits of these two predictions.
+
+```{r}
+x1wat<-data.frame(temp=30,humid=75)
+predict(lmod9, x1wat, interval="prediction")
+```
+
+#### (d) The intercept in your model is 52.6%. Give two values of the predictors for which this represents the predicted response. Is your answer unique? Do you think this represents a reasonable prediction?
+
+```{r}
+x3wat<-data.frame(temp=0,humid=0)
+predict(lmod9,x3wat,interval="prediction")
+```
+
+#### (e) For a temperature of 25 ◦ C, what value of humidity would give a predicted response of 80% water content.
+
+```{r}
+x6wat<-data.frame(temp=25,humid=seq(67.1,68.0,0.1))
+predict(lmod9,x6wat,interval="prediction")
+```
+
+
+## Ejercicios Opcionales
+## Ejercicios del libro de Carmona
+
+#### 2. (∗) (Ejercicio 6.9 del Capítulo 6 página 118)
+Comparar las rectas de regresión de hombres y mujeres con los logaritmos de los datos del ejercicio 1.4.
+
+```{r}
+# Datos
+TPO_H <- c(9.84,19.32,43.19,102.58,215.78,787.96,1627.34,7956)
+TPO_M <- c(10.94,22.12,48.25,117.73,240.83,899.88,1861.63,8765)
+distancia <- c(100,200,400,800,1500,5000,10000,42192)
+lTPO_H <- log(TPO_H)
+lTPO_M <- log(TPO_M)
+ldistancia <- log(distancia)
+```
+
+
+```{r}
+n <- length(distancia)
+uno.h <- c(rep(1,n),rep(0,n))
+uno.m <- c(rep(0,n),rep(1,n))
+x.h <- c(ldistancia,rep(0,n))
+x.m <- c(rep(0,n),ldistancia)
+y <- c(lTPO_H,lTPO_M)
+modc <- lm(y ~ 0 + uno.h + uno.m + x.h + x.m)
+```
+
+
+```{r}
+x <- c(ldistancia,ldistancia)
+modp <- lm(y ~ 0 + uno.h + uno.m + x)
+```
+
+```{r}
+mod0 <- lm(y ~ x)
+anova(mod0,modp)
+```
+
+
+#### 6. (∗) (Ejercicio 8.5 del Capítulo 8 página 157)
+Dado el modelo
+Y t = β 0 + β 1 X 1t + β 2 X 2t + u t
+y los siguientes datos:
+
+```{r}
+y <- c(10,25,32,43,58,62,67,71)
+x1 <- c(1,3,4,5,7,8,10,10)
+x2 <- c(0,-1,0,1,-1,0,-1,2)
+
+```
+
+
+#### (a) La estimación MC de β 0 , β 1 , β 2 utilizando los valores originales.ç
+
+```{r}
+lmod10<-lm(y ~ x1 + x2)
+coef(lmod10)
+```
+
+
+#### (b) La estimación MC de β 0 , β 1 , β 2 utilizando los datos expresados en desviaciones respecto de la media.
+```{r}
+ys <- scale(y, center=TRUE, scale=FALSE)
+x1s <- scale(x1, center=TRUE, scale=FALSE)
+x2s <- scale(x2, center=TRUE, scale=FALSE)
+lmod11 <- lm(ys ~ 0 + x1s + x2s)
+coef(lmod11)
+```
+
+#### (c) La estimación insesgada de σ2
+
+```{r}
+sg <- summary(lmod10)
+sgs <- summary(lmod11)
+c(sg$sigma^2, sgs$sigma^2)
+```
+
+
+#### (d) El coeficiente de determinación
+
+```{r}
+c(sg$r.squared,sgs$r.squared)
+```
+
+
+#### (e) El coeficiente de determinación corregido
+
+```{r}
+c(sg$adj.r.squared,sgs$adj.r.squared)
+```
+
+
+#### (f) El contraste de la hipótesis nula H 0 : β0=β1=β2=0
+
+```{r}
+g0 <- lm(y ~ 0)
+anova(g0,lmod10)
+```
+
+Se rechaza
+
+#### (g) El contraste de la hipótesis nula H 0 : β 1 = β 2 = 0 utilizando datos originales.
+
+```{r}
+g1<-lm(y ~ 1)
+anova(g1,lmod10)
+```
+
+Se rechaza
+
+#### (h) El contraste de la hipótesis nula H 0 : β 1 = β 2 = 0 utilizando datos en desviaciones respecto a la media.
+
+```{r}
+g1s<-lm(ys ~ 1)
+anova(g1s, lmod11)
+```
+
+
+#### (i) La representación gráfica de una región de confianza del 95 % para β 1 y β 2 .
+```{r}
+library(ellipse)
+plot(ellipse(lmod10,2:3),type="l")
+points(coef(lmod10)[2], coef(lmod10)[3], pch=19)
+abline(v=confint(lmod10)[2,],lty=2,col=2)
+abline(h=confint(lmod10)[3,],lty=2,col=2)
+```
+
+
+#### (j) El contraste individual de los parámetros β 0 , β 1 y β 2 .
+
+```{r}
+summary(lmod10)
+```
+
+Beta 1 es significativo
+
+#### (k) El contraste de la hipótesis nula H0: β1 = 10 β2 .
+
+```{r}
+lmod12<-lm(y ~ I(10*x1 + x2))
+anova(lmod12,lmod10)
+```
+
+Se acepta
+
+
+
+## Ejercicios del libro de Faraway
+
+
+#### 4. (∗) (Ejercicio 4 cap. 4 pág. 57)
+The dataset mdeaths reports the number of deaths from lung diseases for men in the UK from 1974 to 1979.
+
+
+#### (a) Make an appropriate plot of the data. At what time of year are deaths most likely to occur?
+
+```{r}
+library(datasets)
+data(UKLungDeaths)
+plot(mdeaths)
+```
+Hay más muertes a primeros de año
+
+#### (b) Fit an autoregressive model of the same form used for the airline data. Are all the predictors statistically significant?
+
+```{r}
+lagdf <- embed(as.vector(mdeaths),14)
+colnames(lagdf) <- c("y",paste0("lag",1:13))
+lagdf <- data.frame(lagdf)
+armod <- lm(y ~ lag1 + lag12 + lag13, data=lagdf)
+summary(armod)
+```
+
+
+#### c) Use the model to predict the number of deaths in January 1980 along with a 95% prediction interval.
+
+```{r}
+lagdf[nrow(lagdf),]
+predict(armod, data.frame(lag1=1341, lag12=2263, lag13=1812),interval="prediction")
+```
+
+#### (d) Use your answer from the previous question to compute a prediction and interval for February 1980.
+
+```{r}
+predict(armod, data.frame(lag1=1879.599, lag12=1820, lag13=2263),interval="prediction")
+```
+
+#### (e) Compute the fitted values. Plot these against the observed values. Note that you will need to select the appropriate observed values. Do you think the accuracy of predictions will be the same for all months of the year?
+
+```{r}
+plot(lagdf$y, type="l", xlim=c(0,62), ylab="deaths")
+lines(predict(armod), lty=2)
+```
+
+```{r}
+pred.int <- predict(armod, interval = "prediction")
+plot(pred.int[,3]-pred.int[,2], type="l", ylab="Anchura del intervalo")
+which.max(pred.int[,3]-pred.int[,2])
+```
+
+#### 5. (∗) (Ejercicio 5 cap. 4 pág. 58)
+For the fat data used in this chapter, a smaller model using only age, weight, height and abdom was proposed on the grounds that these predictors are either known by the individual or easily measured.
+
+
+#### (a) Compare this model to the full thirteen-predictor model used earlier in the chapter. Is it justifiable to use the smaller model?
+```{r}
+data(fat,package="faraway")
+
+lmod13<-lm(brozek ~ age + weight + height + neck + chest + abdom +
+               hip + thigh + knee + ankle + biceps + forearm + wrist, data=fat)
+
+lmod14<-lm(brozek ~ age +  weight +  height + abdom, data=fat)
+
+anova(lmod13, lmod14)
+```
+
+Es significativo, así que no podemos usar el modelo simple.
+
+
+#### (b) Compute a 95% prediction interval for median predictor values and compare to the results to the interval for the full model. Do the intervals differ by a practically important amount?
+
+```{r}
+medianas <- apply(fat[,4:18],2,median)
+predict(lmod14, newdata = data.frame(age=medianas[1],weight=medianas[2],height=medianas[3],abdom=medianas[8]), interval="prediction")
+predict(lmod13, newdata = as.data.frame(t(medianas[c(1:3,6:15)])), interval="prediction")
+```
+
+
+#### (c) For the smaller model, examine all the observations from case numbers 25 to 50. Which two observations seem particularly anomalous?
+
+```{r}
+plot(lmod14, which=5)
+```
+
+
+#### (d) Recompute the 95% prediction interval for median predictor values after these two anomalous cases have been excluded from the data. Did this make much difference to the outcome?
+
+
+```{r}
+lmod15 <- lm(brozek ~ age + weight + height + abdom, data=fat[-c(39,42),])
+medianas <- apply(fat[-c(39,42),4:18],2,median)
+
+predict(lmod15, newdata = data.frame(age=medianas[1],weight=medianas[2],height=medianas[3],abdom=medianas[8]), interval="prediction")
+```
+

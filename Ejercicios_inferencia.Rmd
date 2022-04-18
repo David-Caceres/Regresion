@@ -1,0 +1,557 @@
+---
+title: "Ejercicios de inferencia"
+author: "David Cáceres"
+date: "24/3/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Ejercicios del libro de Faraway
+
+### 1. (Ejercicio 1 cap. 3 pág. 48)
+### For the prostate data, fit a model with lpsa as the response and the other variables as predictors:
+
+#### (a) Compute 90 and 95% CIs for the parameter associated with age. Using just these intervals,
+what could we have deduced about the p-value for age in the regression summary?
+
+```{r}
+require(faraway)
+
+lmod<-lm(lpsa ~ lcavol + lweight + age + lbph + svi + lcp + gleason + pgg45,  data = prostate)
+summary(lmod)
+```
+
+```{r}
+confint(lmod, level=.90)
+# Vemos que para age (age         -0.038210200 -0.001064151)
+```
+
+```{r}
+confint(lmod, level=.95)
+# age         -0.041840618 0.002566267
+```
+
+Vemos que el intervalo de confianza del 90% no incluye el 0, cosa que si pasa 
+en el intervalo del 95%. Lo cual nos indica que el parámetro age no puede ser 0
+para un significación del 10%.
+
+#### (b) Compute and display a 95% joint confidence region for the parameters associated with age and lbph. Plot the origin on this display. The location of the origin on the display tells us the outcome of a certain hypothesis test. State that test and its outcome.
+
+Necesitamos el paquete ellipse para representar la región de confianza.
+
+```{r}
+require(ellipse)
+plot(ellipse(lmod,c(4,5)), type="l")
+points(coef(lmod)[4], coef(lmod)[5])
+points(0,0)
+text(0,0, labels="(0,0)", pos = 3)
+```
+
+El punto 0,0 que es el equivalente a la hipótesis nula de beta = 0 para las 
+dos variables. Vemos que está dentro del intervalo de confianza, así que se 
+acepta.
+
+#### (c) In the text, we made a permutation test corresponding to the F -test for the significance of all the predictors. Execute the permutation test corresponding to the t-test for age in this model. (Hint: summary(g)$coef[4,3] gets you the t-statistic you need if the model is called g.)
+
+El contraste de hipótesis sería
+
+Ho: β age = 0
+H1: β age ≠ 0
+
+```{r}
+set.seed(123)
+nreps<- 4000
+tstats <- numeric(nreps)
+
+for(i in 1:nreps){
+lmod1<-lm(lpsa ~ lweight + sample(age) + lbph + svi + lcp + gleason + pgg45, data= prostate)
+tstats[i] <- summary(lmod1)$coef[4,3]
+}
+
+mean(abs(tstats) > abs(summary(lmod)$coef[4,3]))
+```
+
+
+#### (d) Remove all the predictors that are not significant at the 5% level. Test this model against the original model. Which model is preferred?
+
+
+Si tomamos los intervalos de confianza al 5%
+
+```{r}
+confint(lmod, level=.90)
+```
+
+Vemos que solo 3 superan 0.05, así que construimos el nuevo modelo
+
+```{r}
+lmod2<- lm(lpsa ~ lcavol + lweight + svi, data = prostate)
+summary(lmod2)
+```
+
+Para ver cual de los dos modelos es mejor, realizamos un anova para constrastar la hipótesis nula.
+
+```{r}
+anova(lmod2, lmod)
+```
+
+La diferencia entre ambos es muy poco significativa, así que optamos por el modelo más simple.
+
+
+### 2. (Ejercicio 2 cap. 3 pág. 49)
+Thirty samples of cheddar cheese were analyzed for their content of acetic acid, hydrogen sulfide and lactic acid. Each sample was tasted and scored by a panel of judges and the average taste score produced. Use the cheddar data to answer the following:
+
+#### (a) Fit a regression model with taste as the response and the three chemical contents as predictors. Identify the predictors that are statistically significant at the 5% level.
+
+
+```{r}
+# modelo
+
+lmod3<- lm(taste ~ Acetic + H2S + Lactic, data = cheddar)
+summary(lmod3)
+```
+
+Por debajo de 0.05 se encuentran H2S y Lactic. Estos serían estadísticamente
+significativos para ese intervalo.
+
+
+#### (b) Acetic and H2S are measured on a log scale. Fit a linear model where all three predictors are measured on their original scale. Identify the predictors that are statistically significant at the 5% level for this model.
+
+```{r}
+lmod4<-lm(taste ~ I(exp(Acetic)) + I(exp(H2S)) + Lactic, data=cheddar)
+summary(lmod4)
+```
+
+Tan solo el ácido láctico parece significativo al 5%.
+
+
+#### (c) Can we use an F -test to compare these two models? Explain. Which model provides a better fit to the data? Explain your reasoning.
+
+Para poder usar el F test, todas las variables de uno de los modelos tienen que estar presentes en el otro. En este caso, tenemos variables distintas ya que en un modelo se expresan de forma logarítmica. No pueden compararse y usar el F test.
+
+#### (d) If H2S is increased 0.01 for the model used in (a), what change in the taste would be expected?
+
+```{r}
+3.9118 * 0.01
+
+```
+
+
+#### (e) What is the percentage change in H2S on the original scale corresponding to an additive increase of 0.01 on the (natural) log scale?
+
+```{r eval=FALSE, include=FALSE}
+e^0.01 = 1.01
+# 1.01%
+```
+
+
+### 3. (Ejercicio 3 cap. 3 pág. 49)
+Using the teengamb data, fit a model with gamble as the response and the other variables as predictors.
+
+```{r}
+require(faraway)
+data(teengamb)
+head(teengamb)
+lmod5<-lm(gamble ~ sex + status + income + verbal, data = teengamb)
+```
+
+#### (a) Which variables are statistically significant at the 5% level?
+
+```{r}
+summary(lmod5)
+```
+
+
+Tan solo el sexo, y los ingresos.
+
+#### (b) What interpretation should be given to the coefficient for sex?
+
+El coeficiente mide cuanto varía la variable respuesta por cada unidad de la
+variable explicativa. En este caso, sex es una variable cualitativa y se expresa en 0 para el hombre y 1 para la mujer. EL valor es de -22.118, lo cual siginifica que al pasar de 0 a 1, o de hombre a mujer, el dinero dedicado al juego (gamble), se reduce en 22.118 libras.
+
+
+#### (c) Fit a model with just income as a predictor and use an F -test to compare it to the full model.
+
+```{r}
+lmod6<- lm(gamble ~ income, data = teengamb)
+summary(lmod6)
+```
+
+```{r}
+anova(lmod6, lmod5)
+```
+
+
+El p-valor es de 0.01177, lo cual nos hace rechazar la hipótesis nula de que las demás variables son cero y no influyen en la variable respuesta.
+
+
+
+### 4. (Ejercicio 4 cap. 3 pág. 49)
+
+Using the sat data:
+
+```{r}
+data(sat)
+head(sat)
+```
+
+#### (a) Fit a model with total sat score as the response and expend, ratio and salary as predictors. Test the hypothesis that β salary = 0. Test the hypothesis that. Do any of these predictors have an effect on the response?
+
+
+```{r}
+lmod7<- lm(total ~ expend + ratio + salary, data = sat)
+summary(lmod7)
+```
+
+β salary = 0
+
+Vemos en el summary, que el p-valor para esta variable es de 0.0667 para un 5% de significación, lo cual significa que no podemos rechazar la hipótesis nula y que el salario no tiene influencia sobre el total.
+
+
+β salary = β ratio = β expend = 0
+
+El propio sumary nos da los valores del F test, con un p-valor de 0.01209, lo cual significa que tenemos que rechazar la hipótesis nula. En este caso, y a pesar de que el salario de forma independiente no tiene una influencia significativa, el conjunto de valores si la tiene.
+
+
+#### (b) Now add takers to the model. Test the hypothesis that β takers = 0. Compare this model to the previous one using an F -test. Demonstrate that the F -test and t-test here are equivalent.
+
+```{r}
+lmod8<- lm(total ~ expend + ratio + salary + takers, data = sat)
+summary(lmod8)
+
+```
+
+El p-valor para takers es tremendamente bajo, 2.61 e⁻16. Se rechaza la hipótesis nula. Esta variable tendrá efecto sobre la variable respuesta.
+
+
+```{r}
+anova(lmod7,lmod8)
+```
+
+El p-valor es casi idéntico, lo cual demuestra la equivalencia de ambos tests.
+
+## Ejercicios opcionales.
+
+## Faraway 
+
+
+### 5. (∗) (Ejercicio 5 cap. 3 pág. 50). Find a formula relating R 2 and the F -test for the regression.
+
+
+Si la fórmula de F:
+
+F =(T SS − RSS)/(m − 1) / RSS/(n − m)
+
+Y la de R² es:
+
+R² = 1- RSS/TSS , 1 - R^= RSS/TSS
+
+De este modo:
+
+F = (TSS − RSS)/RSS * n-m/m -1 = (TSS - RSS)/TSS / RSS/TSS * n-m/m-1 =
+
+R²/1-R² * m-1/n-m
+
+### 6. (∗) (Ejercicio 6 cap. 3 pág. 50). Thirty-nine MBA students were asked about happiness and how this related to their income and social life. The data are found in happy. Fit a regression model with happy as the response and the other four variables as predictors.
+
+
+```{r}
+data(happy)
+head(happy)
+
+```
+
+#### (a) Which predictors were statistically significant at the 1% level?
+
+```{r}
+lmod9<-lm(happy ~ money + sex + love + work, data=happy)
+fit<-lm(happy ~ ., data=happy)
+summary(lmod9)
+```
+
+Al 1%, el amor y solo el amor, es estadísticamente significativo.
+
+
+#### (b) Use the table() function to produce a numerical summary of the response. What assumption used to perform the t-tests seems questionable in light of this summary?
+
+```{r}
+table(happy$happy)
+```
+
+
+Los valores no muestran una distribución normal
+
+
+#### (c) Use the permutation procedure described in Section 3.3 to test the significance of the money predictor.
+
+```{r}
+lmod10<-lm(happy ~ sample(money) + sex + love + work, data= happy)
+
+nreps<-4000
+tstats<-numeric(nreps)
+set.seed(123)
+for(i in 1:nreps){
+  lmod10<-lm(happy ~ sample(money) + sex + love + work, data= happy)
+  tstats[i]<-summary(lmod10)$coef[2,3]
+}
+
+mean(abs(tstats) > abs(summary(lmod10)$coef[2,3]))
+
+summary(lmod10)
+```
+
+
+El resultado del test de permutaciones es de 0.269 que es muy parecido al 0.271 que ofrece el summary. La variable work no es significativa.
+
+
+#### (d) Plot a histogram of the permutation t-statistics. Make sure you use the the probability rather than frequency version of the histogram.
+
+```{r}
+hist(tstats, freq = FALSE)
+abline(v=summary(fit)$coef[2,3], lty =2, col= "red")
+```
+
+
+#### (e) Overlay an appropriate t-density over the histogram. Hint: Use grid <- seq(-3, 3, length = 300) to create a grid of values, then use the dt() function to compute the t-density on this grid and the lines() function to superimpose the result.
+
+
+```{r}
+hist(tstats, freq = FALSE, ylim=c(0,0.4))
+curve(dt(x,df=34), col="red", lwd=2, add=T)
+```
+
+
+#### (f) Use the bootstrap procedure from Section 3.6 to compute 90 % and 95 % confidence intervals for β money . Does zero fall within these confidence intervals? Are these results consistent with previous tests?
+
+```{r}
+set.seed(123)
+nb<-4000
+coefmat<- matrix(NA,nb,5)
+
+resids<-residuals(fit)
+pred<-fitted(fit)
+for(i in 1:nb){
+boots<-pred + sample(resids, rep = TRUE)
+bmod<-update(fit, boots ~ .)
+coefmat[i,]<-coef(bmod)
+}
+
+colnames(coefmat) <- c("Intercept", colnames(happy[,2:5]))
+quantile(coefmat[,2],c(0.05, 0.95))
+
+# intervalo de confianza
+confint(fit, parm = 2, level=0.9)
+
+
+quantile(coefmat[,2],c(0.025,0.975))
+confint(fit, parm = 2, level = 0.95)
+```
+
+
+Solo con un intervalo de confianza del 95% los calculados con la t-student incluyen al cero, los demás no lo incluyen.
+
+El resultado es consistente, ya que anteriormente, money no quedaba como variable significativa.
+
+
+### 7. (∗) (Ejercicio 7 cap. 3 pág. 50). In the punting data, we find the average distance punted and hang times of 10 punts of an American football as related to various measures of leg strength for 13 volunteers.
+
+
+
+#### (a) Fit a regression model with Distance as the response and the right and left leg strengths and flexibilities as predictors. Which predictors are significant at the 5% level?
+
+```{r}
+require(faraway)
+data("punting")
+head(punting)
+```
+
+```{r}
+lmod11<-lm(Distance ~ RStr + LStr + RFlex + LFlex, data = punting)
+summary(lmod11)
+lmod11sum<-summary(lmod11)
+```
+
+Ninguna de las variables está por debajo de 0.05, con lo cual ninguna sería significativa.
+
+#### (b) Use an F -test to determine whether collectively these four predictors have a relationship to the response.
+
+```{r}
+c(lmod11$fstatistic, p=pf(lmod11sum$fstatistic[1], lmod11sum$fstatistic[2], lmod11sum$fstatistic[3],lower.tail = FALSE))
+
+```
+
+El valor de p es inferior a 0.05 y por la tanto el conjunto de los 4 es significativo.
+
+
+#### (c) Relative to the model in (a), test whether the right and left leg strengths have the same effect
+
+
+```{r}
+lmod12<-lm(Distance ~ I(RStr + LStr) + RFlex + LFlex , data = punting)
+anova(lmod12,lmod11)
+```
+
+El valor es elevado así que no podemos rechazar la hipótesis de igualdad y la aceptamos
+
+#### (d) Construct a 95% confidence region for (β Str , β LStr ). Explain how the test in (c) relates to this region.
+
+```{r}
+require(ellipse)
+plot(ellipse(lmod11,2:3), ylim = -c(2,-2))
+points(coef(lmod11)[2], coef(lmod11)[3], pch=19)
+abline(0,1,lty=2)
+```
+la recta corta la elipse, así que no podemos rechazar la hipótesis de que ambos coeficientes tienen la misma influencia.
+
+
+#### (e) Fit a model to test the hypothesis that it is total leg strength defined by adding the right and left leg strengths that is sufficient to predict the response in comparison to using individual left and right leg strengths.
+
+```{r}
+lmod13<- lm(Distance ~ RStr + LStr, data = punting)
+lmod14<- lm(Distance ~ I(RStr + LStr), data=punting)
+anova(lmod13,lmod14)
+```
+
+El modelo con la suma es mejor con los valores individuales.
+
+
+#### (f) Relative to the model in (a), test whether the right and left leg flexibilities have the same effect.
+
+```{r}
+lmod15<-lm(Distance ~ RStr + LStr + I(RFlex + LFlex), data=punting)
+anova(lmod15, lmod11)
+```
+
+
+En este caso, tenemos que aceptar la hipótesis de igualdad.
+
+
+#### (g) Test for left-right symmetry by performing the tests in (c) and (f) simultaneously.
+
+```{r}
+lmod16<- lm(Distance ~ I(RStr + LStr) + I(RFlex + LFlex), data= punting)
+anova(lmod16,lmod11)
+```
+
+Aceptamos la hipótesis de la simetría
+
+#### (h) Fit a model with Hang as the response and the same four predictors. Can we make a test to compare this model to that used in (a)? Explain.
+
+```{r}
+lmod17<- lm(Hang ~ RStr + LStr + RFlex + LFlex, data = punting)
+anova(lmod17,lmod11)
+```
+
+Con variables respuesta distintas, no son comparables
+
+
+## Ejercicios del libro de Carmona
+
+
+#### 2. (∗) (Ejercicio 5.2 del Capítulo 5 página 86)
+
+Una variable Y depende de otra x (variable control no aleatoria) que toma los valores x1 = 1,
+x2 = 2, x3 = 3, x4 = 4 de acuerdo con el modelo lineal normal
+y i = β0 + β1 xi + β2 x²i + ei
+
+Encontrar la expresión del estadístico F para la hipótesis
+H0 : β2 = 0
+
+
+```{r}
+# Contruimos la matriz
+
+x<- matrix(c(1,1,1,
+1,2,4,
+1,3,9,
+1,4,16), byrow = T, ncol=3)
+
+# es de rango máximo
+qr(x)$rank
+
+# La resolvemos
+
+imP<-diag(rep(1,4)) - x %*% solve(t(x) %*% x) %*% t(x)
+
+imP
+
+```
+
+```{r}
+# La matriz de la hipótesis nula
+
+x0<-matrix(c(1,1,
+1,2,
+1,3,
+1,4), byrow= T, ncol=2)
+
+ImPH <- diag(rep(1,4)) - x0 %*% solve(t(x0) %*% x0) %*% t(x0)
+```
+
+RSS H − RSS = y0 (I − Pω )y − y0 (I − PΩ )y = y0 (PΩ − Pω )y
+donde I − Pω − (I − PΩ ) = PΩ − P ω es
+
+```{r}
+ImPH - imP
+```
+
+
+
+#### Ejercicio 5.5
+
+Dado el siguiente modelo lineal normal
+
+β1 + β2 = 6.6
+2β1 + β2 = 7.8
+−β1 + β2 = 2.1
+2β1 − β2 = 0.4
+
+Estudiar si se puede aceptar la hipótesis H0 : β2 = 2β1.
+
+```{r}
+# Construimos la matriz
+
+x<- matrix(c(1,1,
+2,1,
+-1,1,
+2,-1), byrow = T, ncol=2)
+
+# Las respuestas
+
+y<-c(6.6,7.8,2.1,0.4)
+
+# Las betas
+
+betas<- solve(crossprod(x,x), crossprod(x,y))
+betas
+
+
+```
+
+Estimamos la varianza de los errores
+
+
+```{r}
+
+r<- ncol(x)
+n<- nrow(x)
+ee<-y-x %*% betas
+RSS<- sum(ee^2)
+(MSE<- RSS/(n-r))
+```
+
+```{r}
+a<-c(2,-1)
+numerador<-t(a) %*% betas
+denominador<-sqrt(MSE * t(a) %*% solve(t(x) %*% x) %*% a)
+t.est<-numerador/denominador
+p.value<-pt(abs(t.est), df= n-r, lower.tail =F) * 2
+c(t.est, p.value)
+
+```
+
+El test no es significativo y rechazamos la hipótesis nula.
+
+
