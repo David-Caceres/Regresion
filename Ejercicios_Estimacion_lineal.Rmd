@@ -1,6 +1,6 @@
 ---
 title: "Ejercicios_Estimacion_lineal"
-author: "David Caceres"
+author: "David Caceres Gallardo"
 date: "28/2/2022"
 output: html_document
 ---
@@ -40,7 +40,7 @@ lmod<-lm(gamble ~ sex + status + income + verbal, data=teengamb)
 summary(lmod)
 ```
 
-(a) What percentage of variation in the response is explained by these predictors?
+#### (a) What percentage of variation in the response is explained by these predictors?
 
 ```{r}
 # El porcentaje de variación de la respuesta es R²
@@ -55,7 +55,7 @@ names(lmodsum)
 lmodsum$r.squared*100
 ```
 
-(b) Which observation has the largest (positive) residual? Give the case number.
+#### (b) Which observation has the largest (positive) residual? Give the case number.
 
 ```{r}
 e<-lmodsum$residuals
@@ -65,27 +65,27 @@ max(e)
 which.max(e)
 ```
 
-(c) Compute the mean and median of the residuals.
+#### (c) Compute the mean and median of the residuals.
 
 ```{r}
 mean(e)
 median(e)
 ```
 
-(d) Compute the correlation of the residuals with the fitted values.
+#### (d) Compute the correlation of the residuals with the fitted values.
 
 ```{r}
 cor(lmod$residuals,lmod$fitted.values)
 ```
 
-(e) Compute the correlation of the residuals with the income.
+#### (e) Compute the correlation of the residuals with the income.
 
 ```{r}
 cor(lmod$residuals, teengamb$income)
 ```
 
 
-(f) For all other predictors held constant, what would be the difference in predicted expenditure
+#### (f) For all other predictors held constant, what would be the difference in predicted expenditure
 on gambling for a male compared to a female?
 
 ```{r}
@@ -294,7 +294,7 @@ data(cheddar)
 head(cheddar)
 ```
 
-(a) Fit a regression model with taste as the response and the three chemical contents as predictors.
+#### (a) Fit a regression model with taste as the response and the three chemical contents as predictors.
 Report the values of the regression coefficients.
 
 ```{r}
@@ -303,7 +303,7 @@ cheddarlm$coefficients
 ```
 
 
-(b) Compute the correlation between the fitted values and the response. Square it. Identify where
+#### (b) Compute the correlation between the fitted values and the response. Square it. Identify where
 this value appears in the regression output.
 ```{r}
 attach(cheddar)
@@ -315,7 +315,7 @@ summary(cheddarlm)
 ```
 
 
-(c) Fit the same regression model but without an intercept term. What is the value of R 2 reported
+#### (c) Fit the same regression model but without an intercept term. What is the value of R 2 reported
 in the output? Compute a more reasonable measure of the good- ness of fit for this example.
 
 ```{r}
@@ -335,7 +335,7 @@ cheddarlm2sum$r.squared
 ```
 
 
-(d) Compute the regression coefficients from the original fit using the QR decomposition showing
+#### (d) Compute the regression coefficients from the original fit using the QR decomposition showing
 your R code.
 
 ```{r}
@@ -368,7 +368,7 @@ waferlm<-lm(resist ~ x1 + x2 + x3 + x4, data = wafer)
 summary(waferlm)
 ```
 
-(a) Extract the X matrix using the model.matrix function. Examine this to determine how the
+#### (a) Extract the X matrix using the model.matrix function. Examine this to determine how the
 low and high levels have been coded in the model.
 
 ```{r}
@@ -379,14 +379,14 @@ mx
 # los más bajos a los 0 o -.
 ```
 
-(b) Compute the correlation in the X matrix. Why are there some missing values in the matrix?
+#### (b) Compute the correlation in the X matrix. Why are there some missing values in the matrix?
 ```{r}
 cor(mx)
 # Hay valores perdidos porque corresponden a la intersección con el intercepto que tiene 1 como valor
 ```
 
 
-(c) What difference in resistance is expected when moving from the low to the high level of x1?
+#### (c) What difference in resistance is expected when moving from the low to the high level of x1?
 
 ```{r}
 # Nos piden el coeficiente de regresión de x1
@@ -394,7 +394,7 @@ waferlm$coefficients
 # Vemos que la resistencia es 25.76 veces mayor cuando los valores son altos
 ```
 
-(d) Refit the model without x4 and examine the regression coefficients and standard errors? What
+#### (d) Refit the model without x4 and examine the regression coefficients and standard errors? What
 stayed the the same as the original fit and what changed?
 
 ```{r}
@@ -423,7 +423,7 @@ La matriz contiene muchos ceros, por lo tanto, la covarianza entre x4 y los valo
 
 Una variable Y toma los valores y1, y2 y y3 en función de otra variable X con los valores x1, x2 y x3. Determinar cuales de los siguientes modelos son lineales y encontrar, en su caso, la matriz de diseño para x1=1, x2=2 y x3=3.
 
-a) y i = β 0 + β 1 x i + β 2 (x 2 i − 1) +  i
+#### a) yi = β0 + β1xi + β2 (x2i − 1) +  ei
 
 ```{r}
 # Es un modelo lineal
@@ -458,7 +458,7 @@ y<-c(9.2,8.3,5.4,-1.6,8.7,3.5)
     
 ```
 
-Hallar las estimaciones de cada β i y de la varianza del error.
+#### Hallar las estimaciones de cada β i y de la varianza del error.
 
 ```{r}
 # Primero calculamos las betas
@@ -476,6 +476,7 @@ lmodsumpesos2$sigma^2
 
 
 # Ejercicios opcionales
+## Faraway
 
 ### 3. (∗) (Ejercicio 3 cap. 2 pág. 30)
 In this question, we investigate the relative merits of methods for computing the coefficients. Generate some artificial data by:
@@ -551,9 +552,11 @@ coef(recta6)
 
 ```{r}
 matriz<-model.matrix(recta6)
-cbind(coef(recta6),solve(t(matriz) %*% matriz) %*% t(matriz) %*% y)
 ```
 
+```{r eval=FALSE, include=FALSE}
+cbind(coef(recta6),solve(t(matriz) %*% matriz) %*% t(matriz) %*% y)
+```
 
 
 ### 8. (∗) (Ejercicio 8 cap. 2 pág. 31)
@@ -569,7 +572,7 @@ truck$D <- sapply(truck$D, function(x) ifelse(x == "-",-1,1))
 truck$E <- sapply(truck$E, function(x) ifelse(x == "-",-1,1))
 truck$O <- sapply(truck$O, function(x) ifelse(x == "-",-1,1))
 ```
-(a) Fit a linear model for the height in terms of the five factors. Report on the value of the
+#### (a) Fit a linear model for the height in terms of the five factors. Report on the value of the
 regression coefficients.
 
 ```{r}
@@ -577,7 +580,7 @@ lmodt<-lm(height ~ B + C + D + E + O, data = truck)
 lmodt$coefficients
 ```
 
-(b) Fit a linear model using just factors B, C, D and E and report the coefficients. How do these com-
+#### (b) Fit a linear model using just factors B, C, D and E and report the coefficients. How do these com-
 pare to the previous question? Show how we could have anticipated this result by examining
 the X matrix.
 
@@ -594,7 +597,7 @@ t(x) %*% x
 # Vemos que hay ortogonalidad, y que los coeficientes son independientes.
 ```
 
-(c) Construct a new predictor called A which is set to B+C+D+E. Fit a linear model with the
+#### (c) Construct a new predictor called A which is set to B+C+D+E. Fit a linear model with the
 predictors A, B, C, D, E and O. Do coefficients for all six predictors appear in the regression
 summary? Explain.
 
@@ -609,18 +612,21 @@ lmodt3$coefficients
 ```
 
 
-(d) Extract the model matrix X from the previous model. Attempt to compute β̂ from (X 0 X) −1 X 0 y.
+#### (d) Extract the model matrix X from the previous model. Attempt to compute β̂ from (X 0 X) −1 X 0 y.
 What went wrong and why?
 
 ```{r}
 x<-model.matrix(lmodt3)
+```
+
+```{r eval=FALSE, include=FALSE}
 solve(t(x) %*% x)
 
 # La matriz no es de rango máximo y no tiene inversa
+
 ```
 
-
-(e) Use the QR decomposition method as seen in Section 2.7 to compute β̂. Are the results satisfactory?
+#### (e) Use the QR decomposition method as seen in Section 2.7 to compute β̂. Are the results satisfactory?
 
 ```{r}
 qrx<-qr(x)
@@ -631,7 +637,7 @@ backsolve(qr.R(qrx),f)
 # QR no va bien aquí
 ```
 
-(f) Use the function qr.coef to correctly compute β̂.
+#### (f) Use the function qr.coef to correctly compute β̂.
 
 ```{r}
 qr.coef(qrx, height)
@@ -660,3 +666,353 @@ qr(matriz)$rank
 # Es de rango 3, con lo cual no es máximo
 ```
 
+ Una función paramétrica puede estimarse si es combinación lineal de las filas 
+ de la matriz de diseño. Tomamos 3 filas independientes.
+ 
+```{r}
+qr(matriz[1:3,])$rank
+#Sigue siendo de rango 3
+```
+ 
+ 
+ Planteamos las combinaciones lineales:
+ 
+ (a,b,c,d,e) = λ1(1,1,1,1,1) + λ2 (1,0,1,0,0) + λ3 (1,1,1,0,0)
+ 
+ Y las ecuaciones lineales:
+
+a = λ1 + λ2 + λ3
+b = λ1 + λ3
+c = λ1 + λ2 + λ3
+d = λ1
+e = λ1
+
+Como el número de ecuaciones necesarios es igual al numero de columnas menos el 
+rango 5-3= 2
+
+Las ecuaciones paramétricas estimables cumplirán;
+
+a=c y d=e
+
+
+### 4. (∗) (Ejercicio 3.7 del Capítulo 3 página 55)
+Consideremos el modelo lineal
+
+y1 = β1 + β2 + ϵ1
+y2 = β1 + β3 + ϵ2
+y3 = β1 + β2 + ϵ3
+
+
+#### 1) ¿Es la función paramétrica ψ = β1 + β2 + β3 estimable?
+
+```{r}
+
+matriz<-matrix(c(1,1,0,1,0,1,1,1,0),byrow=T,ncol = 3)
+matriz
+qr(matriz)$rank
+# La matriz es de rango 2
+
+matriz2<-matrix(c(1,1,0,1,0,1,1,1,0,1,1,1),byrow=T,ncol = 3)
+matriz2
+qr(matriz2)$rank
+
+# Hemos añadido la función problema a la matriz, añadiendo sus coeficientes
+# Vemos que el rango pasa a 3 y no se conserva, así que no sería estimable
+```
+
+
+#### 2) Probar que toda función paramétrica
+
+ψ = a1 β1 + a2 β2 + a3 β3
+
+es estimable si y sólo si a1 = a2 + a3.
+
+Partiendo de la misma matriz que en el apartado anterior, tomamos 2 filas 
+independientes para rango 2
+
+(a1,a2,a3) =λ1 (1,1,0) + λ2(1,0,1)
+
+Sistema de ecuaciones:
+
+a1 =  λ1 + λ2
+a2 =  λ1
+a3 =  λ2
+
+El resultado verifica que a1 = a2 + a3
+
+
+
+### 5. (∗) (Ejercicio 3.8 del Capítulo 3 página 56)
+
+Consideremos el modelo lineal
+y1 = µ + α1 + β1 + ϵ1
+y2 = µ + α1 + β2 + ϵ2
+y3 = µ + α2 + β1 + ϵ3
+y4 = µ + α2 + β2 + ϵ4
+y5 = µ + α3 + β1 + ϵ5
+y6 = µ + α3 + β2 + ϵ6
+
+
+#### (a) ¿Cuando es a0µ + a1 α1 + a2 α2 + a3 α3 + a4 β1 + a5 β2 estimable?
+
+
+```{r}
+# Creamos la matriz y vemos su rango
+
+matriz<-matrix(c(1,1,0,0,1,0,
+                 1,1,0,0,0,1,
+                 1,0,1,0,1,0,
+                 1,0,1,0,0,1,
+                 1,0,0,1,1,0,
+                 1,0,0,1,0,1), byrow = T, ncol = 6)
+qr(matriz)$rank
+```
+
+Es de rango 4, y vemos que la suma de las columnas 2-4 es igual a la primera,
+lo mismo pasa con la 5ª y 6ª.
+
+```{r}
+# Buscamos 4 columnas linealmente independientes
+
+qr(matriz[1:4,])$rank
+# No
+qr(matriz[c(1,2,5,6)])$rank
+# No
+qr(matriz[c(1,2,4,5),])$rank
+# Si
+
+```
+
+
+
+(a0,a1,a2,a3,a4,a5) = λ1(1,1,0,0,1,0) + λ2(1,1,0,0,0,1) + λ3(1,0,1,0,1,0) + 
+λ4(1,0,0,1,1,0)
+
+a0 = λ1 + λ2 + λ3 + λ4
+a1 = λ1 + λ2
+a2 = λ3
+a3 = λ4
+a4 = λ1 + λ3 + λ4
+a5 = λ2
+
+Necesitamos 6-4 = 2 ecuaciones
+
+Así que:
+
+a0 = a1 + a2 + a3
+
+a0 = a4 + a5
+
+
+a0µ + a1 α1 + a2 α2 + a3 α3 + a4 β1 + a5 β2 es estimable cuando se cumplen las 
+2 ecuaciones anteriores.
+
+
+#### (b) ¿Es α 1 + α 2 estimable?
+
+Para esta función los coeficientes son: (a0,a1,a2,a3,a4,a5)= (0,1,1,0,0,0)
+
+Usando las ecuaciones anteriores
+
+a0 = a1 + a2 + a3
+
+a0 = a4 + a5
+
+Vemos que 
+
+0 = 1 + 1 + 0, no se cumple, así que no es estimable
+
+
+#### (c) ¿Es β 1 − β 2 estimable?
+
+Para esta función los coeficientes son: (a0,a1,a2,a3,a4,a5)= (0,0,0,0,1,-1)
+
+0 = 0 + 0 + 0
+0 = 1 -1
+
+Sería estimable
+
+#### (d) ¿Es µ + α 1 estimable?
+
+Para esta función los coeficientes son: (a0,a1,a2,a3,a4,a5)= (1,1,0,0,0,0)
+
+
+1 = 1 + 0 + 0
+1 = 0 + 0 
+
+No estimable
+
+#### (e) ¿Es 6µ + 2α1 + 2α2 + 2α3 + 3β1 + 3β2 estimable?
+
+Para esta función los coeficientes son: (a0,a1,a2,a3,a4,a5)= (6,2,2,2,3,3)
+
+6 = 2 + 2 + 2
+6 = 3 + 3
+
+Es estimable
+
+#### (f) ¿Es α1 − 2α2 + α3 estimable?
+
+Para esta función los coeficientes son: (a0,a1,a2,a3,a4,a5)= (0,1,-2,1,0,0)
+
+0 = 1 - 2 + 1
+0 = 0 + 0
+
+Es estimable
+
+#### (g) Hallar la covarianza entre los estimadores lineales MC de las funciones paramétricas β1 − β2 y α1 − α2
+
+Comprobamos que la segunda función sea estimable, la primera ya lo es.
+
+(0,1,-1,0,0,0,0)
+
+0 = 1 - 1 + 0
+0 = 0 + 0
+
+Es estimable
+
+La matriz de covarianzas es igual a:
+
+Σ = cov(β) = σ2 (X  X)⁻
+
+De este modo, podemos calcular la covarianza:
+
+cov(β1−β2,α1 − α2) = cov(β1,α1) − cov(β1,α2) − cov(β2,α1) + cov(β 2 , α2 ) = σ52 − σ53 − σ62 + σ63
+
+```{r}
+library(MASS)
+ginvxtx<-ginv(t(matriz) %*% matriz)
+ginvxtx[5,2] - ginvxtx[5,3] - ginvxtx[6,2] + ginvxtx[6,2]
+```
+
+#### (h) Hallar la dimensión del espacio paramétrico.
+
+La dimensión del espacio paramétrico es igual al rango de la matriz de diseño
+
+```{r}
+qr(matriz[c(1,2,4,5),])$rank
+```
+
+#### (i) Obtener una expresión del espacio de los errores.
+
+
+### 6. (∗) (Ejercicio 3.10 del Capítulo 3 página 56)
+Un transportista realiza diversos trayectos entre tres poblaciones A, B y C. En cuatro días consecutivos
+ha hecho los recorridos que muestra la siguiente tabla:
+
+trayecto
+A → B → A → C
+C → A → C → B
+B → C → A → C → A → B → A
+A → B → A → C → A → B → A
+
+km
+533
+583
+1111
+1069
+donde el kilometraje es, por diversas razones, aproximado.
+
+
+#### (a) Proponer un modelo lineal, con la matriz de diseño y las hipótesis necesarias, para estimar las
+distancias kilométricas entre las tres poblaciones.
+Con los datos proporcionados, ¿es posible estimar las distancias entre las tres poblaciones? ¿Cuales son
+las distancias o funciones paramétricas estimables (fpe) en este modelo?
+
+Partiendo de la idea de que la distancia de una ciudad a otra es la misma en los 
+dos trayectos tenemos:
+
+ α = d(A,B)
+ β = d(A,C)
+ γ = d(B,C)
+ 
+ El modelo lineal es:
+ 
+ 533 = 2α + β + ε1
+ 583 = 2β + γ + ε2
+1111 = 2α + 3β + γ + ε3
+1069 = 4α + 2β + ε4
+
+
+```{r}
+# Creamos la matriz y vemos su rango
+matriz<-matrix(c(2,1,0,
+0,2,1,
+2,3,1,
+4,2,0), byrow = T, ncol = 3)
+qr(matriz)$rank
+
+# Vemos que es de rango 2
+```
+
+Buscamos las funciones paramétricas estimables
+
+(a1,a2,a3) = λ1(2,1,0) + λ2(0,2,1)
+
+a1 = 2λ1
+a2 = λ1 + 2λ2
+a3 = λ2
+
+4-2 = 2 ecuaciones
+
+a2 = a1/2 + 2a3
+2a2 = a1 + 4a3
+
+
+Es posible estimar las distacias?
+
+-d(A,B) -- (1,0,0) --- 2 * 0 = 1 + 4 * 0
+No es estimable
+
+-d(A,C) -- (0,1,0) --- 2 * 1 = 0 + 4 * 0 
+No es estimable
+
+-d(B,C) -- (0.0,1) --- 2 * 0 = 0 + 4 * 1
+No es estimable
+
+
+#### (b) ¿Se puede estimar el kilometraje del trayecto M BC → B → A → C → M AC , donde M IJ es el punto
+medio entre dos poblaciones? ¿Es una buena estimación? ¿Cual es el error de esta estimación?
+
+Lo traducimos al modelo:
+
+1/2γ + α + β + 1/2β = α + 3/2β + 1/2γ
+
+Vemos que:
+
+2 * 3/2 = 1 + 4 * 1/2
+
+Es correcto así que es estimable
+
+```{r}
+# Construimos el modelo
+y<-c(533,583,1111,1069)
+x<-matrix(c(2,1,0,
+         0,2,1,
+         2,3,1,
+         4,2,0), byrow = T, ncol = 3)
+
+```
+
+```{r}
+# Estimamos el valor
+library(MASS)
+betas<-ginv(t(x) %*% x) %*% t(x) %*% y
+a<-c(1,3/2,1/2)
+t(a) %*% betas
+```
+
+
+```{r}
+# Caculamos el error de estimación
+
+n<-length(y)
+r<-2
+residuos<-y-x %*% betas
+sigma2<-sum(residuos^2)/(n-r)
+var.error<-sigma2 * t(a) %*% ginv(t(x) %*% x) %*% a
+error<-sqrt(var.error)
+error
+```
+
+Vemos que el error es del 0,21%. Muy pequeño, la estimación es bastante buena
