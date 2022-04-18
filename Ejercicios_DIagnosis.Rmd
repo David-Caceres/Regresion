@@ -1,0 +1,253 @@
+---
+title: "Ejercicios_Diagnosis_del_modelo"
+author: "David Caceres"
+date: "17/4/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Faraway. Capítulo 6.
+
+### Problema 6.1. pág. 97
+Using the sat dataset, fit a model with the total SAT score as the response and expend, salary, ratio and takers as predictors. Perform regression diagnostics on this model to answer the following questions. Display any plots that are relevant. Do not provide any plots about which you have nothing to say. Suggest possible improvements or corrections to the model where appropriate.
+
+```{r}
+require(faraway)
+data("sat")
+head(sat)
+```
+
+```{r}
+lmod<-lm(total ~ expend + ratio + salary + takers, data =sat)
+summary(lmod)
+```
+
+#### Check the constant variance assumption for the errors.
+
+Represento los valores ajustados frente a los residuos para ver la desviación respecto de cero. A simple vista, parece que los puntos están equitativamente distribuidos sobre y bajo la línea central, lo cual indicaría una varianza constante. 
+
+```{r}
+par(las=1)
+plot(fitted(lmod), residuals(lmod), xlab="Fitted", ylab="Residuals")
+abline(h=0, col="red") 
+```
+
+Los valores ajustados respecto a los residuos en valor absoluto, también parecen tener una relacion aleatoria.
+
+```{r}
+
+plot(fitted(lmod),abs(residuals(lmod)),xlab="Predict values",ylab="|Residuals|")
+```
+
+Para comprobarlo, veamos el p-valor que nos dará una idea de la pendiente de la recta que representa a estos valores.
+
+```{r}
+summary(lm(abs(residuals(lmod)) ~ fitted(lmod)))
+```
+
+#### Check the normality assumption.
+
+EL gráfico de Q-Q plot suele ser el elegido para este test
+
+```{r}
+par(mfrow=c(1,1))           
+qqnorm(residuals(lmod), ylab="Residuals") 
+qqline(residuals(lmod)) 
+```
+
+A priori se ajusta bastante a la nosrmalidad, aunque vemo indicios de sort-tail en la parte superior.
+Realizamos un test de shapiro para salir de dudas
+
+```{r}
+shapiro.test(residuals(lmod))
+
+
+```
+EL p-valor es superior a cualquier valor de significación que queramos usar, así que rechazamos la hipótesis nula y entendemos que son datos normales.
+
+#### Check for large leverage points.
+
+```{r}
+hatv <- hatvalues(lmod)
+head(sort(hatv,decreasing=T))
+
+# Vemos los datos con mayor Leverage
+
+```
+```{r}
+# BUscamos que observaciones tienen un leverage que supone el doble del valor medio.
+p <- length(lmod$coefficients) # k+1
+n <- length(lmod$fitted.values)
+leverage.mean <- p/n # (k+1)/n
+which(hatv > 2*leverage.mean)
+
+```
+
+```{r}
+# Graficamente
+
+estados <- row.names(sat)
+halfnorm(hatv,labs=estados,nlab = 4,ylab="Leverage")
+
+# Laverage frente a residuos estandarizados
+
+plot(lmod, which=5)
+```
+
+
+Vemos que Utah, California, Connecticut y New jersey tienen un laverage superior al cut off.
+
+
+#### Check for outliers.
+```{r}
+# Studentizamos los residuos y buscamos los más grandes
+
+stud <- rstudent(lmod)
+head(sort(abs(stud),decreasing=TRUE))
+```
+
+```{r}
+# Será un outlier, todo residuo cuyo valor studentizado en valor absoluto, sea mayor que 2
+which(abs(stud)>2)
+# Los 4 primeros parecen outliers
+
+# Lo confirmamos graficamente
+
+plot(stud, type="h")
+abline(h=-2, col="red"); abline(h=0); abline(h=2, col="red")
+```
+
+Realizamos un bonferroni para definir finalmente si están por encima del valor cŕitico de la t de student
+
+```{r}
+grlib <- n-p-1
+which(abs(stud) > abs(qt(0.05/(2*n),grlib)))
+
+```
+Con el test de Bonferroni, vemos que no hay ningún outlier, pero podemos estar ante velores atípicos o influyentes.
+
+#### Check for influential points.
+
+
+```{r}
+# Calculamos las distancias de cook
+
+cook <- cooks.distance(lmod)
+head(cook)
+
+```
+
+```{r eval=FALSE, include=FALSE}
+# Graficamente
+halfnorm(cook,nlab=3,labs=estados,ylab="Distancia de Cook")
+
+# Utah se aleja bastante
+
+influencePlot(lmod, id=T, main="Influence Plot", sub="Circle size is proportial to Cook's Distance" )
+
+# Vemos que es el punto más influyente.
+```
+
+## Problema 6.2. pág. 97
+Using the teengamb dataset, fit a model with gamble as the response and the other variables as predictors. Answer the questions posed in the previous question.
+
+```{r}
+data(teengamb,package="faraway")
+head(teengamb)
+```
+
+```{r}
+lmod1 <- lm(gamble~.,data=teengamb)
+summary(lmod1)
+
+```
+
+#### a) Varianza constante
+
+```{r}
+plot(fitted(lmod1),abs(residuals(lmod1)),xlab="Predict values",ylab="|Residuals|")
+```
+
+```{r}
+sumary(lm(sqrt(abs(residuals(lmod1)))~fitted(lmod1)))
+```
+
+A pesar de que la pendiente es casi cero, vemos valores muy apartados del núcleo principal
+
+
+#### b) Normalidad
+
+```{r}
+qqnorm(residuals(lmod1),ylab="Residuos")
+qqline(residuals(lmod1))
+```
+
+Vemos una cola larga superior, y otra algo más corta en la inferior
+
+```{r}
+shapiro.test(residuals(lmod1))
+```
+
+El test de shapiro nos dice que tenemos que rechazar la normalidad.
+
+#### c) Leverage
+
+```{r}
+hatv <- hatvalues(lmod1)
+head(sort(hatv,decreasing=T))
+```
+```{r}
+p <- length(lmod1$coefficients) # k+1
+n <- length(lmod1$fitted.values)
+leverage.mean <- p/n # (k+1)/n
+which(hatv > 2*leverage.mean)
+```
+
+```{r}
+plot(hatv, type="h")
+abline(h=2*leverage.mean, col="red")
+
+halfnorm(hatv,nlab=4,ylab="Leverage")
+```
+
+Hay 4 valores que claramente superan el laverage medio
+
+#### d) Valores atípicos (outliers)
+
+```{r}
+head(sort(abs(stud),decreasing=TRUE))
+```
+
+```{r}
+which(abs(stud)>2)
+plot(hatv, type="h")
+abline(h=2*leverage.mean, col="red")
+```
+
+
+```{r}
+# Bonferroni nos confirma la presencia de un outlier
+
+which(abs(stud) > abs(qt(0.05/(2*n),df=n-p-1)))
+
+```
+
+#### e) Observaciones influeyntes
+
+```{r}
+cook <- cooks.distance(lmod1)
+halfnorm(cook,nlab=3,ylab="Distancia de Cook")
+
+```
+
+Vemos que el punto 24 sigue siendo un punto a considerar
+
+#### f) Estructura del modelo
+
+```{r}
+plot(fitted(lmod1),residuals(lmod1),xlab="Predict values",ylab="Residuals")
+```
+
