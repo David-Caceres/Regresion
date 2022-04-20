@@ -251,3 +251,310 @@ Vemos que el punto 24 sigue siendo un punto a considerar
 plot(fitted(lmod1),residuals(lmod1),xlab="Predict values",ylab="Residuals")
 ```
 
+### Problema 6.3. pág. 97
+
+For the prostate data, fit a model with lpsa as the response and the other variables as predictors. Answer the questions posed in the first question.
+
+
+```{r}
+data(prostate,package="faraway")
+head(prostate)
+```
+
+```{r}
+lmod16<-lm(lpsa~.,data=prostate)
+summary(lmod16)
+```
+
+#### a) Varianza constante
+
+```{r}
+plot(fitted(lmod16),abs(residuals(lmod16)),xlab="Predict values",ylab="|Residuals|")
+
+summary(lm(sqrt(abs(residuals(lmod16)))~fitted(lmod16)))
+```
+
+El valor de la pendiente es casi cero, y no se apercia agrupamiento de los datos
+
+#### b) Normalidad
+
+```{r}
+qqnorm(residuals(lmod16),ylab="Residuos")
+qqline(residuals(lmod16))
+```
+
+
+Se aprecian indicios de colas largas
+
+```{r}
+shapiro.test(residuals(lmod16))
+```
+
+Vemos que no hay normalidad en los datos
+
+#### c) Leverage
+
+```{r}
+# Residuos con mayor leverage
+hatv <- hatvalues(lmod16)
+head(sort(hatv,decreasing=T))
+```
+
+```{r}
+# Residuos con leverage mayor de 2
+p <- length(lmod16$coefficients) 
+n <- length(lmod16$fitted.values)
+which(hatv > 2*p/n)
+```
+
+
+```{r}
+plot(hatv, type="h")
+abline(h=2*p/n, col="red")
+```
+
+Vemos que hay un buen número de puntos por encima de doble de la media
+
+#### d) Outliers
+```{r}
+# Residuos studentizados con meadi mayor del doble
+stud <- rstudent(lmod16)
+head(sort(abs(stud),decreasing=TRUE))
+which(abs(stud)>2)
+```
+
+
+```{r}
+plot(stud, type="h")
+abline(h=-2, col="red"); abline(h=0); abline(h=2, col="red")
+```
+
+```{r}
+```
+
+
+```{r}
+which(abs(stud) > abs(qt(0.05/(2*n),df=n-p-1)))
+```
+
+Según Bonferroni, ninguno de los puntos es un outlier
+
+#### e) Observaciones influyentes
+
+```{r}
+# Distancias de Cook
+
+cook <- cooks.distance(lmod16)
+halfnorm(cook,nlab=3,ylab="Distancia de Cook")
+```
+
+
+```{r}
+# Puntos influyentes
+
+plot(lmod16, which=4)
+abline(h=4/((n-p-2)), col="red")
+```
+
+El punto 32 es el más influyente, si ajustamos el modelo sin él:
+
+```{r}
+lmod17 <- lm(lpsa~.,data=prostate[-32,])
+summary(lmod17)
+```
+
+El cambio es a mejor, pero no demasiado sustancial.
+
+#### f) Estructura del modelo
+
+```{r}
+plot(fitted(lmod16),residuals(lmod16),xlab="Predict values",ylab="Residuals")
+```
+La estructura es máas o menos circular
+
+
+## Problema 6.4. pag. 97
+
+For the swiss data, fit a model with Fertility as the response and the other variables as predictors. Answer the questions posed in the first question.
+
+```{r}
+data("swiss")
+head(swiss)
+```
+
+```{r}
+# Modelo
+lmod18 <- lm(Fertility~.,data=swiss)
+summary(lmod18)
+```
+
+
+#### a) Varianza constante
+
+```{r}
+plot(fitted(lmod18),abs(residuals(lmod18)),xlab="Predicted values",ylab="|Residuals|")
+```
+
+```{r}
+summary(lm(sqrt(abs(residuals(lmod18)))~fitted(lmod18)))
+```
+A priori, no vemos nada anormal
+
+
+#### b) Normalidad
+
+```{r}
+qqnorm(residuals(lmod18),ylab="Residuals")
+qqline(residuals(lmod18))
+```
+
+```{r}
+shapiro.test(residuals(lmod18))
+```
+
+
+El ajuste es bueno, y la normalidad manifiesta
+
+#### c) Leverage
+
+
+```{r}
+hatv <- hatvalues(lmod18)
+head(sort(hatv,decreasing=T))
+```
+
+
+
+```{r}
+p <- length(lmod18$coefficients) 
+n <- length(lmod18$fitted.values)
+which(hatv > 2*p/n)
+```
+```{r}
+plot(hatv, type="h")
+abline(h=2*p/n, col="red")
+```
+
+```{r}
+# Hay 2 valores atípicos a priori
+
+halfnorm(hatv,nlab=2,labs=row.names(swiss),ylab="Leverage")
+abline(h=2*p/n, col="red")
+```
+
+
+#### d) Valores atípicos (outliers)
+
+```{r}
+# Studentizamos los residuos
+stud <- rstudent(lmod18)
+head(sort(abs(stud),decreasing=TRUE))
+```
+
+
+```{r}
+which(abs(stud)>2)
+```
+
+
+```{r}
+plot(stud, type="h")
+abline(h=-2, col="red"); abline(h=0); abline(h=2, col="red")
+```
+
+```{r}
+# Según Bonferroni, no podemos considerar ningún punto como un outlier
+which(abs(stud) > abs(qt(0.05/(2*n),df=n-p-1)))
+```
+
+#### e) Observaciones influyentes
+
+
+```{r}
+# Distancias de Cook
+
+cook <- cooks.distance(lmod18)
+halfnorm(cook,nlab=3,labs=row.names(swiss),ylab="Distancia de Cook")
+```
+
+
+```{r}
+plot(lmod18, which=4)
+abline(h=4/((n-p-2)), col="red")
+```
+
+Los puntos más influyentes, no coinciden del todo con los más atípicos.
+
+#### f) Estructura del modelo
+
+```{r}
+plot(fitted(lmod18),residuals(lmod18),xlab="Predicted values",ylab="Residuals")
+```
+
+El modelo parece adecuado
+
+
+### Problema 6.5. pag. 97
+
+Using the cheddar data, fit a model with taste as the response and the other three variables as predictors. Answer the questions posed in the first question.
+
+```{r}
+data(cheddar,package="faraway")
+head(cheddar)
+```
+
+```{r}
+# Modelo
+lmod19 <- lm(taste~.,data=cheddar)
+summary(lmod19)
+```
+
+#### a) Varianza constante
+
+```{r}
+plot(fitted(lmod19),abs(residuals(lmod19)),xlab="Predicted values",ylab="|Residuals|")
+
+summary(lm(sqrt(abs(residuals(lmod19)))~fitted(lmod19)))
+```
+
+La homocedasticidad parece clara
+
+#### b) Normalidad
+
+```{r}
+qqnorm(residuals(lmod19),ylab="Residuals")
+qqline(residuals(lmod19))
+```
+
+
+```{r}
+shapiro.test(residuals(lmod19))
+```
+
+La normalidad es evidente
+
+#### c) Leverage
+
+```{r}
+hatv <- hatvalues(lmod19)
+head(sort(hatv,decreasing=T))
+```
+```{r}
+# Comparando con el Leverage medio
+
+p <- length(lmod19$coefficients) 
+n <- length(lmod19$fitted.values)
+which(hatv > 2*p/n)
+```
+
+```{r}
+plot(hatv, type="h")
+abline(h=2*p/n, col="red")
+```
+Ningún valor por encima de la media
+
+```{r}
+halfnorm(hatv,nlab=3,labs=row.names(cheddar),ylab="Leverage")
+abline(h=2*p/n, col="red")
+```
+

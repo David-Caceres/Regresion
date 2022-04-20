@@ -1,0 +1,261 @@
+---
+title: "PEC1"
+author: "David Cáceres"
+date: "20/4/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+### Ejercicio 1 (50 pt.)
+
+García et al. (2005) estudiaron la obtención de ecuaciones
+de regresión predictivas para el contenido de grasa corpo-
+ral mediante medidas antropométricas comunes obtenidas
+en 71 mujeres alemanas sanas. Además, la composición
+corporal de las mujeres se midió mediante la absorciome-
+tría con rayos X de doble energía (DXA). Este método
+de referencia es muy preciso para medir la grasa corpo-
+ral, pero se aplica poco en la práctica, sobre todo por su
+elevado coste y el esfuerzo metodológico que requiere. Por
+lo tanto, una ecuación de regresión sencilla para predecir
+las mediciones de grasa corporal por DXA es de especial
+interés para el profesional.
+
+Los datos de este estudio se pueden incorporar a R desde el data.frame bodyfat del paquete TH.data.Los datos de este estudio se pueden incorporar a R desde el data.frame bodyfat del paquete TH.data.
+
+```{r}
+# Cargamos los datos
+library(TH.data)
+data("bodyfat")
+```
+
+#### (a) Explorar los datos gráficamente. Calcular la matriz de correlaciones entre las variables dos a dos. ¿Qué variables crees que hay que incluir para predecir la grasa corporal?
+
+Partimos de un data set en el que  todas las variables son numéricas y cuantitativas, y de que en teoría, las medidas infuyen sobre el porcentaje de grasa corporal medido.
+
+Para poder ver las posibles relaciones con claridad, veremos el cruce de gráficas de las medidas por un lado, y de las variables logarítmicas por otro.
+
+```{r}
+pairs( ~ DEXfat + age + waistcirc + hipcirc + elbowbreadth + kneebreadth, data= bodyfat)
+```
+
+Si nos fijamos en la primera fila de gráficas, vemos que a simple vista, la correlación entre el aumento de grasa corporal y el controno de la cintura, o la cadera, es manifiesta. También puede apreciarse en cierto modo en variables como la edad, o la anchura del codo, pero de una forma algo más dispersa.
+
+Lo vemos más claramente con un gráfico de cajas en el caso de la cintura
+
+```{r}
+boxplot(DEXfat ~ waistcirc, col="light blue", data=bodyfat)
+
+```
+
+En el caso de la edad, la tendencia no es tan fuerte, pero es igualmente clara
+
+```{r echo=FALSE}
+library(ggplot2)
+ggplot(data=bodyfat)+
+     geom_point(aes(x=age,y=DEXfat))+
+     geom_smooth(aes(x=age, y=DEXfat), method = "lm")
+```
+
+
+EN el caso de las variables logarítmicas, la tendencia a la correlación gráfica entre el aumento de las mismas, y el aumento de la variable respuesta es notable a simple vista. Podemos observar la tendencia alcista de la primera fila de gráficas. Esto nos puede dar un primer indicio, de que la combinación de estas medidas expresadas de forma logarítmica pueden ser buenos predictores de la medida final de grasa corporal.
+
+
+```{r}
+pairs( ~ DEXfat + anthro3a + anthro3b + anthro3c + anthro4, data= bodyfat)
+```
+
+
+Obtenemos la matriz de correlacion dos a dos de los datos.
+
+```{r}
+round(cor(bodyfat[,-9]),2)
+```
+
+Vista así puede ser un poco difícil de interpretar, mejor de forma gráfica
+```{r echo=FALSE}
+if(!require(corrplot)){
+    install.packages("corrplot")
+    library(corrplot)
+}
+
+corrplot(cor(bodyfat), method="circle")
+```
+
+Observamos que la correlación entre la grasa corporal medida y las variables predictoras es razonable en la mayoría de los casos.
+
+#### ¿Qué variables crees que hay que incluir para predecir la grasa corporal?
+
+De acuerdo a las correlaciones obtenidas en la matriz y graficamente, todas las variables tienen efecto positivo sobre la variable respuesta, así que en principio no excuiría ninguna. La linealidad mostrada por las variables logarítmicas que son conjunción de las demás las hacen candidates a crear un modelo solo con ellas, o con algunas de ellas, pero en principio todas parece útiles pare el modelo.
+
+Esto no significa, que no podamos hacer el modelo más simple medainte la eliminación de algunas de las variables, pero con los datos que tenemos hasta ahora aún no podemos seleccionar cuales de ellas retirar.
+
+#### (b) Como algunas de las variables tienen alta correlación entre ellas, estudiar con los VIFs la posible multicolinealidad del modelo con todas las regresoras.
+
+```{r}
+lmod<-lm(DEXfat ~ ., data=bodyfat)
+summary(lmod)
+```
+
+Si echamos un vistazo al summary, vemos que R² es muy elevado, incluso aunque algunos de los predictores no tienen significancia. Además, en la amtriz de correlación, hemos visto que algunas variables tenían valores cercanos a 1 cuando se comparaban con otras. Tenemos indicios de multicolinealidad
+
+
+Estudiaremos los valores eigen primero. 
+
+```{r}
+X <- model.matrix(lmod)
+e <- eigen(t(X) %*% X)$values
+sqrt(max(e)/e)
+```
+
+Tal y como esperábamos, aparecen valores muy altos, con un intervalo también elevado. Más de una variable está realizando el mismo trabajo sobre la respuesta.
+
+Veamos los VIF (variance inflation factors).
+
+```{r}
+library(faraway)
+vif(lmod)
+```
+
+
+Claramente, la colinealidad existe, algunos valores son bastente elevados, e indican que son fuentes de la misma, como es el caso de anthro3b, antrho4, o incluso antrho3a. Estas variables están ejerciendo un efecto sinérgico entre ellas e influyendo sumiltáneamente sobre la respuesta. 
+
+Si probamos a eliminar las 2 más fuertes.
+
+```{r}
+lmod1<-lm(DEXfat ~ age + waistcirc + hipcirc + elbowbreadth + kneebreadth + anthro3a + anthro3c, data=bodyfat)
+summary(lmod1)
+```
+
+
+R² se ha reducido, y hay más valores significativos. Veamos los VIF
+```{r}
+vif(lmod1)
+```
+
+La colinealidad se ha reducido, y este modelo más simple parece más adecuado.
+
+
+#### (c) Contrastar con un test F si aceptamos el modelo más simple con las variables age, waistcirc,
+hipcirc, elbowbreadth, kneebreadth, anthro3a y anthro3c. Escribir la hipótesis nula paramétrica de este contraste y la tabla ANOVA con las sumas de cuadrados, grados de libertad, el estadístico y su p-valor. ¿Cual es la conclusión?
+
+La hipótesis nula sería que los predictores que hemos retirado son iguales, es decir H0 : β1 = β2 = 0
+que significaría que el modelo más simple es equivalente al más complejo. Realizamos el F-test
+
+```{r}
+anova(lmod, lmod1)
+```
+
+
+El p-valor no nos permite rechazar esta hipótesis, así que tenemos que aceptarla y concluir que el modelo simple es igual que el complejo, y por lo tanto más adecuado.
+
+
+#### (d) ¿Alguna transformación de la variable respuesta podría mejorar el modelo?
+Nota: Aunque la respuesta sea afirmativa, seguiremos con el modelo sin transformar.
+
+
+Cuando necesitamos chequear la idoneidad del modelo nos centramos en 3 aspectos de este. El primero son los errores, necesitamos saber si estos son independientes, si tienen igual varianza y si poseen distribución normal. El segundo aspecto, es conocer la integridad estructural del modelo, y el tercero, es centrarse en las observaciones inusuales, o atípicas.
+
+Las transformaciones de la variable Y, se centran en el primero de ellos, los errores, ya que estas transformaciones pueden llevar a un cambio en la distribución y varianza de los mismos y pueden hacer que un modelo mejore. Las observaciones atípicas se basan en las variables x, así que las descartamos, al igual que la estructura del modelo, que también suele centrarse en los predictores.
+
+Para comprobar si nuestro modelo posee varianza constante y normalidad en los errores, lo mejor es representarlo graficamente.
+
+```{r}
+par(mfrow = c(1, 2))
+plot(fitted(lmod1), residuals(lmod1), xlab="Fitted", ylab="Residuals", main = "Varianza")
+abline(h=0, col="red")
+qqnorm(residuals(lmod1), ylab="Residuals", main = "Normalidad") 
+qqline(residuals(lmod1)) 
+```
+
+
+Vemos que la varianza muestra cierto efecto "embudo", lo que indicaría hetercedasticidad. En estos casos, podemos optar por transformar la variable Y buscando que este problema se minimice.
+
+También observamos indicios de long-tail en la normalidad.
+
+
+Procedemos a dar valores logarítmicos a la Y pare ver si el modelo mejora.
+
+
+```{r}
+lmod2<-lm(log(DEXfat) ~ age + waistcirc + hipcirc + elbowbreadth + kneebreadth + anthro3a + anthro3c, data= bodyfat)
+par(mfrow = c(1, 2))
+plot(fitted(lmod1), residuals(lmod2), xlab="Fitted", ylab="Residuals", main = "Varianza")
+abline(h=0, col="red")
+qqnorm(residuals(lmod2), ylab="Residuals", main = "Normalidad") 
+qqline(residuals(lmod2)) 
+shapiro.test(residuals(lmod2))
+```
+
+COmo podemos observar, la varianza ahora parece mucho más constante, e incluso los datos de normalidad han mejorado con la reducción de las colas, aunque este último extremo habría que estudiarlo por separado. En general, el modelo mejora con la transformación logarítmica de Y.
+
+
+#### (e) Realizar un análisis de los residuos del modelo más simple propuesto en el apartado (c). En especial, estudiar la heterocedasticidad y la normalidad de los errores. ¿Hay alguna observación con un alto leverage? ¿Y con una gran influencia? Si hay alguna observación con alto leverage y gran influencia
+puedes eliminarla y mirar si hay alguna mejora.
+
+Partimos del modelo propuesto en el apartado C, primero comprobamos la heterocedasticidad.
+
+```{r}
+plot(lmod1, which=1)
+```
+
+Como vimos en el apartado anterior, vemos cierta tendencia al aumento de la varianza en los residuos cuando los representamos frente a los valores ajustados. Aparecen algunos puntos que se van bastante por encima, como el 87 y el 94, aunque el grueso de los mismos tiende a tomar valores negativos en ese mismo area. 
+
+La heterocedasticidad parece clara.
+
+```{r}
+plot(lmod1, which=3)
+```
+
+
+Con los residuos studentizados en valor absoluto vemos una tendencia similar, ahora observamos cierta parábola en el comportamiento de los resíduos, desde luego no constancia.
+
+```{r}
+summary(lm(abs(residuals(lmod1)) ~ fitted(lmod1)))
+```
+
+#### Normalidad
+
+```{r}
+qqnorm(residuals(lmod1), ylab="Residuals") 
+qqline(residuals(lmod1))
+```
+
+Apreciamos desviación de la normalidad a partir del quantil +1, lo que vendría a ser un long tail de los valores superiores. El test de saphiro nos confirma que tenemos que rechazar la hipótesis de normalidad
+
+```{r}
+shapiro.test(residuals(lmod1))
+```
+
+
+#### Leverage
+
+```{r}
+# Calculamos el leverage. Mostramos los puntos con mayor valor
+hatv <- hatvalues(lmod1)
+head(sort(hatv,decreasing=T))
+```
+
+
+```{r}
+
+# Calculamos que puntos tienen un leverage mayor al doble de la media
+p <- length(lmod1$coefficients) 
+n <- length(lmod1$fitted.values)
+leverage.mean <- p/n 
+which(hatv > 2*leverage.mean)
+```
+
+
+```{r}
+medidas<- row.names(bodyfat)
+halfnorm(hatv,labs=medidas,nlab = 4,ylab="Leverage")
+```
+
+
+#### Puntos influyentes
+
