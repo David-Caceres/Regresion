@@ -191,7 +191,7 @@ qqline(residuals(lmod2))
 shapiro.test(residuals(lmod2))
 ```
 
-COmo podemos observar, la varianza ahora parece mucho más constante, e incluso los datos de normalidad han mejorado con la reducción de las colas, aunque este último extremo habría que estudiarlo por separado. En general, el modelo mejora con la transformación logarítmica de Y.
+Como podemos observar, la varianza ahora parece mucho más constante, e incluso los datos de normalidad han mejorado con la reducción de las colas, aunque este último extremo habría que estudiarlo por separado. En general, el modelo mejora con la transformación logarítmica de Y.
 
 
 #### (e) Realizar un análisis de los residuos del modelo más simple propuesto en el apartado (c). En especial, estudiar la heterocedasticidad y la normalidad de los errores. ¿Hay alguna observación con un alto leverage? ¿Y con una gran influencia? Si hay alguna observación con alto leverage y gran influencia
@@ -217,6 +217,8 @@ Con los residuos studentizados en valor absoluto vemos una tendencia similar, ah
 ```{r}
 summary(lm(abs(residuals(lmod1)) ~ fitted(lmod1)))
 ```
+
+El p-valor es menor de 0.05, así que la heterocedasticidad queda confirmada.
 
 #### Normalidad
 
@@ -259,3 +261,68 @@ halfnorm(hatv,labs=medidas,nlab = 4,ylab="Leverage")
 
 #### Puntos influyentes
 
+Calculamos las distancias de cook.
+
+```{r}
+cook <- cooks.distance(lmod1)
+head(sort(cook, decreasing = T))
+```
+
+Los puntos 81,113,112,91,116 y 100 tienen las distancias de cook más elevadas.
+
+Graficamente vemos la misma tendencia que en el leverage, en los quantiles superiores la distancia de cook es mayor y podemos ver los puntos que más se distancian de la media.
+
+```{r}
+medidas <- row.names(bodyfat)
+halfnorm(cook, 3, labs=medidas, ylab="Cook’s distance")
+```
+
+Tenemos 5 puntos por encima del cut off de 4/(n-p). Estos puntos los consideraremos influyentes.
+
+```{r}
+plot(lmod1, which=4)
+abline(h=4/((n-p-2)), col="red")
+```
+
+
+Concluyendo, podemos clasificar los puntos 87, 94, y 91, como con alto leverage y alta influencia, lo que significa que pueden estar condicionado nuestro modelo, podemos ver en el gráfico de cook vs leverage que son los más destacados y a la vez los que muestran más influencia.
+
+```{r}
+library(car)
+```
+
+
+```{r}
+par(mfrow = c(1, 2))
+plot(lmod1, which=6)
+influencePlot(lmod1, id=T, main="Influence Plot", sub="Circle size is proportial to Cook's Distance" )
+```
+
+
+Nos es de utilidad comprobar si alguno de estos puntos puede considerarse como un outlier, ya que el hecho de que sean influyentes no tiene porque ser necesariamente negativo para el modelo, pero cuando se trata de desviaciones atípicas, si podemos estar alterandolo de manera innecesaria. Usaremos el criterio de Bonferroni para dilucidar si alguno de los puntos es un outlier
+
+```{r}
+jack <- rstudent(lmod1)
+outlierTest(lmod1)
+```
+
+
+El punto 87 queda señalado, y ya era candidato a estudio en los análisis de leverage y de influencia. Propondremos pues un nuevo modelo sin esta observación.
+
+```{r}
+lmod3<-lm(DEXfat ~ age + waistcirc + hipcirc + elbowbreadth + kneebreadth + anthro3a + anthro3c, data=bodyfat, subset=(cook < max(
+    cook)))
+summary(lmod3)
+```
+
+
+Obervamos una leve variación respecto a modelo simplificado (lmod1). El valor de R² ha aumentado levemente, y la variable que mide el ancho de la rodilla, ahora no es significativa, lo cual podría servirnos para simplificar aún más el modelo. 
+
+
+#### (f) Con el modelo del apartado (c) completo (con todos los datos) hacer la predicción de una observación concreta en forma de intervalo de confianza al 90 %. Los valores observados son:
+
+age = 62, waistcirc = 100, hipcirc = 105, elbowbreadth = 6.8, kneebreadth = 9.5,
+anthro3a = 4.2, anthro3c = 4.3
+
+Previamente debemos asegurarnos que los valores observados no suponen una extrapolación. Para
+ello utilizaremos el elipsoide que se forma con el leverage máximo.
