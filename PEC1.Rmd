@@ -326,3 +326,230 @@ anthro3a = 4.2, anthro3c = 4.3
 
 Previamente debemos asegurarnos que los valores observados no suponen una extrapolación. Para
 ello utilizaremos el elipsoide que se forma con el leverage máximo.
+
+
+```{r}
+# Primero calculamos el leverage máximo
+max(hatvalues(lmod1))
+```
+
+Este será el valor máximo de leverage que puede tener nuestra observación para no ser considerada como una extrapolación
+
+
+```{r}
+# Valores de nuestra observación
+X0<-c(1,62, 100, 105, 6.8, 9.5, 4.2, 4.3)
+
+
+# Matriz que contiene las observaciones del modelo
+
+X<-cbind(1, bodyfat$age, bodyfat$waistcirc,bodyfat$hipcirc,bodyfat$elbowbreadth,bodyfat$kneebreadth,bodyfat$anthro3a,bodyfat$anthro3c)
+
+
+# Calculamos H para nuestra observación
+
+H<-t(X0)%*%(solve(t(X)%*%X))%*%X0
+H
+
+```
+
+
+Observamos que el valor obtenido es menor que el del leverage máximo, así que podemos interpretar que nuestra observación estaría dentro del ellipsoide de leverage y que por lo tanto no estamos haciendo una extrapolación oculta.
+
+
+```{r}
+
+# Predecimos el valor de la respuesta al 90% de CI
+X1= data.frame(age = 62, waistcirc = 100, hipcirc = 105, elbowbreadth = 6.8, kneebreadth = 9.5,
+                  anthro3a = 4.2, anthro3c = 4.3)
+predict(lmod1, newdata = X1, interval= 'confidence', level = 0.90)
+```
+
+
+## Ejercicio 2 (35 pt.)
+
+En la especie de luciérnaga Photinus ignitus, el macho
+transfiere un gran espermatóforo a la hembra durante el
+apareamiento. Rooney y Lewis (2002) querían saber si los
+recursos extra de este “regalo nupcial” permiten a la hem-
+bra producir más descendencia. Recogieron 40 hembras
+vírgenes y aparearon 20 de ellas con un macho y 20 con
+tres machos. Luego contaron el número de huevos que puso
+cada hembra. Dado que la fecundidad varía con el tama-
+ño de la hembra, analizaron los datos mediante ANCOVA,
+con el peso de la hembra (antes del apareamiento) como
+variable de medida independiente y el número de huevos
+puestos como variable de medida dependiente. Como el
+número de machos sólo tiene dos valores (“uno” o “tres”),
+es una variable nominal o factor, no de medida.
+
+#### (a) Reproducir el gráfico (a) de la Figura 1 del trabajo de Rooney y Lewis [2].
+Esa figura contiene las rectas de regresión de los dos grupos por separado.
+Nota: Los resultados pueden ser ligeramente distintos a los del trabajo de Rooney y Lewis por la
+falta de datos originales.
+
+
+```{r}
+photinus<-read.csv("/home/david/Documentos/Master/Regresión, modelos y métodos/PEC1/photinus.csv", header = TRUE, sep = ";")
+photinus<-data.frame(photinus)
+head(photinus)
+```
+
+
+
+```{r}
+# Adecuamos el dataset y añadimos la segmentación por grupos
+names(photinus) <- c("eggs", "weight", "treatment")
+photinus$treatment <- factor(photinus$treatment, labels = c("singly","triply"))
+
+```
+
+```{r}
+by(photinus, photinus$treatment, summary)
+```
+
+Vemos que tenemos 2 grupos de 20 observacionesp1
+
+```{r}
+# Creamos las regresiones para cada grupos
+
+male1<-lm(eggs ~ weight, data = photinus, sub= treatment=="singly")
+male3<-lm(eggs ~ weight, data = photinus, sub= treatment=="triply")
+```
+
+```{r}
+# Representamos los datos
+plot(eggs ~ weight, pch=ifelse(treatment=="triply",1,16), ylab="Number of eggs laid", xlab= "Female wet weight (mg)", main= "(a) Photinus ignitus", data=photinus)
+abline(male1, lty=1)
+abline(male3, lty=2)
+```
+
+
+
+#### (b) Estimar y validar un modelo ANCOVA para la comparación de las rectas de regresión de los dos grupos.
+
+¿A qué conclusiones llegamos? ¿Podemos decir que con el apareamiento con 3 machos la hembra genera más huevos cualquiera que sea su peso? ¿Cual es esta diferencia?
+
+
+```{r}
+# Planteamos el ANCOVA, primer modelo con interacción. Tomamos weight como variable concomitante
+
+p1 <- lm(eggs ~ weight * treatment, data=photinus)
+summary(p1)
+
+```
+
+
+Vemos que el modelo es significativo, ya que el p valor (p-value: 1.138e-05), es mucho menor de 0.05. 
+
+La interacción también es significativa, p-valor 0.042801, lo cual significa que las rectas de este modelo con interacción, son paralelas y no se cortan. β2≠0 así que no son la misma recta.
+
+El p-valor para la coicidencia es de 0.249181, así que aunque son parelas, las rectas (tratamientos) no son coincidentes.
+
+En el caso de la variable concomitante(p-valor=0.000106), será significativa.
+
+```{r}
+# Para el modelo sin interacción
+p0 <- lm(eggs ~ weight + treatment, data=photinus)
+summary(p0)
+```
+
+Vemos que no son rectas paralelas. Y este modelo no sería significativo.
+
+
+El ANCOVA nos dice que la relación entre el peso de las hembras y el número de huevos es paralelo entre los grupos de 1 macho y los de 3 machos. Diferencia (2.6). Y que las hembras que se aparearon con 3 machos son más fecundas indepedientemente de su peso.
+
+
+#### (c) Dibujar el modelo resultante del apartado anterior.
+
+```{r}
+plot(eggs ~ weight, pch=ifelse(treatment=="triply",1,16), data=photinus)
+legend(27, 11, levels(photinus$treatment), pch=c(16,1))
+abline(11.12950, 0.32245, lty=1)
+abline(11.12950 + 2.60497,  0.32245, lty=2)
+```
+
+
+#### (d) Hallar los intervalos de confianza para las pendientes de las rectas del apartado anterior al 90 %.
+Obtener los mismos intervalos con el método bootstrap. Dibujar un gráfico como el de la figura 3.3
+del libro de Faraway con los límites de los intervalos de confianza según la t de Student y según el
+método bootstrap.
+
+
+
+
+
+
+### Ejercicio 3 (15 pt)
+En estadística, el test de Ramsey (1969) o Ramsey Regression Equation Specification Error Test (RESET)
+es un test para contrastar la linealidad de un modelo de regresión. La idea es contrastar si combinaciones
+de potencias del vector de predicciones nos ayudan a explicar la variable respuesta. La intuición detrás del
+test es que si estas combinaciones no lineales de las variables predictivas tienen algún poder de explicación
+en la respuesta, entonces el modelo lineal inicial no está bien definido. Así pues, el contraste RESET(k)
+para un valor de k > 1 es
+
+
+
+```{r}
+# Cargamos los datos
+require(faraway)
+data("teengamb")
+head(teengamb)
+```
+
+
+```{r}
+# Creamos el modelo
+lmod3<-lm(gamble ~ sex + income + verbal, data=teengamb)
+summary(lmod3)
+```
+
+A simple vista, no apreciamos indicios de falta de linealidad en los datos, el modelo es significativo, y la mayor parte de las variables también lo son. 
+
+Para comprobar si existe linealindad vamos a realizar varios contrastersde reset.
+
+Para comprobar la hipótesis nula, tenemos que construir el modelo que incorpora el vector de predicciones y ver si la variable que contiene este vector es significativa, es decir, si el p-valor de esta variable de potencias está por debajo de 0.05, tendremos que rechazar la hipótesis nula H0 y aceptar H1, lo cual indicaría que este vector de predicciones influye sobre la variable respuesta, y que el modelo tiene falta de linealidad.
+
+```{r}
+# Para k2
+
+# k2 es el cuadrado de los valores ajustados. Obtenemos los datos y los añadimos al dataset, y luego al modelo
+
+k2=(lmod3$fitted.values)^2
+lmod4=update(lmod3, . ~. + k2, data = teengamb)
+summary(lmod4)
+```
+
+
+Vemos que el nuevo término es significativo, así que tenemos que rechazar la hipótesis nula H0, lo cual es signo de no-linealidad
+
+```{r}
+# Para k3
+
+k3=(lmod3$fitted.values)^3
+lmod5=update(lmod3, . ~. + k3, data = teengamb)
+summary(lmod5)
+```
+
+Sucede lo mismo cuando usamos la tercera potencia, aunque apreciamos que el valor ha crecido y nos vamos acercando a linealidad. Sea como sea, seguimos teniendo un modelo no lineal.
+
+
+```{r}
+k4=(lmod3$fitted.values)^4
+lmod6=update(lmod3, . ~. + k4, data = teengamb)
+summary(lmod6)
+```
+
+A pesar de usar la cuarta potencia, el p-valor sigue por debajo del nivel de significancia, así que seguimos teniendo que rechazar H0.
+
+
+Si comparamos los valores con los de resettest, vemos que son muy parecidos
+
+```{r}
+library(lmtest)
+resettest(lmod3,power=2)
+resettest(lmod3,power=2:3)
+resettest(lmod3,power=2:4)
+
+```
+
